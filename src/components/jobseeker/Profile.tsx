@@ -517,8 +517,6 @@ const Profile = () => {
                       rowCount={rows2.length}
                     />
                     <TableBody>
-                      {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-              rows.sort(getComparator(order, orderBy)).slice() */}
                       {stableSort(rows2, getComparator(order, orderBy))
                         .slice(
                           page * rowsPerPage,

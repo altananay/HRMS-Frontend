@@ -1,7 +1,38 @@
 import React from "react";
 import "../../assets/login-and-signup-page-styles.css";
+import * as Yup from "yup";
+import { Formik, Form, Field } from "formik";
 
-const SignUp = () => {
+interface FormValues {
+  firstName: string;
+  lastName: string;
+  email: string;
+  identityNumber: string;
+  password: string;
+  passwordAgain: string;
+}
+
+const SignUp: React.FC = () => {
+  const initialValues: FormValues = {
+    firstName: "",
+    lastName: "",
+    email: "",
+    identityNumber: "",
+    password: "",
+    passwordAgain: "",
+  };
+
+  const schema = Yup.object({
+    firstName: Yup.string().required("Ad zorunlu"),
+    lastName: Yup.string().required("Soyadı zorunlu"),
+    email: Yup.string().email().required("Email zorunlu"),
+    identityNumber: Yup.string().max(11).required("TC Kimlik Numarası zorunlu"),
+    password: Yup.string().required("Şifre zorunlu"),
+    passwordAgain: Yup.string()
+      .oneOf([Yup.ref("password"), null], "Şifreler eşleşmek zorunda")
+      .required("Zorunlu alan"),
+  });
+
   return (
     <section className="background-radial-gradient overflow-hidden">
       <div className="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
@@ -37,74 +68,151 @@ const SignUp = () => {
               className="position-absolute shadow-5-strong"
             ></div>
 
-            <div className="card bg-glass">
-              <div className="card-body px-4 py-5 px-md-5">
-                <div className="row">
-                  <div className="col-md-6 mb-4">
-                    <div className="form-outline">
-                      <input
-                        type="text"
-                        id="form3Example1"
-                        className="form-control"
-                      />
-                      <label className="form-label">First name</label>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={schema}
+              onSubmit={(values, { setSubmitting, resetForm }) => {
+                setTimeout(() => {
+                  console.log(values);
+                  setSubmitting(false);
+                  resetForm();
+                }, 1000);
+              }}
+            >
+              {({ isSubmitting, touched, errors }) => (
+                <Form noValidate>
+                  <div className="card bg-glass">
+                    <div className="card-body px-4 py-5 px-md-5">
+                      <div className="row">
+                        <div className="col-md-6 mb-4">
+                          <div className="form-outline">
+                            <label className="form-label">First name</label>
+                            <Field
+                              name="firstName"
+                              type="text"
+                              className={
+                                "form-control " +
+                                (touched.firstName && errors.firstName
+                                  ? "is-invalid"
+                                  : null)
+                              }
+                            />
+                            {touched.firstName && errors.firstName ? (
+                              <div className="text-danger">
+                                {errors.firstName}
+                              </div>
+                            ) : null}
+                          </div>
+                        </div>
+                        <div className="col-md-6 mb-4">
+                          <div className="form-outline">
+                            <label className="form-label">Last name</label>
+                            <Field
+                              name="lastName"
+                              className={
+                                "form-control " +
+                                (touched.lastName && errors.lastName
+                                  ? "is-invalid"
+                                  : null)
+                              }
+                              type="text"
+                            />
+
+                            {touched.lastName && errors.lastName ? (
+                              <div className="text-danger">
+                                {errors.lastName}
+                              </div>
+                            ) : null}
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="form-outline mb-4">
+                        <label className="form-label">Email address</label>
+                        <Field
+                          name="email"
+                          type="email"
+                          className={
+                            "form-control " +
+                            (touched.email && errors.email
+                              ? "is-invalid"
+                              : null)
+                          }
+                        />
+                        {touched.email && errors.email ? (
+                          <div className="text-danger">{errors.email}</div>
+                        ) : null}
+                      </div>
+
+                      <div className="form-outline mb-4">
+                        <label className="form-label">TC Kimlik Numarası</label>
+                        <Field
+                          name="identityNumber"
+                          type="text"
+                          className={
+                            "form-control " +
+                            (touched.identityNumber && errors.identityNumber
+                              ? "is-invalid"
+                              : null)
+                          }
+                        />
+                        {touched.identityNumber && errors.identityNumber ? (
+                          <div className="text-danger">
+                            {errors.identityNumber}
+                          </div>
+                        ) : null}
+                      </div>
+
+                      <div className="form-outline mb-4">
+                        <label className="form-label">Şifre</label>
+                        <Field
+                          name="password"
+                          type="password"
+                          className={
+                            "form-control " +
+                            (touched.password && errors.password
+                              ? "is-invalid"
+                              : null)
+                          }
+                        />
+                        {touched.password && errors.password ? (
+                          <div className="text-danger">{errors.password}</div>
+                        ) : null}
+                      </div>
+
+                      <div className="form-outline mb-4">
+                        <label className="form-label">
+                          Şifreyi tekrar girin.
+                        </label>
+                        <Field
+                          name="passwordAgain"
+                          type="password"
+                          className={
+                            "form-control " +
+                            (touched.passwordAgain && errors.passwordAgain
+                              ? "is-invalid"
+                              : null)
+                          }
+                        />
+                        {touched.passwordAgain && errors.passwordAgain ? (
+                          <div className="text-danger">
+                            {errors.passwordAgain}
+                          </div>
+                        ) : null}
+                      </div>
+
+                      <button
+                        className="btn btn-primary btn-block mb-4"
+                        type="submit"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? "Please wait..." : "Giriş Yap"}
+                      </button>
                     </div>
                   </div>
-                  <div className="col-md-6 mb-4">
-                    <div className="form-outline">
-                      <input
-                        type="text"
-                        id="form3Example2"
-                        className="form-control"
-                      />
-                      <label className="form-label">Last name</label>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="form-outline mb-4">
-                  <input
-                    type="email"
-                    id="form3Example3"
-                    className="form-control"
-                  />
-                  <label className="form-label">Email address</label>
-                </div>
-
-                <div className="form-outline mb-4">
-                  <input
-                    type="password"
-                    id="form3Example4"
-                    className="form-control"
-                  />
-                  <label className="form-label">TC Kimlik Numarası</label>
-                </div>
-
-                <div className="form-outline mb-4">
-                  <input
-                    type="password"
-                    id="form3Example4"
-                    className="form-control"
-                  />
-                  <label className="form-label">Şifre</label>
-                </div>
-
-                
-
-                <div className="form-outline mb-4">
-                  <input
-                    type="password"
-                    id="form3Example4"
-                    className="form-control"
-                  />
-                  <label className="form-label">Şifreyi tekrar girin.</label>
-                </div>
-
-                <button className="btn btn-primary btn-block mb-4">
-                  Kayıt Ol
-                </button>
-              </div>
-            </div>
+                </Form>
+              )}
+            </Formik>
           </div>
         </div>
       </div>

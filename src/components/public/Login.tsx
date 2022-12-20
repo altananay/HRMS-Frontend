@@ -1,7 +1,24 @@
 import React from "react";
 import "../../assets/login-and-signup-page-styles.css";
+import * as Yup from "yup";
+import { Formik, Form, Field } from "formik";
 
-const Login = () => {
+interface FormValues {
+  email: string;
+  password: string;
+}
+
+const Login: React.FC = () => {
+  const initialValues: FormValues = {
+    email: "",
+    password: "",
+  };
+
+  const schema = Yup.object({
+    email: Yup.string().email().required("Email zorunlu"),
+    password: Yup.string().required("Şifre zorunlu"),
+  });
+
   return (
     <section className="background-radial-gradient overflow-hidden">
       <div className="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
@@ -37,32 +54,67 @@ const Login = () => {
               className="position-absolute shadow-5-strong"
             ></div>
 
-            <div className="card bg-glass">
-              <div className="card-body px-4 py-5 px-md-5">
+            <Formik
+              initialValues={initialValues}
+              validationSchema={schema}
+              onSubmit={(values, { setSubmitting, resetForm }) => {
+                setTimeout(() => {
+                  console.log(values);
+                  setSubmitting(false);
+                  resetForm();
+                }, 1000);
+              }}
+            >
+              {({ isSubmitting, touched, errors }) => (
+                <Form noValidate>
+                  <div className="card bg-glass">
+                    <div className="card-body px-4 py-5 px-md-5">
+                      <div className="form-outline mb-4">
+                        <label className="form-label">Email address</label>
+                        <Field
+                          name="email"
+                          type="email"
+                          className={
+                            "form-control " +
+                            (touched.email && errors.email
+                              ? "is-invalid"
+                              : null)
+                          }
+                        />
+                        {touched.email && errors.email ? (
+                          <div className="text-danger">{errors.email}</div>
+                        ) : null}
+                      </div>
 
-                <div className="form-outline mb-4">
-                  <input
-                    type="email"
-                    id="form3Example3"
-                    className="form-control"
-                  />
-                  <label className="form-label">Email address</label>
-                </div>
+                      <div className="form-outline mb-4">
+                        <label className="form-label">Password</label>
+                        <Field
+                          name="password"
+                          type="password"
+                          className={
+                            "form-control " +
+                            (touched.password && errors.password
+                              ? "is-invalid"
+                              : null)
+                          }
+                        />
+                        {touched.password && errors.password ? (
+                          <div className="text-danger">{errors.password}</div>
+                        ) : null}
+                      </div>
 
-                <div className="form-outline mb-4">
-                  <input
-                    type="password"
-                    id="form3Example4"
-                    className="form-control"
-                  />
-                  <label className="form-label">Password</label>
-                </div>
-
-                <button className="btn btn-primary btn-block mb-4">
-                  Giriş Yap
-                </button>
-              </div>
-            </div>
+                      <button
+                        className="btn btn-primary btn-block mb-4"
+                        type="submit"
+                        disabled={isSubmitting}
+                      >
+                        {isSubmitting ? "Please wait..." : "Giriş Yap"}
+                      </button>
+                    </div>
+                  </div>
+                </Form>
+              )}
+            </Formik>
           </div>
         </div>
       </div>
