@@ -1,0 +1,7 @@
+Projede yapılan bütün eklemeler, değişiklikler burada.
+
+11 Aralık 2022 -> Proje React with TypeScript ile oluşturuldu. Web sitesinin tasarım kodları componentlere bölündü. Tagcanvas kütüphanesinin React'ta çalışabilmesi için kütüphanedeki kodlarda ufak düzenlemeler yapıldı ve projeye entegre edildi.
+
+12 Aralık 2022 -> İş arayan kullanıcının profil sayfası eklendi.
+
+19 Aralık 2022 -> Login, Signup sayfaları eklendi. React-router-dom kütüphanesi kullanılarak gerekli routing işlemleri yapıldı.
