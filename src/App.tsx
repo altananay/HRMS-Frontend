@@ -5,6 +5,7 @@ import SignUp from "./components/jobseeker/Signup";
 import Homepage from "./components/public/Homepage";
 import Login from "./components/public/Login";
 import Navbar from "./components/public/Navbar";
+import Notfound from "./components/public/Notfound";
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <Route path="profile" element={<Profile></Profile>}></Route>
         <Route path="login" element={<Login></Login>}></Route>
         <Route path="signup" element={<SignUp></SignUp>}></Route>
+        <Route path="*" element={<Notfound></Notfound>}></Route>
       </Routes>
     </div>
   );
