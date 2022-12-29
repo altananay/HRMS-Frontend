@@ -5,3 +5,5 @@ Projede yapılan bütün eklemeler, değişiklikler burada.
 12 Aralık 2022 -> İş arayan kullanıcının profil sayfası eklendi.
 
 19 Aralık 2022 -> Login, Signup sayfaları eklendi. React-router-dom kütüphanesi kullanılarak gerekli routing işlemleri yapıldı.
+
+20 Aralık 2022 -> Login ve Signup sayfalarına Client-side validation eklendi. Kullanılan kütüphaneler Formik, Yup
