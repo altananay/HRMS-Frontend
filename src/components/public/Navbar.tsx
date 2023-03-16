@@ -26,17 +26,17 @@ const Navbar = () => {
         <div className="collapse navbar-collapse" id="navbarResponsive">
           <ul className="navbar-nav ms-auto me-4 my-3 my-lg-0">
             <li className="nav-item">
-              <NavLink className="nav-link me-lg-3" to="login">
+              <NavLink className="nav-link me-lg-3" to="/login">
                 Giriş Yap
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link me-lg-3" to="signup">
+              <NavLink className="nav-link me-lg-3" to="/signup">
                 Kayıt Ol
               </NavLink>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link me-lg-3" to="profile">
+              <NavLink className="nav-link me-lg-3" to="/profile">
                 Profil
               </NavLink>
             </li>
