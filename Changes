@@ -9,3 +9,13 @@ Projede yapılan bütün eklemeler, değişiklikler burada.
 20 Aralık 2022 -> Login ve Signup sayfalarına Client-side validation eklendi. Kullanılan kütüphaneler Formik, Yup
 
 29 Aralık 2022 -> 404 Not Found sayfası eklendi.
+
+15 Mart 2023
+Front-End sunucu ile Back-end sunucunun bağlantısı kuruldu.
+Gerekli contractlar, back-end ile bağlantıyı sağlayan service interfaceleri kodlandı.
+İş arayan kullanıcının profil sayfası eklendi. Profil sayfasında kendi cvsini görüntüleyebiliyor.
+Company kısmı için hazır tema kuruldu gerekli değişiklikleri yapıldı.
+İş İlanlarını listeletme, aktif ve pasiflik durumuna göre listeletme işlemleri yapıldı.
+İş ilanı ekleme sayfası yapıldı.
+İş ilanı ekleme işlemi başarılıysa Back-End'den gelen mesaj react-toastify kütüphanesi ile kullanıcı bilgilendiriliyor.
+İş ilanı eklemek için gerekli validationlar formik ve yup kullanılarak kodlandı.
