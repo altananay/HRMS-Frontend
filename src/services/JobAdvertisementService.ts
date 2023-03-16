@@ -5,15 +5,13 @@ import { ListResponseModel } from "../contracts/ListResponseModel"
 import SingleResponseModel from "../contracts/SingleResponseModel"
 import { UpdateJobAdvertisementDto } from "../contracts/UpdateJobAdvertisementDto"
 
-let apiUrl = "https://webapi20230125044326.azurewebsites.net/api/"
-
 export const addJobAdvertisement = async (jobAdvertisement:CreateJobAdvertisement) => {
-    let newApiUrl = apiUrl + "jobadvertisements/add"
+    let newApiUrl = process.env.REACT_APP_BASE_ENDPOINT + "jobadvertisements/add"
     return await axios.post<SingleResponseModel<JobAdvertisement>>(newApiUrl, jobAdvertisement)
 }
 
 export const updateJobAdvertisement = async (jobAdvertisement: UpdateJobAdvertisementDto) => {
-    let newApiUrl = apiUrl + "jobadvertisements/update"
+    let newApiUrl = process.env.REACT_APP_BASE_ENDPOINT + "jobadvertisements/update"
     return await axios.put<SingleResponseModel<JobAdvertisement>>(newApiUrl, jobAdvertisement)
 }
 
@@ -23,12 +21,12 @@ export const addJobAdvertisementWithLocalhost = async (jobAdvertisement: CreateJ
 }
 
 export const getAllJobAdvertisement = async () => {
-    let newApiUrl = apiUrl + "jobadvertisements/getall"
+    let newApiUrl = process.env.REACT_APP_BASE_ENDPOINT + "jobadvertisements/getall"
     return await axios.get<ListResponseModel<JobAdvertisement>>(newApiUrl)
 }
 
 export const getAllJobAdvertisementsByStatus = async (status: string) => {
-    let newApiUrl = apiUrl + "jobadvertisements/getallbystatus?status=" + status
+    let newApiUrl = process.env.REACT_APP_BASE_ENDPOINT + "jobadvertisements/getallbystatus?status=" + status
     return await axios.get<ListResponseModel<JobAdvertisement>>(newApiUrl);
 }
 
