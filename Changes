@@ -19,3 +19,4 @@ Company kısmı için hazır tema kuruldu gerekli değişiklikleri yapıldı.
 İş ilanı ekleme sayfası yapıldı.
 İş ilanı ekleme işlemi başarılıysa Back-End'den gelen mesaj react-toastify kütüphanesi ile kullanıcı bilgilendiriliyor.
 İş ilanı eklemek için gerekli validationlar formik ve yup kullanılarak kodlandı.
+
