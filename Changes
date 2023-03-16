@@ -20,3 +20,8 @@ Company kısmı için hazır tema kuruldu gerekli değişiklikleri yapıldı.
 İş ilanı ekleme işlemi başarılıysa Back-End'den gelen mesaj react-toastify kütüphanesi ile kullanıcı bilgilendiriliyor.
 İş ilanı eklemek için gerekli validationlar formik ve yup kullanılarak kodlandı.
 
+<<<<<<< HEAD
+=======
+16 Mart 2023
+.env dosyası projeye eklendi. Api'ya bağlanmak için gerekli endpoint bu dosyadan çekiliyor.
+>>>>>>> 6de8c290538d8d55ddede3eb2c2ba9cad692cab1
