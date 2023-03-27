@@ -22,3 +22,9 @@ Company kısmı için hazır tema kuruldu gerekli değişiklikleri yapıldı.
 
 16 Mart 2023
 .env dosyası projeye eklendi. Api'ya bağlanmak için gerekli endpoint bu dosyadan çekiliyor.
+
+27 Mart 2023
+JWT Front-End'e entegre edildi. Back-end ile etkileşimli bir şekilde.
+Local Storage service yazıldı.
+Jwt Decode service yazıldı.
+Kullanıcı login işlemi yapıldı.
