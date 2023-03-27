@@ -8,7 +8,6 @@ interface FormValues {
   firstName: string;
   lastName: string;
   email: string;
-  identityNumber: string;
   password: string;
   passwordAgain: string;
 }
@@ -18,7 +17,6 @@ const SignUp: React.FC = () => {
     firstName: "",
     lastName: "",
     email: "",
-    identityNumber: "",
     password: "",
     passwordAgain: "",
   };
@@ -27,7 +25,6 @@ const SignUp: React.FC = () => {
     firstName: Yup.string().required("Ad zorunlu"),
     lastName: Yup.string().required("Soyadı zorunlu"),
     email: Yup.string().email().required("Email zorunlu"),
-    identityNumber: Yup.string().max(11).required("TC Kimlik Numarası zorunlu"),
     password: Yup.string().required("Şifre zorunlu"),
     passwordAgain: Yup.string()
       .oneOf([Yup.ref("password"), null], "Şifreler eşleşmek zorunda")
@@ -144,27 +141,6 @@ const SignUp: React.FC = () => {
                           />
                           {touched.email && errors.email ? (
                             <div className="text-danger">{errors.email}</div>
-                          ) : null}
-                        </div>
-
-                        <div className="form-outline mb-4">
-                          <label className="form-label">
-                            TC Kimlik Numarası
-                          </label>
-                          <Field
-                            name="identityNumber"
-                            type="text"
-                            className={
-                              "form-control " +
-                              (touched.identityNumber && errors.identityNumber
-                                ? "is-invalid"
-                                : null)
-                            }
-                          />
-                          {touched.identityNumber && errors.identityNumber ? (
-                            <div className="text-danger">
-                              {errors.identityNumber}
-                            </div>
                           ) : null}
                         </div>
 

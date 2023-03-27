@@ -1,8 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import "../../assets/login-and-signup-page-styles.css";
 import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
 import Navbar from "./Navbar";
+import { login } from "../../services/JobSeekerAuthService";
+import { TokenModel } from "../../contracts/tokenModel";
+import { toast, ToastContainer } from "react-toastify";
+import {
+  AddLocalStorage,
+  GetFromLocalStorage,
+} from "../../services/LocalStorageService";
+import { getClaims, jwtDecode } from "../../services/JWTService";
 
 interface FormValues {
   email: string;
@@ -10,6 +18,7 @@ interface FormValues {
 }
 
 const Login: React.FC = () => {
+
   const initialValues: FormValues = {
     email: "",
     password: "",
@@ -22,7 +31,7 @@ const Login: React.FC = () => {
 
   return (
     <>
-    <Navbar></Navbar>
+      <Navbar></Navbar>
       <section className="background-radial-gradient overflow-hidden">
         <div className="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
           <div className="row gx-lg-5 align-items-center mb-5">
@@ -61,11 +70,33 @@ const Login: React.FC = () => {
                 initialValues={initialValues}
                 validationSchema={schema}
                 onSubmit={(values, { setSubmitting, resetForm }) => {
-                  setTimeout(() => {
-                    console.log(values);
-                    setSubmitting(false);
-                    resetForm();
-                  }, 1000);
+                  const decode = async () => {
+                    let token = await GetFromLocalStorage("token");
+                    let decodedJwt = await jwtDecode(token!);
+                    console.log(decodedJwt)
+                    getClaims(decodedJwt)
+                  };
+
+                  const jobSeekerLogin = async () => {
+                     await login(values)
+                      .then((response) => {
+                        if (response.data.isSuccess) {
+                          setSubmitting(false);
+                          toast.success(response.data.message, {
+                            position: toast.POSITION.BOTTOM_RIGHT,
+                          });
+                          AddLocalStorage("token", response.data.data.token)
+                          decode();
+                        }
+                      })
+                      .catch((error) => {
+                        toast.error(error.response.data.message, {
+                          position: toast.POSITION.BOTTOM_RIGHT,
+                        });
+                      });
+                  };
+                  jobSeekerLogin();
+                  resetForm();
                 }}
               >
                 {({ isSubmitting, touched, errors }) => (
@@ -122,6 +153,7 @@ const Login: React.FC = () => {
           </div>
         </div>
       </section>
+      <ToastContainer></ToastContainer>
     </>
   );
 };
