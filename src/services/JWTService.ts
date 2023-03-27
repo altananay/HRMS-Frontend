@@ -13,5 +13,35 @@ export const getClaims = (decodedJwt: Object) => {
             jwtElements.push(decodedJwt[key])
         }
     })
-    console.log(jwtElements)
+    return jwtElements;
+}
+
+export const getUserId = (decodedJwt: Object) => {
+    let id = ""
+    Object.keys(decodedJwt).map(key => {
+        if (key == process.env.REACT_APP_USER_ID) {
+            id = decodedJwt[key];
+        }
+    })
+    return id;
+}
+
+export const getUserEmail = (decodedJwt: Object) => {
+    let email = ""
+    Object.keys(decodedJwt).map(key => {
+        if (key == process.env.REACT_APP_EMAIL) {
+            email = decodedJwt[key];
+        }
+    })
+    return email;
+}
+
+export const getUserFullName = (decodedJwt: Object) => {
+    let fullName = ""
+    Object.keys(decodedJwt).map(key => {
+        if (key == process.env.REACT_APP_FULL_NAME) {
+            fullName = decodedJwt[key];
+        }
+    })
+    return fullName;
 }

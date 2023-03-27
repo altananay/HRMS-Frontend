@@ -10,7 +10,7 @@ import {
   AddLocalStorage,
   GetFromLocalStorage,
 } from "../../services/LocalStorageService";
-import { getClaims, jwtDecode } from "../../services/JWTService";
+import { getClaims, getUserEmail, getUserFullName, getUserId, jwtDecode } from "../../services/JWTService";
 
 interface FormValues {
   email: string;
@@ -74,7 +74,7 @@ const Login: React.FC = () => {
                     let token = await GetFromLocalStorage("token");
                     let decodedJwt = await jwtDecode(token!);
                     console.log(decodedJwt)
-                    getClaims(decodedJwt)
+                    console.log(getClaims(decodedJwt))
                   };
 
                   const jobSeekerLogin = async () => {
