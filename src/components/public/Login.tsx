@@ -10,7 +10,7 @@ import {
   AddLocalStorage,
   GetFromLocalStorage,
 } from "../../services/LocalStorageService";
-import { getClaims, getUserEmail, getUserFullName, getUserId, jwtDecode } from "../../services/JWTService";
+import { getClaims, jwtDecode } from "../../services/JWTService";
 
 interface FormValues {
   email: string;
@@ -18,6 +18,8 @@ interface FormValues {
 }
 
 const Login: React.FC = () => {
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const initialValues: FormValues = {
     email: "",
@@ -31,7 +33,7 @@ const Login: React.FC = () => {
 
   return (
     <>
-      <Navbar></Navbar>
+      <Navbar isAuthenticated={isAuthenticated}></Navbar>
       <section className="background-radial-gradient overflow-hidden">
         <div className="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
           <div className="row gx-lg-5 align-items-center mb-5">
@@ -70,13 +72,6 @@ const Login: React.FC = () => {
                 initialValues={initialValues}
                 validationSchema={schema}
                 onSubmit={(values, { setSubmitting, resetForm }) => {
-                  const decode = async () => {
-                    let token = await GetFromLocalStorage("token");
-                    let decodedJwt = await jwtDecode(token!);
-                    console.log(decodedJwt)
-                    console.log(getClaims(decodedJwt))
-                  };
-
                   const jobSeekerLogin = async () => {
                      await login(values)
                       .then((response) => {
@@ -86,7 +81,6 @@ const Login: React.FC = () => {
                             position: toast.POSITION.BOTTOM_RIGHT,
                           });
                           AddLocalStorage("token", response.data.data.token)
-                          decode();
                         }
                       })
                       .catch((error) => {
@@ -97,6 +91,7 @@ const Login: React.FC = () => {
                   };
                   jobSeekerLogin();
                   resetForm();
+                  setIsAuthenticated(true)
                 }}
               >
                 {({ isSubmitting, touched, errors }) => (

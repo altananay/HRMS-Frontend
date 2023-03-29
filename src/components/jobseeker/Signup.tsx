@@ -33,7 +33,7 @@ const SignUp: React.FC = () => {
 
   return (
     <>
-    <Navbar></Navbar>
+    <Navbar isAuthenticated={false}></Navbar>
       <section className="background-radial-gradient overflow-hidden">
         <div className="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
           <div className="row gx-lg-5 mb-5">

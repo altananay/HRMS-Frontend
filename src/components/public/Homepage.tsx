@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../../assets/styles.css";
+import { GetFromLocalStorage } from "../../services/LocalStorageService";
 import TagCanvas from "../animations/TagCanvas";
 import Features from "./Features";
 import Footer from "./Footer";
@@ -7,9 +8,17 @@ import Header from "./Header";
 import Navbar from "./Navbar";
 
 const Homepage = () => {
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    if (GetFromLocalStorage("token")) {
+      setIsAuthenticated(true)
+    }
+  }, [])
   return (
     <div>
-      <Navbar></Navbar>
+      <Navbar isAuthenticated={isAuthenticated}></Navbar>
 
       <Header></Header>
 

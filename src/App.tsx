@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import AddJobAdvertisement from "./components/company/AddJobAdvertisement";
 import Charts from "./components/company/Charts";

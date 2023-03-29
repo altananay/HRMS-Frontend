@@ -5,6 +5,9 @@ import "../../assets/argon-dashboard.css";
 import Navbar from "../public/Navbar";
 import Box from "@mui/material/Box";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { GetFromLocalStorage } from "../../services/LocalStorageService";
+import { getClaims, getUserId, jwtDecode } from "../../services/JWTService";
+import Notfound from "../public/Notfound";
 
 const columns: GridColDef[] = [
   {
@@ -63,13 +66,34 @@ const jobExperiencesColumns: GridColDef[] = [
 
 const Profile = () => {
   const [cv, setCv] = useState<Cv>();
-  
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   let dateOfBirth;
 
   useEffect(() => {
+
+    let jwt = GetFromLocalStorage("token")
+    let decodedJwt;
+    let roles;
+    let id;
+
+    if (jwt) {
+      decodedJwt = jwtDecode(jwt)
+      roles = getClaims(decodedJwt)
+    }
+
+
+    roles!?.map((role) => {
+      if (role == "jobseeker") {
+        setIsAuthenticated(true)
+        id = getUserId(decodedJwt)
+        console.log(id)
+      }
+    })
+
+
     //todo: loading koy
     const getCv = async () => {
-      await getByJobSeekerId("640736b0de63636c38a70f43").then((response) => {
+      await getByJobSeekerId(id).then((response) => {
         setCv(response.data.data);
       });
     //todo: loading gizle.
@@ -80,13 +104,15 @@ const Profile = () => {
       dateOfBirth[2] = dateOfBirth[2][0] + dateOfBirth[2][1]
       console.log(dateOfBirth);
     }
-    getCv();
-    parseDate();
+
+    getCv()
+    parseDate()
+    
   }, []);
 
   return (
     <>
-      <Navbar></Navbar>
+    {isAuthenticated ? <><Navbar isAuthenticated={isAuthenticated}></Navbar>
       <section style={{ backgroundColor: "#eee" }}>
         <div className="container py-5">
           <div className="row">
@@ -144,15 +170,6 @@ const Profile = () => {
                     </div>
                     <div className="col-sm-9">
                       <p className="text-muted mb-0">{cv?.email}</p>
-                    </div>
-                  </div>
-                  <hr></hr>
-                  <div className="row">
-                    <div className="col-sm-3">
-                      <p className="mb-0">TC Kimlik</p>
-                    </div>
-                    <div className="col-sm-9">
-                      <p className="text-muted mb-0">111111111111</p>
                     </div>
                   </div>
                   <hr></hr>
@@ -329,7 +346,8 @@ const Profile = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> </>: <Notfound></Notfound>}
+      
     </>
   );
 };

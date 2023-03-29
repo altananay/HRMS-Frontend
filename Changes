@@ -28,3 +28,7 @@ JWT Front-End'e entegre edildi. Back-end ile etkileşimli bir şekilde.
 Local Storage service yazıldı.
 Jwt Decode service yazıldı.
 Kullanıcı login işlemi yapıldı.
+
+28 Mart 2023
+Kullanıcı login işlemi yaptıktan sonra gerekli conditional rendering işlemi yapıldı.
+Giriş yapan kullanıcının cv'si back-end'den getirilip web sayfasında gösterildi.
