@@ -32,3 +32,6 @@ Kullanıcı login işlemi yapıldı.
 28 Mart 2023
 Kullanıcı login işlemi yaptıktan sonra gerekli conditional rendering işlemi yapıldı.
 Giriş yapan kullanıcının cv'si back-end'den getirilip web sayfasında gösterildi.
+
+29 Mart 2023
+Kullanıcının sistemden çıkış yapma işlemi eklendi ve gerekli sayfa yönlendirmeleri yapıldı.

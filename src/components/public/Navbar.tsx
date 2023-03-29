@@ -1,5 +1,6 @@
-import React from "react";
 import { NavLink } from "react-router-dom";
+import { DeleteFromLocalStorage } from "../../services/LocalStorageService";
+import { toast, ToastContainer } from "react-toastify";
 
 const Navbar = ({ isAuthenticated }) => {
   return isAuthenticated ? (
@@ -28,6 +29,19 @@ const Navbar = ({ isAuthenticated }) => {
             <li className="nav-item">
               <NavLink className="nav-link me-lg-3" to="/profile" state={isAuthenticated}>
                 Profil
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link me-lg-3" to="/" onClick={() => {
+                DeleteFromLocalStorage("token")
+                isAuthenticated = false
+                setTimeout(() => {
+                  toast.warning("Çıkış yapıldı. Ana sayfaya yönlendirildiniz.", {
+                    position: toast.POSITION.BOTTOM_RIGHT
+                  })
+                }, 1000);
+              }}>
+                Çıkış Yap
               </NavLink>
             </li>
           </ul>
@@ -88,6 +102,7 @@ const Navbar = ({ isAuthenticated }) => {
           </button>
         </div>
       </div>
+      <ToastContainer></ToastContainer>
     </nav>
   );
 };

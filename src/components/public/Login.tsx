@@ -4,13 +4,10 @@ import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
 import Navbar from "./Navbar";
 import { login } from "../../services/JobSeekerAuthService";
-import { TokenModel } from "../../contracts/tokenModel";
 import { toast, ToastContainer } from "react-toastify";
 import {
   AddLocalStorage,
-  GetFromLocalStorage,
 } from "../../services/LocalStorageService";
-import { getClaims, jwtDecode } from "../../services/JWTService";
 
 interface FormValues {
   email: string;

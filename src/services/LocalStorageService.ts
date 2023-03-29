@@ -3,7 +3,7 @@ export const AddLocalStorage = async (key: string, value: string) =>
     await localStorage.setItem(key,value);
 }
 
-export const DeleteLocalStorage = (key: string) => {
+export const DeleteFromLocalStorage = (key: string) => {
     localStorage.removeItem(key)
 }
 
