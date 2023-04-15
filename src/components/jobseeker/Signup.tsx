@@ -3,6 +3,8 @@ import "../../assets/login-and-signup-page-styles.css";
 import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
 import Navbar from "../public/Navbar";
+import {signup} from "../../services/JobSeekerAuthService"
+import { toast, ToastContainer } from "react-toastify";
 
 interface FormValues {
   firstName: string;
@@ -73,7 +75,30 @@ const SignUp: React.FC = () => {
                 validationSchema={schema}
                 onSubmit={(values, { setSubmitting, resetForm }) => {
                   setTimeout(() => {
-                    console.log(values);
+
+                    const signUpValues = {
+                      email: values.email,
+                      password: values.password,
+                      firstName: values.firstName,
+                      lastName: values.lastName,
+
+                    }
+
+                    signup(signUpValues).then((response) => {
+                      if (response.data.isSuccess)
+                      {
+                        toast.success(response.data.message, {
+                          position: toast.POSITION.BOTTOM_RIGHT
+                        })
+                      }
+                      else
+                      {
+                        toast.warning(response.data.message, {
+                          position: toast.POSITION.BOTTOM_RIGHT
+                        })
+                      }
+                      
+                    })
                     setSubmitting(false);
                     resetForm();
                   }, 1000);
@@ -198,6 +223,7 @@ const SignUp: React.FC = () => {
           </div>
         </div>
       </section>
+      <ToastContainer></ToastContainer>
     </>
   );
 };
