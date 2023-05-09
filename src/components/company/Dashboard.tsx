@@ -1,6 +1,5 @@
 import { Box } from "@mui/material";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
-import "../../assets/argon-dashboard.css";
 import Sidebar from "./layouts/Sidebar";
 import Statistics from "./layouts/Statistics";
 import { useEffect, useState } from "react";
@@ -9,7 +8,10 @@ import jwtDecode from "jwt-decode";
 import { getClaims, getUserId } from "../../services/JWTService";
 import Notfound from "../public/Notfound";
 import Loader from "react-loaders";
-import "../../App.scss"
+import "../../assets/style.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBars } from "@fortawesome/free-solid-svg-icons";
+import Navbar from "../public/Navbar";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90 },
@@ -56,14 +58,13 @@ const rows = [
 ];
 
 const Dashboard = () => {
-
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const renderNotFound = () => {
     setTimeout(() => {
-      return( <Notfound></Notfound>)
-    }, 1500)
-  }
+      return <Notfound></Notfound>;
+    }, 1500);
+  };
 
   useEffect(() => {
     let jwt = GetFromLocalStorage("companyToken");
@@ -82,149 +83,396 @@ const Dashboard = () => {
         id = getUserId(decodedJwt);
       }
     });
-
   }, []);
 
   return (
     <>
-    {isAuthenticated ? <body className="g-sidenav-show" style={{marginTop: "60px", backgroundColor: "#5F73E3"}}>
-        <Loader type="pacman" active></Loader>
-        <div
-          className="min-height-300 position-absolute w-100"
-          style={{ backgroundColor: "#5E72E4" }}
-        ></div>
-        <Sidebar></Sidebar>
-        <main className="main-content position-relative border-radius-lg" style={{backgroundColor: "#5F73E3"}}>
-          <div className="container-fluid py-4">
-            <Statistics></Statistics>
+      <div id="main-wrapper">
+        <div className="brand-logo">
+          <a>
+            <b className="logo-abbr"></b>
+            <span className="logo-compact"></span>
+            <span className="brand-title"></span>
+          </a>
+        </div>
+      </div>
+      <div className="nk-sidebar">
+        <div className="nk-nav-scroll">
+          <ul className="metismenu" id="menu">
+            <li className="nav-label">Dashboard</li>
+            <li>
+              <a
+                className="has-arrow"
+                href="javascript:void()"
+                aria-expanded="false"
+              >
+                <i className="icon-speedometer menu-icon"></i>
+                <span className="nav-text">Dashboard</span>
+              </a>
+              <ul aria-expanded="false">
+                <li>
+                  <a href="./index.html">Home 1</a>
+                </li>
+              </ul>
+            </li>
+            <li className="mega-menu mega-menu-sm">
+              <a
+                className="has-arrow"
+                href="javascript:void()"
+                aria-expanded="false"
+              >
+                <i className="icon-globe-alt menu-icon"></i>
+                <span className="nav-text">Layouts</span>
+              </a>
+              <ul aria-expanded="false">
+                <li>
+                  <a href="./layout-blank.html">Blank</a>
+                </li>
+                <li>
+                  <a href="./layout-one-column.html">One Column</a>
+                </li>
+                <li>
+                  <a href="./layout-two-column.html">Two column</a>
+                </li>
+                <li>
+                  <a href="./layout-compact-nav.html">Compact Nav</a>
+                </li>
+                <li>
+                  <a href="./layout-vertical.html">Vertical</a>
+                </li>
+                <li>
+                  <a href="./layout-horizontal.html">Horizontal</a>
+                </li>
+                <li>
+                  <a href="./layout-boxed.html">Boxed</a>
+                </li>
+                <li>
+                  <a href="./layout-wide.html">Wide</a>
+                </li>
 
-            <div className="row mt-4">
-              <div className="col-lg-7 mb-lg-0">
-                <Box sx={{ height: 400, width: "100%" }}>
-                  <DataGrid
-                    rows={rows}
-                    columns={columns}
-                    pageSize={5}
-                    rowsPerPageOptions={[5, 10, 20]}
-                    checkboxSelection
-                    disableSelectionOnClick
-                    experimentalFeatures={{ newEditingApi: true }}
-                    sx={{ backgroundColor: "white" }}
-                    pagination
-                  />
-                </Box>
+                <li>
+                  <a href="./layout-fixed-header.html">Fixed Header</a>
+                </li>
+                <li>
+                  <a href="layout-fixed-sidebar.html">Fixed Sidebar</a>
+                </li>
+              </ul>
+            </li>
+            <li className="nav-label">Apps</li>
+            <li>
+              <a
+                className="has-arrow"
+                href="javascript:void()"
+                aria-expanded="false"
+              >
+                <i className="icon-envelope menu-icon"></i>{" "}
+                <span className="nav-text">Email</span>
+              </a>
+              <ul aria-expanded="false">
+                <li>
+                  <a href="./email-inbox.html">Inbox</a>
+                </li>
+                <li>
+                  <a href="./email-read.html">Read</a>
+                </li>
+                <li>
+                  <a href="./email-compose.html">Compose</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a
+                className="has-arrow"
+                href="javascript:void()"
+                aria-expanded="false"
+              >
+                <i className="icon-screen-tablet menu-icon"></i>
+                <span className="nav-text">Apps</span>
+              </a>
+              <ul aria-expanded="false">
+                <li>
+                  <a href="./app-profile.html">Profile</a>
+                </li>
+                <li>
+                  <a href="./app-calender.html">Calender</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a
+                className="has-arrow"
+                href="javascript:void()"
+                aria-expanded="false"
+              >
+                <i className="icon-graph menu-icon"></i>{" "}
+                <span className="nav-text">Charts</span>
+              </a>
+              <ul aria-expanded="false">
+                <li>
+                  <a href="./chart-flot.html">Flot</a>
+                </li>
+                <li>
+                  <a href="./chart-morris.html">Morris</a>
+                </li>
+                <li>
+                  <a href="./chart-chartjs.html">Chartjs</a>
+                </li>
+                <li>
+                  <a href="./chart-chartist.html">Chartist</a>
+                </li>
+                <li>
+                  <a href="./chart-sparkline.html">Sparkline</a>
+                </li>
+                <li>
+                  <a href="./chart-peity.html">Peity</a>
+                </li>
+              </ul>
+            </li>
+            <li className="nav-label">UI Components</li>
+            <li>
+              <a
+                className="has-arrow"
+                href="javascript:void()"
+                aria-expanded="false"
+              >
+                <i className="icon-grid menu-icon"></i>
+                <span className="nav-text">UI Components</span>
+              </a>
+              <ul aria-expanded="false">
+                <li>
+                  <a href="./ui-accordion.html">Accordion</a>
+                </li>
+                <li>
+                  <a href="./ui-alert.html">Alert</a>
+                </li>
+                <li>
+                  <a href="./ui-badge.html">Badge</a>
+                </li>
+                <li>
+                  <a href="./ui-button.html">Button</a>
+                </li>
+                <li>
+                  <a href="./ui-button-group.html">Button Group</a>
+                </li>
+                <li>
+                  <a href="./ui-cards.html">Cards</a>
+                </li>
+                <li>
+                  <a href="./ui-carousel.html">Carousel</a>
+                </li>
+                <li>
+                  <a href="./ui-dropdown.html">Dropdown</a>
+                </li>
+                <li>
+                  <a href="./ui-list-group.html">List Group</a>
+                </li>
+                <li>
+                  <a href="./ui-media-object.html">Media Object</a>
+                </li>
+                <li>
+                  <a href="./ui-modal.html">Modal</a>
+                </li>
+                <li>
+                  <a href="./ui-pagination.html">Pagination</a>
+                </li>
+                <li>
+                  <a href="./ui-popover.html">Popover</a>
+                </li>
+                <li>
+                  <a href="./ui-progressbar.html">Progressbar</a>
+                </li>
+                <li>
+                  <a href="./ui-tab.html">Tab</a>
+                </li>
+                <li>
+                  <a href="./ui-typography.html">Typography</a>
+                </li>
+                <li>
+                  <a href="./uc-nestedable.html">Nestedable</a>
+                </li>
+                <li>
+                  <a href="./uc-noui-slider.html">Noui Slider</a>
+                </li>
+                <li>
+                  <a href="./uc-sweetalert.html">Sweet Alert</a>
+                </li>
+                <li>
+                  <a href="./uc-toastr.html">Toastr</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a href="widgets.html" aria-expanded="false">
+                <i className="icon-badge menu-icon"></i>
+                <span className="nav-text">Widget</span>
+              </a>
+            </li>
+            <li className="nav-label">Forms</li>
+            <li>
+              <a
+                className="has-arrow"
+                href="javascript:void()"
+                aria-expanded="false"
+              >
+                <i className="icon-note menu-icon"></i>
+                <span className="nav-text">Forms</span>
+              </a>
+              <ul aria-expanded="false">
+                <li>
+                  <a href="./form-basic.html">Basic Form</a>
+                </li>
+                <li>
+                  <a href="./form-validation.html">Form Validation</a>
+                </li>
+                <li>
+                  <a href="./form-step.html">Step Form</a>
+                </li>
+                <li>
+                  <a href="./form-editor.html">Editor</a>
+                </li>
+                <li>
+                  <a href="./form-picker.html">Picker</a>
+                </li>
+              </ul>
+            </li>
+            <li className="nav-label">Table</li>
+            <li>
+              <a
+                className="has-arrow"
+                href="javascript:void()"
+                aria-expanded="false"
+              >
+                <i className="icon-menu menu-icon"></i>
+                <span className="nav-text">Table</span>
+              </a>
+              <ul aria-expanded="false">
+                <li>
+                  <a href="./table-basic.html" aria-expanded="false">
+                    Basic Table
+                  </a>
+                </li>
+                <li>
+                  <a href="./table-datatable.html" aria-expanded="false">
+                    Data Table
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li className="nav-label">Pages</li>
+            <li>
+              <a
+                className="has-arrow"
+                href="javascript:void()"
+                aria-expanded="false"
+              >
+                <i className="icon-notebook menu-icon"></i>
+                <span className="nav-text">Pages</span>
+              </a>
+              <ul aria-expanded="false">
+                <li>
+                  <a href="./page-login.html">Login</a>
+                </li>
+                <li>
+                  <a href="./page-register.html">Register</a>
+                </li>
+                <li>
+                  <a href="./page-lock.html">Lock Screen</a>
+                </li>
+                <li>
+                  <a
+                    className="has-arrow"
+                    href="javascript:void()"
+                    aria-expanded="false"
+                  >
+                    Error
+                  </a>
+                  <ul aria-expanded="false">
+                    <li>
+                      <a href="./page-error-404.html">Error 404</a>
+                    </li>
+                    <li>
+                      <a href="./page-error-403.html">Error 403</a>
+                    </li>
+                    <li>
+                      <a href="./page-error-400.html">Error 400</a>
+                    </li>
+                    <li>
+                      <a href="./page-error-500.html">Error 500</a>
+                    </li>
+                    <li>
+                      <a href="./page-error-503.html">Error 503</a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div className="content-body">
+        <div className="container-fluid mt-3">
+          <div className="row">
+            <div className="col-lg-3 col-sm-6">
+              <div className="card gradient-1">
+                <div className="card-body">
+                  <h3 className="card-title text-white">Products Sold</h3>
+                  <div className="d-inline-block">
+                    <h2 className="text-white">4565</h2>
+                    <p className="text-white mb-0">Jan - March 2019</p>
+                  </div>
+                  <span className="float-right display-5 opacity-5">
+                    <i className="fa fa-shopping-cart"></i>
+                  </span>
+                </div>
               </div>
-              <div className="col-lg-5">
-                <div className="company-card">
-                  <div className="card-header pb-0 p-3">
-                    <h6 className="mb-0">Categories</h6>
+            </div>
+            <div className="col-lg-3 col-sm-6">
+              <div className="card gradient-2">
+                <div className="card-body">
+                  <h3 className="card-title text-white">Net Profit</h3>
+                  <div className="d-inline-block">
+                    <h2 className="text-white">$ 8541</h2>
+                    <p className="text-white mb-0">Jan - March 2019</p>
                   </div>
-                  <div className="card-body p-3">
-                    <ul className="list-group">
-                      <li className="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                        <div className="d-flex align-items-center">
-                          <div className="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
-                            <i className="ni ni-mobile-button text-white opacity-10"></i>
-                          </div>
-                          <div className="d-flex flex-column">
-                            <h6 className="mb-1 text-dark text-sm">Devices</h6>
-                            <span className="text-xs">
-                              250 in stock,{" "}
-                              <span className="font-weight-bold">
-                                346+ sold
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                        <div className="d-flex">
-                          <button className="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto">
-                            <i
-                              className="ni ni-bold-right"
-                              aria-hidden="true"
-                            ></i>
-                          </button>
-                        </div>
-                      </li>
-                      <li className="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                        <div className="d-flex align-items-center">
-                          <div className="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
-                            <i className="ni ni-tag text-white opacity-10"></i>
-                          </div>
-                          <div className="d-flex flex-column">
-                            <h6 className="mb-1 text-dark text-sm">Tickets</h6>
-                            <span className="text-xs">
-                              123 closed,{" "}
-                              <span className="font-weight-bold">15 open</span>
-                            </span>
-                          </div>
-                        </div>
-                        <div className="d-flex">
-                          <button className="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto">
-                            <i
-                              className="ni ni-bold-right"
-                              aria-hidden="true"
-                            ></i>
-                          </button>
-                        </div>
-                      </li>
-                      <li className="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
-                        <div className="d-flex align-items-center">
-                          <div className="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
-                            <i className="ni ni-box-2 text-white opacity-10"></i>
-                          </div>
-                          <div className="d-flex flex-column">
-                            <h6 className="mb-1 text-dark text-sm">
-                              Error logs
-                            </h6>
-                            <span className="text-xs">
-                              1 is active,{" "}
-                              <span className="font-weight-bold">
-                                40 closed
-                              </span>
-                            </span>
-                          </div>
-                        </div>
-                        <div className="d-flex">
-                          <button className="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto">
-                            <i
-                              className="ni ni-bold-right"
-                              aria-hidden="true"
-                            ></i>
-                          </button>
-                        </div>
-                      </li>
-                      <li className="list-group-item border-0 d-flex justify-content-between ps-0 border-radius-lg">
-                        <div className="d-flex align-items-center">
-                          <div className="icon icon-shape icon-sm me-3 bg-gradient-dark shadow text-center">
-                            <i className="ni ni-satisfied text-white opacity-10"></i>
-                          </div>
-                          <div className="d-flex flex-column">
-                            <h6 className="mb-1 text-dark text-sm">
-                              Happy users
-                            </h6>
-                            <span className="text-xs font-weight-bold">
-                              + 430
-                            </span>
-                          </div>
-                        </div>
-                        <div className="d-flex">
-                          <button className="btn btn-link btn-icon-only btn-rounded btn-sm text-dark icon-move-right my-auto">
-                            <i
-                              className="ni ni-bold-right"
-                              aria-hidden="true"
-                            ></i>
-                          </button>
-                        </div>
-                      </li>
-                    </ul>
+                  <span className="float-right display-5 opacity-5">
+                    <i className="fa fa-money"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-3 col-sm-6">
+              <div className="card gradient-3">
+                <div className="card-body">
+                  <h3 className="card-title text-white">New Customers</h3>
+                  <div className="d-inline-block">
+                    <h2 className="text-white">4565</h2>
+                    <p className="text-white mb-0">Jan - March 2019</p>
                   </div>
+                  <span className="float-right display-5 opacity-5">
+                    <i className="fa fa-users"></i>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="col-lg-3 col-sm-6">
+              <div className="card gradient-4">
+                <div className="card-body">
+                  <h3 className="card-title text-white">
+                    Customer Satisfaction
+                  </h3>
+                  <div className="d-inline-block">
+                    <h2 className="text-white">99%</h2>
+                    <p className="text-white mb-0">Jan - March 2019</p>
+                  </div>
+                  <span className="float-right display-5 opacity-5">
+                    <i className="fa fa-heart"></i>
+                  </span>
                 </div>
               </div>
             </div>
           </div>
-        </main>
-      </body> : renderNotFound()}
-      
+        </div>
+      </div>
     </>
   );
 };
