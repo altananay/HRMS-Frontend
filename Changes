@@ -38,3 +38,13 @@ Kullanıcının sistemden çıkış yapma işlemi eklendi ve gerekli sayfa yönl
 
 15 Nisan 2023
 İş arayan artık sisteme kayıt olabilir.
+
+9 Mayıs 2023
+Bireysel ve Kurumsal giriş yapma eklendi.
+Bireysel ve Kurumsal kayıt olma eklendi.
+Sistemde cv'si kayıtlı olan ve olmayan için conditional rendering yapıldı.
+Company ve User için navbarda gerekli ui düzeltmeleri yapıldı.
+Loader eklendi.
+Giriş yapma ve kayıt olma kısımları için custom dropdown component yazıldı.
+Cv sayfasında düzeltmeler yapıldı.
+Contact us sayfası oluşturuldu ve back-end ile bağlantısı sağlandı.

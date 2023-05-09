@@ -1,4 +1,4 @@
-import React, { KeyboardEventHandler } from "react";
+import { KeyboardEventHandler } from "react";
 import { Field, Form, Formik } from "formik";
 import Sidebar from "./layouts/Sidebar";
 import * as Yup from "yup";

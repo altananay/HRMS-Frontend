@@ -1,5 +1,3 @@
-import DashboardIcon from "@mui/icons-material/Dashboard";
-
 import {
   BarChart,
   Bar,
@@ -19,6 +17,7 @@ import { Link } from "react-router-dom";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import Navbar from "../public/Navbar";
 import Sidebar from "./layouts/Sidebar";
+import Loader from "react-loaders";
 
 const data = [
   { name: "1. Sınıf", Toplam: 5 },
@@ -75,6 +74,7 @@ const Charts = () => {
   return (
     <>
       <body className="g-sidenav-show">
+        <Loader type="pacman" active></Loader>
         <div className="min-height-300 position-absolute w-100"></div>
         <Sidebar></Sidebar>
         <main className="main-content position-relative border-radius-lg">

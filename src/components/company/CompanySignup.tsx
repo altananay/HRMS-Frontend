@@ -2,28 +2,37 @@ import React, { useState } from "react";
 import "../../assets/login-and-signup-page-styles.css";
 import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
-import Navbar from "./Navbar";
+import Navbar from "../public/Navbar";
 import { login } from "../../services/JobSeekerAuthService";
 import { toast, ToastContainer } from "react-toastify";
-import {
-  AddLocalStorage,
-} from "../../services/LocalStorageService";
+import { AddLocalStorage } from "../../services/LocalStorageService";
+import { useNavigate } from "react-router-dom";
+import { companyLogin, signUp } from "../../services/EmployerAuthService";
 
 interface FormValues {
+  companyName: string;
+  companyPhone: string;
+  webSite: string;
   email: string;
   password: string;
 }
 
-const Login: React.FC = () => {
-
+const CompanySignUp: React.FC = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
 
   const initialValues: FormValues = {
+    companyName: "",
+    companyPhone: "",
+    webSite: "",
     email: "",
     password: "",
   };
 
   const schema = Yup.object({
+    companyName: Yup.string().required("Şirket ismi zorunlu"),
+    companyPhone: Yup.string().required("Telefon zorunlu"),
+    webSite: Yup.string().required("Web sitesi zorunlu"),
     email: Yup.string().email().required("Email zorunlu"),
     password: Yup.string().required("Şifre zorunlu"),
   });
@@ -69,34 +78,78 @@ const Login: React.FC = () => {
                 initialValues={initialValues}
                 validationSchema={schema}
                 onSubmit={(values, { setSubmitting, resetForm }) => {
-                  const jobSeekerLogin = async () => {
-                     await login(values)
-                      .then((response) => {
-                        if (response.data.isSuccess) {
-                          setSubmitting(false);
-                          toast.success(response.data.message, {
-                            position: toast.POSITION.BOTTOM_RIGHT,
-                          });
-                          AddLocalStorage("token", response.data.data.token)
-                        }
-                      })
-                      .catch((error) => {
-                        toast.error(error.response.data.message, {
-                          position: toast.POSITION.BOTTOM_RIGHT,
-                        });
-                      });
-                  };
-                  jobSeekerLogin();
+                  
+                  signUp(values).then(response => {
+                    toast.success(`${response.data.message} Giriş sayfasına yönlendirildiniz.`)
+                    navigate("/employerlogin")
+                  }).catch(error => {
+                    console.log(error);
+                  })
+                  
+                  
+
                   resetForm();
-                  setIsAuthenticated(true)
+                  setIsAuthenticated(true);
                 }}
               >
                 {({ isSubmitting, touched, errors }) => (
                   <Form noValidate>
                     <div className="card bg-glass">
                       <div className="card-body px-4 py-5 px-md-5">
+
+                      <div className="form-outline mb-4">
+                          <label className="form-label">Şirket adınız</label>
+                          <Field
+                            name="companyName"
+                            type="text"
+                            className={
+                              "form-control " +
+                              (touched.companyName && errors.companyName
+                                ? "is-invalid"
+                                : null)
+                            }
+                          />
+                          {touched.companyName && errors.companyName ? (
+                            <div className="text-danger">{errors.companyName}</div>
+                          ) : null}
+                        </div>
+
                         <div className="form-outline mb-4">
-                          <label className="form-label">Email address</label>
+                          <label className="form-label">Şirket telefonu</label>
+                          <Field
+                            name="companyPhone"
+                            type="text"
+                            className={
+                              "form-control " +
+                              (touched.companyPhone && errors.companyPhone
+                                ? "is-invalid"
+                                : null)
+                            }
+                          />
+                          {touched.companyPhone && errors.companyPhone ? (
+                            <div className="text-danger">{errors.companyPhone}</div>
+                          ) : null}
+                        </div>
+
+                        <div className="form-outline mb-4">
+                          <label className="form-label">Web siteniz</label>
+                          <Field
+                            name="webSite"
+                            type="text"
+                            className={
+                              "form-control " +
+                              (touched.webSite && errors.webSite
+                                ? "is-invalid"
+                                : null)
+                            }
+                          />
+                          {touched.webSite && errors.webSite ? (
+                            <div className="text-danger">{errors.webSite}</div>
+                          ) : null}
+                        </div>
+
+                        <div className="form-outline mb-4">
+                          <label className="form-label">Email adresiniz</label>
                           <Field
                             name="email"
                             type="email"
@@ -113,7 +166,7 @@ const Login: React.FC = () => {
                         </div>
 
                         <div className="form-outline mb-4">
-                          <label className="form-label">Password</label>
+                          <label className="form-label">Şifre</label>
                           <Field
                             name="password"
                             type="password"
@@ -150,4 +203,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login;
+export default CompanySignUp;

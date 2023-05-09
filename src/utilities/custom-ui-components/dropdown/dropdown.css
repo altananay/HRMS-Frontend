@@ -1,0 +1,161 @@
+body {
+  margin: 0;
+  background: #151616;
+  font-family: roboto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+
+:root {
+  --bg:  #21324F;
+  --bg-accent: #484a4d;
+  --text-color: #dadce1;
+  --nav-size: 60px;
+  --border: 1px solid #474a4d;
+  --border-radius: 8px;
+  --speed: 500ms; 
+}
+
+.custom-ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.custom-a {
+  color: var(--text-color);
+  text-decoration: none;;
+}
+
+/* Top Navigation Bar */
+
+/* <nav> */
+.custom-navbar {
+  height: var(--nav-size);
+  background-color: var(--bg);
+  padding: 0 1rem;
+  border-bottom: var(--border);
+}
+
+/* <ul> */
+.custom-navbar-nav {
+  max-width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* <li> */
+.custom-nav-item {
+  width: calc(var(--nav-size) * 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Icon Button */
+.custom-icon-button {
+  --button-size: calc(var(--nav-size) * 0.5);
+  width: var(--button-size);
+  height: var(--button-size);
+  background-color: #484a4d;
+  border-radius: 50%;
+  padding: 5px;
+  margin: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 300ms;
+}
+
+.custom-icon-button:hover {
+  filter: brightness(1.2);
+}
+
+.custom-icon-button svg { 
+  fill: var(--text-color);
+  width: 20px;
+  height: 20px;
+}
+
+
+/* Dropdown Menu */
+
+.custom-dropdown {
+  position: absolute;
+  top: 58px;
+  width: 300px;
+  transform: translateX(-45%);
+  background-color: var(--bg);
+  border: var(--border);
+  border-radius: var(--border-radius);
+  padding: 1rem;
+  overflow: hidden;
+  transition: height var(--speed) ease;
+}
+
+.custom-menu {
+  width: 100%;
+}
+
+.custom-menu-item {
+  height: 33px;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  border-radius: var(--border-radius);
+  transition: background var(--speed);
+}
+
+.custom-menu-item .icon-button {
+  margin-right: 0.5rem;
+}
+
+
+.custom-menu-item .icon-button:hover {
+  filter: none;
+}
+
+.custom-menu-item:hover {
+  background-color: #525357;
+}
+
+.custom-icon-right {
+  margin-left: auto;
+}
+
+/* CSSTransition classes  */
+.custom-menu-primary-enter {
+  position: absolute;
+  transform: translateX(-110%);
+}
+.custom-menu-primary-enter-active {
+  transform: translateX(0%);
+  transition: all var(--speed) ease;
+}
+.custom-menu-primary-exit {
+  position: absolute;
+}
+.custom-menu-primary-exit-active {
+  transform: translateX(-110%);
+  transition: all var(--speed) ease;
+}
+
+
+.custom-menu-secondary-enter {
+  transform: translateX(110%);
+}
+.custom-menu-secondary-enter-active {
+  transform: translateX(0%);
+  transition: all var(--speed) ease;
+}
+.custom-menu-secondary-exit-active {
+  transform: translateX(110%);
+  transition: all var(--speed) ease;
+}

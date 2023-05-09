@@ -3,7 +3,7 @@ import { CreateJobAdvertisement } from "../contracts/CreateJobAdvertisement"
 import { JobAdvertisement } from "../contracts/JobAdvertisement"
 import { ListResponseModel } from "../contracts/ListResponseModel"
 import SingleResponseModel from "../contracts/SingleResponseModel"
-import { UpdateJobAdvertisementDto } from "../contracts/UpdateJobAdvertisementDto"
+import { UpdateJobAdvertisementDto } from "../requests/UpdateJobAdvertisementDto"
 
 export const addJobAdvertisement = async (jobAdvertisement:CreateJobAdvertisement) => {
     let newApiUrl = process.env.REACT_APP_BASE_ENDPOINT + "jobadvertisements/add"
@@ -31,6 +31,11 @@ export const getAllJobAdvertisementsByStatus = async (status: string) => {
 }
 
 export const updateJobAdvertisementWithLocalHost = async(jobAdvertisement: UpdateJobAdvertisementDto) => {
-    let apiUrl = "https://localhost:7129/api/jobadvertisements/update"
-    return await axios.put<SingleResponseModel<JobAdvertisement>>(apiUrl, jobAdvertisement);
+    let newApiUrl = "https://localhost:7129/api/jobadvertisements/update"
+    return await axios.put<SingleResponseModel<JobAdvertisement>>(newApiUrl, jobAdvertisement);
+}
+
+export const getJobAdvertisementByEmployerIdWithStatus = async(id: string, status: boolean) => {
+    let newApiUrl = process.env.REACT_APP_BASE_ENDPOINT + "jobadvertisements/getbyemployerid/" + id + "/" + status;
+    return await axios.get<ListResponseModel<JobAdvertisement>>(newApiUrl);
 }

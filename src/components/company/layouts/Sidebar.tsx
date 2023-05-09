@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import BarChartIcon from "@mui/icons-material/BarChart";
 import WorkIcon from "@mui/icons-material/Work";
 import AddIcon from '@mui/icons-material/Add';
-import UpdateIcon from '@mui/icons-material/Update';
 
 const Sidebar = () => {
   return (

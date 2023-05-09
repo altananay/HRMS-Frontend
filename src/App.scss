@@ -1,0 +1,23 @@
+$primary-color: #ffd700;
+
+@import 'animate.css';
+@import "~loaders.css/src/animations/pacman.scss";
+
+.loader-hidden {
+  display: none;
+}
+
+.loader-active {
+  color: red;
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto;
+  top: 0;
+  bottom: 0;
+  width: 50px;
+  height: 50px;
+  animation: fadeOut 1.5s 1.5s;
+  animation-fill-mode: forwards;
+}

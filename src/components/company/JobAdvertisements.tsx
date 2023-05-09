@@ -1,4 +1,3 @@
-import Navbar from "../public/Navbar";
 import Sidebar from "./layouts/Sidebar";
 import "../../assets/style.scss";
 import { useEffect, useState } from "react";
@@ -7,7 +6,6 @@ import {
   getAllJobAdvertisement,
   getAllJobAdvertisementsByStatus,
 } from "../../services/JobAdvertisementService";
-import { bool } from "yup";
 import { Link } from "react-router-dom";
 
 const JobAdvertisements = () => {

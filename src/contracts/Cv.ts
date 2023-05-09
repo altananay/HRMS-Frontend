@@ -1,7 +1,6 @@
 import { Education } from "./Education"
 import { JobExperience } from "./JobExperience"
 import { Language } from "./Language"
-import { ProgrammingLanguage } from "./ProgrammingLanguage"
 import { Project } from "./Project"
 import { SocialMedia } from "./SocialMedia"
 
@@ -20,7 +19,6 @@ export interface Cv
     information : string,
     imageUrl: string,
     projects: Project[],
-    programmingLanguages: ProgrammingLanguage[],
     languages: Language[],
     educations: Education[],
     jobExperiences: JobExperience[],

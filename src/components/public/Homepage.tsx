@@ -1,24 +1,19 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "../../assets/styles.css";
 import { GetFromLocalStorage } from "../../services/LocalStorageService";
-import TagCanvas from "../animations/TagCanvas";
+import TagCanvas from "../../utilities/animations/TagCanvas";
 import Features from "./Features";
 import Footer from "./Footer";
 import Header from "./Header";
 import Navbar from "./Navbar";
+import appleStore from "../../assets/images/app-store-badge.svg"
+import googlePlay from "../../assets/images/google-play-badge.svg"
 
 const Homepage = () => {
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    if (GetFromLocalStorage("token")) {
-      setIsAuthenticated(true)
-    }
-  }, [])
   return (
     <div>
-      <Navbar isAuthenticated={isAuthenticated}></Navbar>
+      <Navbar></Navbar>
 
       <Header></Header>
 
@@ -88,12 +83,12 @@ const Homepage = () => {
             <a className="me-lg-3 mb-4 mb-lg-0" href="#!">
               <img
                 className="app-badge"
-                src="google-play-badge.svg"
+                src={googlePlay}
                 alt="..."
               />
             </a>
             <a href="#!">
-              <img className="app-badge" src="app-store-badge.svg" alt="..." />
+              <img className="app-badge" src={appleStore} alt="..." />
             </a>
           </div>
         </div>

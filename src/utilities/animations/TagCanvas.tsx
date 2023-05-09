@@ -1,5 +1,5 @@
 import React from "react";
-import "../../assets/tagcanvas";
+import "../../assets/tagcanvas"
 import { useEffect } from "react";
 
 declare const window: any;

@@ -1,10 +1,15 @@
 import { Box } from "@mui/material";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import "../../assets/argon-dashboard.css";
-
-import Navbar from "../public/Navbar";
 import Sidebar from "./layouts/Sidebar";
 import Statistics from "./layouts/Statistics";
+import { useEffect, useState } from "react";
+import { GetFromLocalStorage } from "../../services/LocalStorageService";
+import jwtDecode from "jwt-decode";
+import { getClaims, getUserId } from "../../services/JWTService";
+import Notfound from "../public/Notfound";
+import Loader from "react-loaders";
+import "../../App.scss"
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "ID", width: 90 },
@@ -51,9 +56,39 @@ const rows = [
 ];
 
 const Dashboard = () => {
+
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+
+  const renderNotFound = () => {
+    setTimeout(() => {
+      return( <Notfound></Notfound>)
+    }, 1500)
+  }
+
+  useEffect(() => {
+    let jwt = GetFromLocalStorage("companyToken");
+    let decodedJwt;
+    let roles;
+    let id;
+
+    if (jwt) {
+      decodedJwt = jwtDecode(jwt);
+      roles = getClaims(decodedJwt);
+    }
+
+    roles!?.map((role) => {
+      if (role == "employer") {
+        setIsAuthenticated(true);
+        id = getUserId(decodedJwt);
+      }
+    });
+
+  }, []);
+
   return (
     <>
-      <body className="g-sidenav-show" style={{marginTop: "60px", backgroundColor: "#5F73E3"}}>
+    {isAuthenticated ? <body className="g-sidenav-show" style={{marginTop: "60px", backgroundColor: "#5F73E3"}}>
+        <Loader type="pacman" active></Loader>
         <div
           className="min-height-300 position-absolute w-100"
           style={{ backgroundColor: "#5E72E4" }}
@@ -188,7 +223,8 @@ const Dashboard = () => {
             </div>
           </div>
         </main>
-      </body>
+      </body> : renderNotFound()}
+      
     </>
   );
 };

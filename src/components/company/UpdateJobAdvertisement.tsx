@@ -5,13 +5,12 @@ import * as Yup from "yup";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {
-  addJobAdvertisement,
   getAllJobAdvertisement,
   updateJobAdvertisement,
 } from "../../services/JobAdvertisementService";
 import CreatableSelect from "react-select/creatable";
 import { JobAdvertisement } from "../../contracts/JobAdvertisement";
-import { UpdateJobAdvertisementDto } from "../../contracts/UpdateJobAdvertisementDto";
+import { UpdateJobAdvertisementDto } from "../../requests/UpdateJobAdvertisementDto";
 import { useLocation } from "react-router-dom";
 import { FormControl, FormGroup, FormLabel } from "react-bootstrap";
 
