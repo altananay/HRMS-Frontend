@@ -10,6 +10,6 @@ export const login = async (loginModel: LoginModel) => {
 }
 
 export const signup = async (signupModel: JobSeekerSignUpModel) => {
-    let newApiUrl = "https://localhost:7129/api/" + "auth/register"
+    let newApiUrl = process.env.REACT_APP_BASE_ENDPOINT + "auth/register"
     return await axios.post<SingleResponseModel<JobSeekerSignUpModel>>(newApiUrl, signupModel);
 }
