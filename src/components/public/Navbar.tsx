@@ -6,6 +6,7 @@ import {
 import { toast, ToastContainer } from "react-toastify";
 import Dropdown from "../../utilities/custom-ui-components/dropdown/Dropdown";
 import SignUpDropdown from "../../utilities/custom-ui-components/dropdown/SignUpDropdown";
+import hrms from "../../assets/images/hrms.png";
 
 const Navbar = () => {
   const renderNavbar = () => {
@@ -17,7 +18,7 @@ const Navbar = () => {
         >
           <div className="container px-5">
             <NavLink className="navbar-brand fw-bold" to="/">
-              HRMS
+              <img src={hrms} width="100"></img>
             </NavLink>
             <button
               className="navbar-toggler"
@@ -34,10 +35,7 @@ const Navbar = () => {
             <div className="collapse navbar-collapse" id="navbarResponsive">
               <ul className="navbar-nav ms-auto me-4 my-3 my-lg-0">
                 <li className="nav-item">
-                  <NavLink
-                    className="nav-link me-lg-3"
-                    to="/company"
-                  >
+                  <NavLink className="nav-link me-lg-3" to="/company">
                     Şirket Paneli
                   </NavLink>
                 </li>
@@ -67,7 +65,12 @@ const Navbar = () => {
                 data-bs-target="#feedbackModal"
               >
                 <span className="d-flex align-items-center">
-                  <span className="small">Bize Ulaşın</span>
+                  <NavLink
+                    to="/contact"
+                    style={{ textDecoration: "none", color: "white" }}
+                  >
+                    <span className="small">Bize Ulaşın</span>
+                  </NavLink>
                 </span>
               </button>
             </div>
@@ -82,7 +85,7 @@ const Navbar = () => {
         >
           <div className="container px-5">
             <NavLink className="navbar-brand fw-bold" to="/">
-              HRMS
+              <img src={hrms} width="100"></img>
             </NavLink>
             <button
               className="navbar-toggler"
@@ -99,10 +102,7 @@ const Navbar = () => {
             <div className="collapse navbar-collapse" id="navbarResponsive">
               <ul className="navbar-nav ms-auto me-4 my-3 my-lg-0">
                 <li className="nav-item">
-                  <NavLink
-                    className="nav-link me-lg-3"
-                    to="/profile"
-                  >
+                  <NavLink className="nav-link me-lg-3" to="/profile">
                     Profil
                   </NavLink>
                 </li>
@@ -132,7 +132,12 @@ const Navbar = () => {
                 data-bs-target="#feedbackModal"
               >
                 <span className="d-flex align-items-center">
-                  <span className="small">Bize Ulaşın</span>
+                  <NavLink
+                    to="/contact"
+                    style={{ textDecoration: "none", color: "white" }}
+                  >
+                    <span className="small">Bize Ulaşın</span>
+                  </NavLink>
                 </span>
               </button>
             </div>
@@ -147,7 +152,7 @@ const Navbar = () => {
         >
           <div className="container px-5">
             <NavLink className="navbar-brand fw-bold" to="/">
-              HRMS
+              <img src={hrms} width="100"></img>
             </NavLink>
             <button
               className="navbar-toggler"

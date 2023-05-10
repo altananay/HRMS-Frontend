@@ -78,15 +78,27 @@ const CompanySignUp: React.FC = () => {
                 initialValues={initialValues}
                 validationSchema={schema}
                 onSubmit={(values, { setSubmitting, resetForm }) => {
-                  
-                  signUp(values).then(response => {
-                    toast.success(`${response.data.message} Giriş sayfasına yönlendirildiniz.`)
-                    navigate("/employerlogin")
-                  }).catch(error => {
-                    console.log(error);
-                  })
-                  
-                  
+                  signUp(values)
+                    .then((response) => {
+                      if (response.data.isSuccess) {
+                        toast.success(
+                          `${response.data.message} Giriş sayfasına yönlendirildiniz.`,
+                          {
+                            position: toast.POSITION.BOTTOM_RIGHT,
+                          }
+                        );
+                        setTimeout(() => {
+                          navigate("/companylogin");
+                        }, 1000);
+                      } else {
+                        toast.warning(`${response.data.message}`);
+                      }
+                    })
+                    .catch((error) => {
+                      toast.error(error.response.data.message, {
+                        position: toast.POSITION.BOTTOM_RIGHT,
+                      });
+                    });
 
                   resetForm();
                   setIsAuthenticated(true);
@@ -96,8 +108,7 @@ const CompanySignUp: React.FC = () => {
                   <Form noValidate>
                     <div className="card bg-glass">
                       <div className="card-body px-4 py-5 px-md-5">
-
-                      <div className="form-outline mb-4">
+                        <div className="form-outline mb-4">
                           <label className="form-label">Şirket adınız</label>
                           <Field
                             name="companyName"
@@ -110,7 +121,9 @@ const CompanySignUp: React.FC = () => {
                             }
                           />
                           {touched.companyName && errors.companyName ? (
-                            <div className="text-danger">{errors.companyName}</div>
+                            <div className="text-danger">
+                              {errors.companyName}
+                            </div>
                           ) : null}
                         </div>
 
@@ -127,7 +140,9 @@ const CompanySignUp: React.FC = () => {
                             }
                           />
                           {touched.companyPhone && errors.companyPhone ? (
-                            <div className="text-danger">{errors.companyPhone}</div>
+                            <div className="text-danger">
+                              {errors.companyPhone}
+                            </div>
                           ) : null}
                         </div>
 
@@ -187,7 +202,7 @@ const CompanySignUp: React.FC = () => {
                           type="submit"
                           disabled={isSubmitting}
                         >
-                          {isSubmitting ? "Please wait..." : "Giriş Yap"}
+                          {isSubmitting ? "Please wait..." : "Kayıt Ol"}
                         </button>
                       </div>
                     </div>

@@ -10,8 +10,9 @@ import { useNavigate } from "react-router-dom";
 import Loader from "react-loaders";
 import "../../assets/argon-dashboard.css";
 import Notfound from "../public/Notfound";
-import github from "../../assets/images/github.png"
-import linkedin from "../../assets/images/linkedin.png"
+import github from "../../assets/images/github.png";
+import linkedin from "../../assets/images/linkedin.png";
+import emptyCv from "../../assets/images/dontResult.png";
 
 const columns: GridColDef[] = [
   {
@@ -70,37 +71,8 @@ const jobExperiencesColumns: GridColDef[] = [
 const Profile = () => {
   const [cv, setCv] = useState<Cv>();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   let dateOfBirth;
-
-  const renderNullCv = () => {
-    setTimeout(()=> {
-      return (<section>
-        <div className="container py-5">
-          <div className="row">
-            <div className="col-lg-4">
-
-              <div className="company-card mb-4">
-                <div className="card-body text-center">
-                  <img
-                    src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
-                    alt="avatar"
-                    className="rounded-circle img-fluid"
-                    style={{ width: 150 }}
-                  ></img>
-                </div>
-              </div>
-              <button className="btn btn-primary">Cv Ekle</button>
-            </div>
-            <div className="col-lg-8">
-              <h3>Cv bilginiz sistemde yoktur. Yeni Cv girişi yapabilirsiniz</h3>
-            </div>
-          </div>
-        </div>
-      </section>)
-    }, 1500)
-  }
 
   useEffect(() => {
     let jwt = GetFromLocalStorage("token");
@@ -136,22 +108,44 @@ const Profile = () => {
   }, []);
 
   if (!isAuthenticated) {
-    return (<Notfound></Notfound>)
-  }
-  else if (loading) {
+    return <Notfound></Notfound>;
+  } else if (cv == null) {
     return (
-      <>
-       {cv != null ? setLoading(false) : <>
-            <Loader type="pacman" active></Loader>
-            <Navbar></Navbar>
-            {renderNullCv()}
-          </>}
-      </>
+      <section>
+        <Navbar></Navbar>
+        <div className="container py-5">
+          <div className="row">
+            <div className="col-lg-4">
+              <div className="company-card mb-4">
+                <div className="card-body text-center">
+                  <img
+                    src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                    alt="avatar"
+                    className="rounded-circle img-fluid"
+                    style={{ width: 150 }}
+                  ></img>
+                </div>
+              </div>
+              <button className="btn btn-primary">Cv Ekle</button>
+            </div>
+            <div className="col-lg-8 text-center">
+              <h3>
+                Cv bilginiz sistemde yoktur. Yeni Cv girişi yapabilirsiniz
+              </h3>
+              <img
+                src={emptyCv}
+                width="150"
+                style={{ marginTop: "30px" }}
+              ></img>
+            </div>
+          </div>
+        </div>
+      </section>
     );
   } else {
     return (
       <>
-        <Navbar></Navbar>
+        <Navbar></Navbar>        
         <section style={{ backgroundColor: "#eee" }}>
           <div className="container py-5">
             <div className="row">
@@ -239,7 +233,7 @@ const Profile = () => {
                     <hr></hr>
                   </div>
                 </div>
-                
+
                 <h4>Projeler</h4>
                 {cv?.projects! ? (
                   <Box sx={{ height: 400, width: "100%" }}>
@@ -260,7 +254,7 @@ const Profile = () => {
                   <div></div>
                 )}
 
-                <h5 style={{marginTop: "25px"}}>İş tecrübeleri</h5>
+                <h5 style={{ marginTop: "25px" }}>İş tecrübeleri</h5>
                 {cv?.jobExperiences! ? (
                   <Box sx={{ height: 400, width: "100%" }}>
                     <DataGrid
@@ -359,6 +353,7 @@ const Profile = () => {
             </div>
           </div>
         </section>
+        )
       </>
     );
   }
