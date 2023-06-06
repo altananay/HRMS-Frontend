@@ -1,5 +1,5 @@
 export interface Language
 {
-    languages: string,
-    languageLevel: string
+    languages?: string,
+    languageLevel?: string
 }

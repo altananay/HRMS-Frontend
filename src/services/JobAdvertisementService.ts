@@ -1,9 +1,9 @@
 import axios from "axios"
-import { CreateJobAdvertisement } from "../contracts/CreateJobAdvertisement"
 import { JobAdvertisement } from "../contracts/JobAdvertisement"
 import { ListResponseModel } from "../contracts/ListResponseModel"
 import SingleResponseModel from "../contracts/SingleResponseModel"
 import { UpdateJobAdvertisementDto } from "../requests/UpdateJobAdvertisementDto"
+import { CreateJobAdvertisement } from "../requests/CreateJobAdvertisement"
 
 export const addJobAdvertisement = async (jobAdvertisement:CreateJobAdvertisement) => {
     let newApiUrl = process.env.REACT_APP_BASE_ENDPOINT + "jobadvertisements/add"

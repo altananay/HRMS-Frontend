@@ -12,7 +12,6 @@ import CreatableSelect from "react-select/creatable";
 import { JobAdvertisement } from "../../contracts/JobAdvertisement";
 import { UpdateJobAdvertisementDto } from "../../requests/UpdateJobAdvertisementDto";
 import { useLocation } from "react-router-dom";
-import { FormControl, FormGroup, FormLabel } from "react-bootstrap";
 
 interface Props {
   updateValue?: UpdateJobAdvertisementDto;

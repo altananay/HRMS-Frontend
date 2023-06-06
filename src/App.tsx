@@ -28,7 +28,7 @@ const App = () => {
         <Route path="/cv-create" element={<CvCreate></CvCreate>}></Route>
         <Route path="*" element={<Notfound></Notfound>}></Route>
         <Route path="/company" element={<Dashboard></Dashboard>}></Route>
-        <Route path="/company/charts" element={<Charts></Charts>}></Route>
+        <Route path="/company/charts" element={<Charts deparments={null}></Charts>}></Route>
         <Route path="/company/jobadvertisements" element={<JobAdvertisements></JobAdvertisements>}></Route>
         <Route path="/company/addjobadvertisement" element={<AddJobAdvertisement></AddJobAdvertisement>}></Route>
         <Route path="/company/updatejobadvertisement" element={<UpdateJobAdvertisement></UpdateJobAdvertisement>}></Route>
@@ -36,6 +36,7 @@ const App = () => {
         <Route path="/companysignup" element={<CompanySignUp></CompanySignUp>}></Route>
         <Route path="/companylogin" element={<CompanyLogin></CompanyLogin>}></Route>
         <Route path="/contact" element={<Contact></Contact>}></Route>
+        <Route path="/cvcreate" element={<CvCreate></CvCreate>}></Route>
       </Routes>
     </div>
   );

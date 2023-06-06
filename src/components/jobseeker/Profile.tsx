@@ -6,7 +6,7 @@ import Box from "@mui/material/Box";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { GetFromLocalStorage } from "../../services/LocalStorageService";
 import { getClaims, getUserId, jwtDecode } from "../../services/JWTService";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Loader from "react-loaders";
 import "../../assets/argon-dashboard.css";
 import Notfound from "../public/Notfound";
@@ -25,6 +25,39 @@ const columns: GridColDef[] = [
     field: "description",
     headerName: "Açıklama",
     width: 500,
+    editable: true,
+  },
+];
+
+const educationsColumns: GridColDef[] = [
+  {
+    field: "school",
+    headerName: "Okul adı",
+    width: 250,
+    editable: true,
+  },
+  {
+    field: "major",
+    headerName: "Bölüm",
+    width: 250,
+    editable: true,
+  },
+  {
+    field: "grade",
+    headerName: "Ortalama/Puan",
+    width: 250,
+    editable: true,
+  },
+  {
+    field: "years",
+    headerName: "Yıl",
+    width: 250,
+    editable: true,
+  },
+  {
+    field: "graduate",
+    headerName: "Durum",
+    width: 250,
     editable: true,
   },
 ];
@@ -126,7 +159,9 @@ const Profile = () => {
                   ></img>
                 </div>
               </div>
-              <button className="btn btn-primary">Cv Ekle</button>
+              <NavLink to="/cvcreate">
+                <button className="btn btn-primary">Cv Ekle</button>
+              </NavLink>
             </div>
             <div className="col-lg-8 text-center">
               <h3>
@@ -145,7 +180,7 @@ const Profile = () => {
   } else {
     return (
       <>
-        <Navbar></Navbar>        
+        <Navbar></Navbar>
         <section style={{ backgroundColor: "#eee" }}>
           <div className="container py-5">
             <div className="row">
@@ -234,7 +269,26 @@ const Profile = () => {
                   </div>
                 </div>
 
-                <h4>Projeler</h4>
+                <h4>Okul Bilgileri</h4>
+                {cv?.educations! ? (
+                  <Box sx={{ height: 400, width: "100%" }}>
+                    <DataGrid
+                      className="mt-3"
+                      rows={cv?.educations!}
+                      getRowId={(row) => cv.id}
+                      columns={educationsColumns}
+                      pageSize={5}
+                      rowsPerPageOptions={[5, 10, 20]}
+                      checkboxSelection
+                      disableSelectionOnClick
+                      experimentalFeatures={{ newEditingApi: true }}
+                      sx={{ backgroundColor: "white" }}
+                      pagination
+                    />
+                  </Box>
+                ) : null}
+
+                <h4 style={{ marginTop: "25px" }}>Projeler</h4>
                 {cv?.projects! ? (
                   <Box sx={{ height: 400, width: "100%" }}>
                     <DataGrid
@@ -254,7 +308,7 @@ const Profile = () => {
                   <div></div>
                 )}
 
-                <h5 style={{ marginTop: "25px" }}>İş tecrübeleri</h5>
+                <h4 style={{ marginTop: "25px" }}>İş tecrübeleri</h4>
                 {cv?.jobExperiences! ? (
                   <Box sx={{ height: 400, width: "100%" }}>
                     <DataGrid
