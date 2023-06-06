@@ -24,6 +24,7 @@
     "jquery": "^3.6.1",
     "jwt-decode": "^3.1.2",
     "loaders.css": "^0.1.2",
+    "npm": "^9.6.7",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
     "react-dom": "^18.2.0",

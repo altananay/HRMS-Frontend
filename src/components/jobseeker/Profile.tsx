@@ -5,9 +5,8 @@ import Navbar from "../public/Navbar";
 import Box from "@mui/material/Box";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { GetFromLocalStorage } from "../../services/LocalStorageService";
-import { getClaims, getUserId, jwtDecode } from "../../services/JWTService";
+import { getClaims, getId, jwtDecode } from "../../services/JWTService";
 import { NavLink, useNavigate } from "react-router-dom";
-import Loader from "react-loaders";
 import "../../assets/argon-dashboard.css";
 import Notfound from "../public/Notfound";
 import github from "../../assets/images/github.png";
@@ -121,7 +120,7 @@ const Profile = () => {
     roles!?.map((role) => {
       if (role == "jobseeker") {
         setIsAuthenticated(true);
-        id = getUserId(decodedJwt);
+        id = getId(decodedJwt);
       }
     });
 

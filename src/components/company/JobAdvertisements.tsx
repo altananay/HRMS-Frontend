@@ -4,21 +4,32 @@ import { useEffect, useState } from "react";
 import { JobAdvertisement } from "../../contracts/JobAdvertisement";
 import {
   getAllJobAdvertisement,
+  getAllJobAdvertisementsByEmployerId,
   getAllJobAdvertisementsByStatus,
+  getJobAdvertisementByEmployerIdWithStatus,
 } from "../../services/JobAdvertisementService";
 import { Link } from "react-router-dom";
+import { GetFromLocalStorage } from "../../services/LocalStorageService";
+import jwtDecode from "jwt-decode";
+import { getId } from "../../services/JWTService";
 
 const JobAdvertisements = () => {
   const [jobAdvertisements, setJobAdvertisemets] =
     useState<JobAdvertisement[]>();
+
+  let token = GetFromLocalStorage("companyToken")?.toString();
+  let decodedJwt = jwtDecode(token!);
+  let id = getId(decodedJwt!);
 
   useEffect(() => {
     getJobAdvertisements();
   }, []);
 
   const getJobAdvertisements = async () => {
-    await getAllJobAdvertisement()
+    console.log(id);
+    await getAllJobAdvertisementsByEmployerId(id!)
       .then((response) => {
+        console.log(response.data.data);
         setJobAdvertisemets(response.data.data);
         console.log(response.data);
       })
@@ -27,8 +38,8 @@ const JobAdvertisements = () => {
       });
   };
 
-  const getJobAdvertisementsByStatus = async (status: string) => {
-    await getAllJobAdvertisementsByStatus(status)
+  const getJobAdvertisementsByStatus = async (status: boolean) => {
+    await getJobAdvertisementByEmployerIdWithStatus(id, status)
       .then((response) => {
         setJobAdvertisemets(response.data.data);
       })
@@ -39,30 +50,29 @@ const JobAdvertisements = () => {
 
   return (
     <>
-      <body className="g-sidenav-show">
-        <Sidebar></Sidebar>
-
-        <main className="main-content position-relative border-radius-lg">
-          <div className="container-fluid py-4">
+      <Sidebar></Sidebar>
+      <div className="content-body">
+        <div className="container-fluid">
+          <main className="main-content position-relative border-radius-lg">
             <div className="row">
               <div className="col">
                 <button
                   className="btn btn-primary"
                   style={{ marginRight: "20px" }}
-                  onClick={() => getJobAdvertisements()}
+                  onClick={() => getAllJobAdvertisementsByEmployerId(id!)}
                 >
                   Hepsi
                 </button>
                 <button
                   className="btn btn-success"
                   style={{ marginRight: "20px" }}
-                  onClick={() => getJobAdvertisementsByStatus("true")}
+                  onClick={() => getJobAdvertisementsByStatus(true)}
                 >
                   Aktif
                 </button>
                 <button
                   className="btn btn-warning"
-                  onClick={() => getJobAdvertisementsByStatus("false")}
+                  onClick={() => getJobAdvertisementsByStatus(false)}
                 >
                   Pasif
                 </button>
@@ -100,7 +110,10 @@ const JobAdvertisements = () => {
                               );
                             })}
                           </div>
-                          <Link to="/company/updatejobadvertisement" state={{updateValue: item}}>
+                          <Link
+                            to="/company/updatejobadvertisement"
+                            state={{ updateValue: item }}
+                          >
                             <button className="btn btn-primary">
                               Güncelle
                             </button>
@@ -112,9 +125,9 @@ const JobAdvertisements = () => {
                 );
               })}
             </div>
-          </div>
-        </main>
-      </body>
+          </main>
+        </div>
+      </div>
     </>
   );
 };

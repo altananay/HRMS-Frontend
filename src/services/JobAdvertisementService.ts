@@ -20,6 +20,11 @@ export const addJobAdvertisementWithLocalhost = async (jobAdvertisement: CreateJ
     return await axios.post<SingleResponseModel<JobAdvertisement>>(apiUrl, jobAdvertisement)
 }
 
+export const getAllJobAdvertisementsByEmployerId = async (id: string) => {
+    let apiUrl = process.env.REACT_APP_BASE_ENDPOINT + "JobAdvertisements/getbyemployerid/" + id
+    return await axios.get<ListResponseModel<JobAdvertisement>>(apiUrl)
+}
+
 export const getAllJobAdvertisement = async () => {
     let newApiUrl = process.env.REACT_APP_BASE_ENDPOINT + "jobadvertisements/getall"
     return await axios.get<ListResponseModel<JobAdvertisement>>(newApiUrl)

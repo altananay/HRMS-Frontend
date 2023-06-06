@@ -11,7 +11,7 @@ import { Project } from "../../requests/Project";
 import { GetFromLocalStorage } from "../../services/LocalStorageService";
 import { jwtDecode } from "../../services/JWTService";
 import { getClaims } from "../../services/JWTService";
-import { getUserId } from "../../services/JWTService";
+import { getId } from "../../services/JWTService";
 import { addCv } from "../../services/CvService";
 import { toast, ToastContainer } from "react-toastify";
 
@@ -70,7 +70,7 @@ const CvCreate = () => {
     let token = GetFromLocalStorage("token");
     let decodedJwt = jwtDecode(token!);
     let roles = getClaims(decodedJwt);
-    let id = getUserId(decodedJwt);
+    let id = getId(decodedJwt);
     setJobSeekerId(id);
   }, []);
 

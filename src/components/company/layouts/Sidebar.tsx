@@ -1,71 +1,135 @@
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import { Link } from "react-router-dom";
 import BarChartIcon from "@mui/icons-material/BarChart";
+import AddIcon from "@mui/icons-material/Add";
+import { DeleteFromLocalStorage } from "../../../services/LocalStorageService";
 import WorkIcon from "@mui/icons-material/Work";
-import AddIcon from '@mui/icons-material/Add';
+import EmailIcon from "@mui/icons-material/Email";
+import SendIcon from "@mui/icons-material/Send";
+import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { NavLink } from "react-router-dom";
+import hrms from "../../../assets/images/hrms.png";
 
 const Sidebar = () => {
   return (
-    <aside
-      className="sidenav bg-white navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4"
-      id="sidenav-main"
-    >
-      <div className="sidenav-header">
-        <a
-          className="navbar-brand m-0"
-          href=" https://demos.creative-tim.com/argon-dashboard/pages/dashboard.html "
-          target="_blank"
-        >
-          <span className="ms-1 font-weight-bold">HRMS</span>
-        </a>
+    <>
+      <img
+        src={hrms}
+        width="200"
+        style={{ marginTop: "20px", marginLeft: "20px" }}
+      ></img>
+      <div className="nk-sidebar">
+        <div className="nk-nav-scroll">
+          <ul className="metismenu" id="menu">
+            <li>
+              <a className="has-arrow" aria-expanded="false">
+                <DashboardIcon
+                  style={{ color: "blue", marginRight: "5px" }}
+                ></DashboardIcon>
+                <span className="nav-text">Dashboard</span>
+              </a>
+            </li>
+            <li className="mega-menu mega-menu-sm">
+              <a className="has-arrow" aria-expanded="false">
+                <WorkIcon
+                  style={{
+                    color: "rgba(214, 104, 17, 254)",
+                    marginRight: "5px",
+                  }}
+                ></WorkIcon>
+                <span className="nav-text">İş İlanı İşlemleri</span>
+              </a>
+              <ul aria-expanded="false">
+                <li>
+                  <NavLink
+                    to="/company/jobadvertisements"
+                    className="has-arrow"
+                    aria-expanded="false"
+                    style={{textDecoration: "none"}}
+                  >
+                    <SendIcon
+                      style={{
+                        color: "rgba(255, 94, 36, 194)",
+                        marginRight: "5px",
+                      }}
+                    ></SendIcon>
+                    <span className="nav-text">İş ilanlarım</span>
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink to="/company/addjobadvertisement" className="has-arrow" aria-expanded="false" style={{textDecoration: "none"}}>
+                    <SendIcon
+                      style={{
+                        color: "rgba(255, 94, 36, 194)",
+                        marginRight: "5px",
+                      }}
+                    ></SendIcon>
+                    <span className="nav-text">İş ilanı ekle</span>
+                  </NavLink>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a className="has-arrow" aria-expanded="false">
+                <EmailIcon
+                  style={{ color: "green", marginRight: "5px" }}
+                ></EmailIcon>
+                <span className="nav-text">Mail</span>
+              </a>
+              <ul aria-expanded="false">
+                <li>
+                  <a className="has-arrow" aria-expanded="false">
+                    <SendIcon
+                      style={{
+                        color: "rgba(255, 94, 36, 194)",
+                        marginRight: "5px",
+                      }}
+                    ></SendIcon>
+                    <span className="nav-text">Mail Gönder</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a className="has-arrow" aria-expanded="false">
+                <PeopleAltIcon
+                  style={{ color: "red", marginRight: "5px" }}
+                ></PeopleAltIcon>
+                <span className="nav-text">Çalışanlarımız</span>
+              </a>
+              <ul aria-expanded="false">
+                <li>
+                  <a className="has-arrow" aria-expanded="false">
+                    <AccountCircleIcon
+                      style={{ color: "purple", marginRight: "5px" }}
+                    ></AccountCircleIcon>
+                    <span className="nav-text">Çalışan Profilleri</span>
+                  </a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <NavLink
+                to="/"
+                onClick={() => DeleteFromLocalStorage("companyToken")}
+                style={{ textDecoration: "none" }}
+                className="has-arrow"
+                aria-expanded="false"
+              >
+                <LogoutIcon
+                  style={{
+                    color: "rgba(214, 190, 48, 48)",
+                    marginRight: "5px",
+                  }}
+                ></LogoutIcon>
+                <span className="nav-text">Çıkış Yap</span>
+              </NavLink>
+            </li>
+          </ul>
+        </div>
       </div>
-      <hr className="horizontal dark mt-0"></hr>
-      <div
-        className="collapse navbar-collapse  w-auto "
-        id="sidenav-collapse-main"
-      >
-        <ul className="navbar-nav">
-          <li className="nav-item">
-            <Link to="/company" className="nav-link">
-              <div className="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                <DashboardIcon style={{ color: "blue" }}></DashboardIcon>
-              </div>
-              <span className="nav-link-text ms-1">Dashboard</span>
-            </Link>
-          </li>
-        </ul>
-        <ul className="navbar-nav">
-          <li className="nav-item">
-            <Link to="/company/charts" className="nav-link">
-              <div className="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                <BarChartIcon style={{ color: "yellow" }}></BarChartIcon>
-              </div>
-              <span className="nav-link-text ms-1">Grafikler</span>
-            </Link>
-          </li>
-        </ul>
-        <ul className="navbar-nav">
-          <li className="nav-item">
-            <Link to="/company/jobadvertisements" className="nav-link">
-              <div className="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                <WorkIcon style={{ color: "brown" }}></WorkIcon>
-              </div>
-              <span className="nav-link-text ms-1">İş İlanlarım</span>
-            </Link>
-          </li>
-        </ul>
-        <ul className="navbar-nav">
-          <li className="nav-item">
-            <Link to="/company/addjobadvertisement" className="nav-link">
-              <div className="icon icon-shape icon-sm border-radius-md text-center me-2 d-flex align-items-center justify-content-center">
-                <AddIcon style={{color: "green"}}></AddIcon>
-              </div>
-              <span className="nav-link-text ms-1">İş İlanı Ekle</span>
-            </Link>
-          </li>
-        </ul>
-      </div>
-    </aside>
+    </>
   );
 };
 
