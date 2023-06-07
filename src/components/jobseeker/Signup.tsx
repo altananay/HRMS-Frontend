@@ -3,7 +3,7 @@ import "../../assets/login-and-signup-page-styles.css";
 import * as Yup from "yup";
 import { Formik, Form, Field } from "formik";
 import Navbar from "../public/Navbar";
-import {signup} from "../../services/JobSeekerAuthService"
+import { signup } from "../../services/JobSeekerAuthService";
 import { toast, ToastContainer } from "react-toastify";
 
 interface FormValues {
@@ -35,29 +35,19 @@ const SignUp: React.FC = () => {
 
   return (
     <>
-    <Navbar></Navbar>
+      <Navbar></Navbar>
       <section className="background-radial-gradient overflow-hidden">
         <div className="container px-4 py-5 px-md-5 text-center text-lg-start my-5">
-          <div className="row gx-lg-5 mb-5">
+          <div className="row gx-lg-5">
             <div className="col-lg-6 mb-5 mb-lg-0" style={{ zIndex: 10 }}>
               <h1
-                className="my-5 display-5 fw-bold ls-tight"
-                style={{ color: "hsl(218, 81%, 95%)" }}
+                className="display-5 fw-bold ls-tight"
+                style={{ color: "hsl(218, 81%, 95%)", marginTop: "150px" }}
               >
-                The best offer <br />
                 <span style={{ color: "hsl(218, 81%, 75%)" }}>
-                  for your business
+                  Kullanıcı Kaydı
                 </span>
               </h1>
-              <p
-                className="mb-4 opacity-70"
-                style={{ color: "hsl(218, 81%, 85%)" }}
-              >
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-                Temporibus, expedita iusto veniam atque, magni tempora mollitia
-                dolorum consequatur nulla, neque debitis eos reprehenderit quasi
-                ab ipsum nisi dolorem modi. Quos?
-              </p>
             </div>
 
             <div className="col-lg-6 mb-5 mb-lg-0 position-relative">
@@ -75,30 +65,24 @@ const SignUp: React.FC = () => {
                 validationSchema={schema}
                 onSubmit={(values, { setSubmitting, resetForm }) => {
                   setTimeout(() => {
-
                     const signUpValues = {
                       email: values.email,
                       password: values.password,
                       firstName: values.firstName,
                       lastName: values.lastName,
-
-                    }
+                    };
 
                     signup(signUpValues).then((response) => {
-                      if (response.data.isSuccess)
-                      {
+                      if (response.data.isSuccess) {
                         toast.success(response.data.message, {
-                          position: toast.POSITION.BOTTOM_RIGHT
-                        })
-                      }
-                      else
-                      {
+                          position: toast.POSITION.BOTTOM_RIGHT,
+                        });
+                      } else {
                         toast.warning(response.data.message, {
-                          position: toast.POSITION.BOTTOM_RIGHT
-                        })
+                          position: toast.POSITION.BOTTOM_RIGHT,
+                        });
                       }
-                      
-                    })
+                    });
                     setSubmitting(false);
                     resetForm();
                   }, 1000);
@@ -111,7 +95,7 @@ const SignUp: React.FC = () => {
                         <div className="row">
                           <div className="col-md-6 mb-4">
                             <div className="form-outline">
-                              <label className="form-label">First name</label>
+                              <label className="form-label">Adınız</label>
                               <Field
                                 name="firstName"
                                 type="text"
@@ -131,7 +115,7 @@ const SignUp: React.FC = () => {
                           </div>
                           <div className="col-md-6 mb-4">
                             <div className="form-outline">
-                              <label className="form-label">Last name</label>
+                              <label className="form-label">Soyadınız</label>
                               <Field
                                 name="lastName"
                                 className={
@@ -153,7 +137,7 @@ const SignUp: React.FC = () => {
                         </div>
 
                         <div className="form-outline mb-4">
-                          <label className="form-label">Email address</label>
+                          <label className="form-label">Email adresiniz</label>
                           <Field
                             name="email"
                             type="email"

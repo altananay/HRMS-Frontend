@@ -1,6 +1,4 @@
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import BarChartIcon from "@mui/icons-material/BarChart";
-import AddIcon from "@mui/icons-material/Add";
 import { DeleteFromLocalStorage } from "../../../services/LocalStorageService";
 import WorkIcon from "@mui/icons-material/Work";
 import EmailIcon from "@mui/icons-material/Email";
@@ -10,6 +8,8 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { NavLink } from "react-router-dom";
 import hrms from "../../../assets/images/hrms.png";
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import EditIcon from '@mui/icons-material/Edit';
 
 const Sidebar = () => {
   return (
@@ -48,23 +48,23 @@ const Sidebar = () => {
                     aria-expanded="false"
                     style={{textDecoration: "none"}}
                   >
-                    <SendIcon
+                    <FormatListBulletedIcon
                       style={{
                         color: "rgba(255, 94, 36, 194)",
                         marginRight: "5px",
                       }}
-                    ></SendIcon>
+                    ></FormatListBulletedIcon>
                     <span className="nav-text">İş ilanlarım</span>
                   </NavLink>
                 </li>
                 <li>
                   <NavLink to="/company/addjobadvertisement" className="has-arrow" aria-expanded="false" style={{textDecoration: "none"}}>
-                    <SendIcon
+                    <EditIcon
                       style={{
                         color: "rgba(255, 94, 36, 194)",
                         marginRight: "5px",
                       }}
-                    ></SendIcon>
+                    ></EditIcon>
                     <span className="nav-text">İş ilanı ekle</span>
                   </NavLink>
                 </li>
@@ -82,7 +82,7 @@ const Sidebar = () => {
                   <a className="has-arrow" aria-expanded="false">
                     <SendIcon
                       style={{
-                        color: "rgba(255, 94, 36, 194)",
+                        color: "green",
                         marginRight: "5px",
                       }}
                     ></SendIcon>

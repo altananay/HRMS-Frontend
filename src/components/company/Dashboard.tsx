@@ -86,22 +86,6 @@ const Dashboard = () => {
                 </div>
               </div>
             </div>
-            <div className="col-lg-3 col-sm-6">
-              <div className="card gradient-4">
-                <div className="card-body">
-                  <h3 className="card-title text-white">
-                    Customer Satisfaction
-                  </h3>
-                  <div className="d-inline-block">
-                    <h2 className="text-white">99%</h2>
-                    <p className="text-white mb-0">Jan - March 2019</p>
-                  </div>
-                  <span className="float-right display-5 opacity-5">
-                    <i className="fa fa-heart"></i>
-                  </span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
         <Charts deparments={employer?.departments}></Charts>
