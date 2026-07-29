@@ -1,0 +1,39 @@
+/*
+ * Global baseline only. Everything visual lands in the MUI theme (P3) — CssBaseline resets from
+ * there, so this file stays deliberately small rather than growing into a second styling system.
+ * The previous app carried ~56,500 lines of vendored theme CSS in the global cascade; not rebuilding
+ * that is a large part of the point of the rewrite.
+ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: light dark;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Honoured everywhere, including components not yet on the theme. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
