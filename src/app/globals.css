@@ -1,8 +1,11 @@
 /*
- * Global baseline only. Everything visual lands in the MUI theme (P3) — CssBaseline resets from
- * there, so this file stays deliberately small rather than growing into a second styling system.
- * The previous app carried ~56,500 lines of vendored theme CSS in the global cascade; not rebuilding
+ * Global baseline only. Everything visual lands in the MUI theme — `CssBaseline` resets from there,
+ * so this file stays deliberately small rather than growing into a second styling system. The
+ * previous app carried ~56,500 lines of vendored theme CSS in the global cascade; not rebuilding
  * that is a large part of the point of the rewrite.
+ *
+ * Add nothing here that the theme could express. The one legitimate reason to touch this file is a
+ * rule that must apply before React mounts or outside the MUI tree.
  */
 
 *,
@@ -11,14 +14,29 @@
   box-sizing: border-box;
 }
 
-html {
-  color-scheme: light dark;
-}
-
 html,
 body {
   margin: 0;
   padding: 0;
+}
+
+/* The layout is a column so a short page still pins the footer to the bottom. */
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/*
+ * Smooth in-page anchors, but only for users who have not asked for less motion — the
+ * prefers-reduced-motion block below also resets it, and both matter: this one keeps the declaration
+ * out of the cascade entirely rather than overriding it.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 body {

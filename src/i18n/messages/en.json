@@ -1,0 +1,136 @@
+{
+  "meta": {
+    "title": "HRMS",
+    "titleTemplate": "%s · HRMS",
+    "description": "A human resources management system for job seekers and employers. Post openings and manage every application in one place."
+  },
+  "common": {
+    "loading": "Loading…",
+    "retry": "Try again",
+    "cancel": "Cancel",
+    "save": "Save",
+    "close": "Close",
+    "search": "Search",
+    "back": "Back",
+    "skipToContent": "Skip to content"
+  },
+  "nav": {
+    "home": "Home",
+    "jobs": "Jobs",
+    "companies": "Companies",
+    "howItWorks": "How it works",
+    "contact": "Contact",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "primaryNavigation": "Primary navigation"
+  },
+  "locale": {
+    "label": "Language",
+    "change": "Change language",
+    "tr": "Türkçe",
+    "en": "English"
+  },
+  "colorScheme": {
+    "label": "Appearance",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Human resources management system",
+      "titleLead": "Match the right talent",
+      "titleHighlight": "with the right role",
+      "titleTail": "— faster.",
+      "subtitle": "One résumé for job seekers, one dashboard for employers. Publish an opening, follow every application, and run the whole process from the same place.",
+      "searchPlaceholder": "Role, skill or company",
+      "searchCityPlaceholder": "City",
+      "searchSubmit": "Search jobs",
+      "browseJobs": "Browse jobs",
+      "forEmployers": "Join as an employer",
+      "pipelineTitle": "Application pipeline",
+      "pipelineCaption": "Every application's status on one screen",
+      "stageSubmitted": "Submitted",
+      "stageUnderReview": "Under review",
+      "stageInterview": "Interview scheduled",
+      "stageOffered": "Offer made"
+    },
+    "audience": {
+      "title": "Two sides, one system",
+      "subtitle": "The same data, shown so it is useful to both.",
+      "seeker": {
+        "label": "For job seekers",
+        "title": "Write it once, use it in every application",
+        "stepOne": "Create your account and fill in the basics.",
+        "stepTwo": "Build your résumé — education, experience, skills, projects — and upload your files.",
+        "stepThree": "Apply to an opening in one click and track its status from your dashboard.",
+        "cta": "Sign up as a job seeker"
+      },
+      "employer": {
+        "label": "For employers",
+        "title": "Open the role, manage the pipeline",
+        "stepOne": "Set up your company profile and departments.",
+        "stepTwo": "Publish an opening with its position, skills, salary range and closing date.",
+        "stepThree": "Review each applicant's résumé, update the status, leave a note.",
+        "cta": "Sign up as an employer"
+      }
+    },
+    "features": {
+      "title": "What's inside",
+      "subtitle": "Not decoration — the parts that do the work.",
+      "cvTitle": "Structured résumé",
+      "cvBody": "Education, experience, skills, languages and projects in their own fields, not one block of free text.",
+      "filesTitle": "Résumé files",
+      "filesBody": "Upload a PDF; your files are visible only to you and to an employer you applied to.",
+      "postingsTitle": "Job postings",
+      "postingsBody": "Openings searchable by skill, city and free text, with salary range and employment type.",
+      "trackingTitle": "Application tracking",
+      "trackingBody": "Submitted, under review, interview, offer, accepted, rejected — every step is recorded.",
+      "moderationTitle": "Admin panel",
+      "moderationBody": "System staff moderate users, postings and applications from a single place.",
+      "languageTitle": "Turkish and English",
+      "languageBody": "Switch the interface language in one click; your choice is remembered next visit."
+    },
+    "cta": {
+      "title": "All it takes to start is an account",
+      "subtitle": "Job seeker or employer — signing up is free, and browsing openings needs no account at all.",
+      "primary": "Sign up",
+      "secondary": "Browse jobs"
+    }
+  },
+  "footer": {
+    "tagline": "An open-source human resources application that puts both sides of hiring in the same system.",
+    "explore": "Explore",
+    "account": "Account",
+    "about": "About",
+    "sourceCode": "Source code",
+    "rights": "{year} HRMS. All rights reserved.",
+    "builtWith": "Built with Next.js and .NET."
+  },
+  "notFound": {
+    "title": "This page doesn't exist",
+    "description": "The address may be mistyped, or the content may have been removed.",
+    "home": "Back to home",
+    "jobs": "Browse jobs"
+  },
+  "errorPage": {
+    "title": "Something went wrong",
+    "description": "The request could not be completed. Trying again may resolve it.",
+    "retry": "Try again",
+    "home": "Back to home"
+  },
+  "errors": {
+    "validation": "Some of the submitted information is invalid. Please check the fields.",
+    "unauthorized": "You need to sign in to do that.",
+    "session_expired": "Your session has expired. Please sign in again.",
+    "forbidden": "You don't have permission to do that.",
+    "not_found": "The record you're looking for was not found.",
+    "conflict": "That action conflicts with the current state.",
+    "rate_limited": "Too many attempts. Please try again shortly.",
+    "server": "A server-side error occurred. Please try again later.",
+    "network": "The server could not be reached. Check your connection.",
+    "unknown": "An unexpected error occurred."
+  }
+}

@@ -96,7 +96,24 @@ These are the points where a generic Next.js audit would get this codebase wrong
 - **DateOnly is a timezone trap.** `toISOString().slice(0,10)` on a local midnight shifts the date back
   a day in UTC+3, which the backend's create validator then rejects. Mappers must use local date parts.
 - **i18n keys fail open.** A key missing from `en.json` renders the key name or the `tr` fallback
-  depending on configuration — either way, no error. Compare the two files key-by-key.
+  depending on configuration — either way, no error. `src/i18n/messages.d.ts` types the keys against
+  `tr.json` and `messages.test.ts` asserts `en.json` matches; both halves are needed.
+- **A server component may not pass a function to a MUI component.** MUI components are client
+  components, so props crossing the boundary must be serializable. That rules out `sx={(theme) => …}`,
+  a function *value* inside `sx` (`zIndex: (theme) => …`), `theme.applyStyles(…)`, and
+  `component={Link}`. `src/theme/tokens.ts` holds the plain-string replacements (`darkScheme`,
+  `displayFontFamily`) and the theme registers `LinkBehavior` as `MuiButtonBase.LinkComponent` /
+  `MuiLink.component` so `href` alone routes. **`next build` does not catch this** — the pages are
+  dynamic, so nothing renders them until a request arrives and then every one 500s. Report a function
+  prop in a non-`'use client'` file as a High finding.
+- **MUI v9 removed the system props from `Stack` and `Grid`.** `alignItems` / `justifyContent` as
+  direct props no longer type-check; they belong in `sx`. `Grid` also has no `item` prop — sizing is
+  `size={{ xs: 12, md: 6 }}`.
+- **Never set `overflow-x: hidden` on `body`.** Setting one axis to `hidden` computes the other to
+  `auto`, which makes `<body>` the scroll container instead of the viewport — and scroll events on a
+  non-viewport container never reach `window`. Everything listening for page scroll silently stops,
+  `useScrollTrigger` included, with no error: the header just never frosts. `theme.ts` carries a comment
+  where the rule used to be. Wide content gets its own `overflow-x: auto` wrapper.
 - **Tests, Docker and CI all exist.** Step 6 is a coverage-*gap* analysis, not an absence finding —
   unlike the pre-rewrite app, which had literally zero tests.
 - **E2E runs against the real backend**, so it needs `docker compose up` and a `dotnet run`. If the

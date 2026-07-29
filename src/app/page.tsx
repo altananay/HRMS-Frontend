@@ -1,15 +1,23 @@
+import { AudienceSection } from '@/components/home/AudienceSection';
+import { CtaBand } from '@/components/home/CtaBand';
+import { FeaturesSection } from '@/components/home/FeaturesSection';
+import { Hero } from '@/components/home/Hero';
+
 /**
- * Placeholder. P3 brings the theme and the shell; P5 builds the real landing page — hero, latest
- * listings and the skill cloud fed by live advertisement data.
+ * The landing page. Every section is a server component — nothing here needs state except the hero's
+ * search field, which is the one client island.
  *
- * Kept deliberately bare rather than styled: anything invested here gets thrown away, and a
- * half-designed holding page is easy to mistake for the finished one.
+ * P5 inserts two data-backed sections between the hero and `AudienceSection`: the latest openings and
+ * the skill cloud built from live advertisement data. They are not stubbed here, because a stub with
+ * invented job listings is indistinguishable from the real thing and leads nowhere when clicked.
  */
 export default function Home() {
   return (
-    <main>
-      <h1>HRMS</h1>
-      <p>Kurulum tamamlandı. Arayüz P3 ile gelecek.</p>
-    </main>
+    <>
+      <Hero />
+      <AudienceSection />
+      <FeaturesSection />
+      <CtaBand />
+    </>
   );
 }

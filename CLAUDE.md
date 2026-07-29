@@ -185,6 +185,29 @@ guard, run `npm run e2e` too.
 - **Form fields**: use the `RHF*` wrappers in `src/components/form/`. A bare MUI `TextField` inside a
   form means the wrapper is missing a feature — add it there, not inline.
 - **Enums** are `as const` objects plus a union type, never TypeScript `enum`.
+- **Theme** (`src/theme/`): `palette.ts` holds the raw scales, `theme.ts` builds the theme,
+  `tokens.ts` holds plain-string tokens for server components, `fonts.ts` owns `next/font`.
+  Component look belongs in `theme.ts` `components.*`, not repeated in `sx` on every screen.
+
+> **⚠ No function props from a server component.** MUI components are client components, so anything
+> passed to them must be serializable. These all throw at request time — and `next build` will not
+> catch it, because the pages are dynamic and nothing renders them until a request arrives:
+>
+> ```tsx
+> sx={(theme) => ({ … })}              // function prop
+> sx={{ zIndex: (theme) => … }}        // function value inside the prop
+> ...theme.applyStyles('dark', { … })  // needs the theme, so needs the callback
+> component={Link}                     // a component reference is a function
+> ```
+>
+> Use `src/theme/tokens.ts` instead — `darkScheme` for a dark-mode branch in a plain object,
+> `displayFontFamily` for the heading stack — and plain `href` for links: the theme registers
+> `LinkBehavior` on `MuiButtonBase.LinkComponent` and `MuiLink.component`, so `<Button href="/jobs">`
+> routes through Next from a server component. Inside a `'use client'` file the callback forms are
+> fine and preferred.
+>
+> MUI v9 also dropped the system props from `Stack` and `Grid`: `alignItems` and `justifyContent` go
+> in `sx`, and `Grid` sizes with `size={{ xs: 12, md: 6 }}` (there is no `item` prop).
 
 ---
 

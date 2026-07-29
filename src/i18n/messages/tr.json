@@ -1,0 +1,136 @@
+{
+  "meta": {
+    "title": "HRMS",
+    "titleTemplate": "%s · HRMS",
+    "description": "İş arayanlar ve işverenler için insan kaynakları yönetim sistemi. İlan yayınlayın, başvuruları tek yerden yönetin."
+  },
+  "common": {
+    "loading": "Yükleniyor…",
+    "retry": "Yeniden dene",
+    "cancel": "Vazgeç",
+    "save": "Kaydet",
+    "close": "Kapat",
+    "search": "Ara",
+    "back": "Geri",
+    "skipToContent": "İçeriğe geç"
+  },
+  "nav": {
+    "home": "Ana sayfa",
+    "jobs": "İş ilanları",
+    "companies": "Şirketler",
+    "howItWorks": "Nasıl çalışır",
+    "contact": "İletişim",
+    "signIn": "Giriş yap",
+    "signUp": "Kayıt ol",
+    "openMenu": "Menüyü aç",
+    "closeMenu": "Menüyü kapat",
+    "primaryNavigation": "Ana gezinme"
+  },
+  "locale": {
+    "label": "Dil",
+    "change": "Dili değiştir",
+    "tr": "Türkçe",
+    "en": "English"
+  },
+  "colorScheme": {
+    "label": "Görünüm",
+    "light": "Açık",
+    "dark": "Koyu",
+    "system": "Sistem"
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "İnsan kaynakları yönetim sistemi",
+      "titleLead": "Doğru yeteneği",
+      "titleHighlight": "doğru işle",
+      "titleTail": "buluşturun.",
+      "subtitle": "İş arayanlar için tek bir özgeçmiş, işverenler için tek bir panel. İlanı yayınlayın, başvuruları izleyin, süreci baştan sona aynı yerden yürütün.",
+      "searchPlaceholder": "Pozisyon, yetenek veya şirket",
+      "searchCityPlaceholder": "Şehir",
+      "searchSubmit": "İş ara",
+      "browseJobs": "İlanlara göz at",
+      "forEmployers": "İşveren olarak katıl",
+      "pipelineTitle": "Başvuru akışı",
+      "pipelineCaption": "Her başvurunun durumu tek ekranda",
+      "stageSubmitted": "Başvuruldu",
+      "stageUnderReview": "İncelemede",
+      "stageInterview": "Görüşme planlandı",
+      "stageOffered": "Teklif verildi"
+    },
+    "audience": {
+      "title": "İki taraf, tek sistem",
+      "subtitle": "Aynı veriyi iki farklı işe yarayacak şekilde gösteriyoruz.",
+      "seeker": {
+        "label": "İş arayanlar için",
+        "title": "Bir kez yaz, her başvuruda kullan",
+        "stepOne": "Hesabını oluştur, temel bilgilerini gir.",
+        "stepTwo": "Özgeçmişini eğitim, deneyim, yetenek ve projelerle doldur; dosyalarını yükle.",
+        "stepThree": "İlgilendiğin ilana tek tıkla başvur, durumunu panelinden takip et.",
+        "cta": "İş arayan olarak kayıt ol"
+      },
+      "employer": {
+        "label": "İşverenler için",
+        "title": "İlanı aç, başvuruyu yönet",
+        "stepOne": "Şirket profilini ve departmanlarını tanımla.",
+        "stepTwo": "İlanını yayınla; pozisyon, yetenekler, maaş aralığı ve son başvuru tarihiyle.",
+        "stepThree": "Gelen başvuruların özgeçmişini incele, durumunu güncelle, notunu bırak.",
+        "cta": "İşveren olarak kayıt ol"
+      }
+    },
+    "features": {
+      "title": "Ne var içinde",
+      "subtitle": "Süslü değil, işini yapan özellikler.",
+      "cvTitle": "Yapılandırılmış özgeçmiş",
+      "cvBody": "Eğitim, deneyim, yetenek, dil ve projeler ayrı ayrı alanlarda; serbest metin yığını değil.",
+      "filesTitle": "Özgeçmiş dosyaları",
+      "filesBody": "PDF yükleyin; dosyalarınız yalnızca yetkili işverene ve size açık.",
+      "postingsTitle": "İlan yönetimi",
+      "postingsBody": "Yetenek, şehir ve serbest metinle aranabilen ilanlar; maaş aralığı ve çalışma tipiyle.",
+      "trackingTitle": "Başvuru takibi",
+      "trackingBody": "Başvuruldu, incelemede, görüşme, teklif, kabul, ret — her adım kayıtlı.",
+      "moderationTitle": "Yönetim paneli",
+      "moderationBody": "Sistem ekibi kullanıcıları, ilanları ve başvuruları tek yerden denetler.",
+      "languageTitle": "Türkçe ve İngilizce",
+      "languageBody": "Arayüz dili tek tıkla değişir; tercihiniz sonraki ziyaretinizde hatırlanır."
+    },
+    "cta": {
+      "title": "Başlamak için hesap açmanız yeterli",
+      "subtitle": "İş arayan ya da işveren — kayıt ücretsiz, ilanlara göz atmak için hesap gerekmiyor.",
+      "primary": "Kayıt ol",
+      "secondary": "İlanlara göz at"
+    }
+  },
+  "footer": {
+    "tagline": "İşe alım sürecinin iki tarafını aynı sistemde buluşturan açık kaynak bir insan kaynakları uygulaması.",
+    "explore": "Keşfet",
+    "account": "Hesap",
+    "about": "Hakkında",
+    "sourceCode": "Kaynak kod",
+    "rights": "{year} HRMS. Tüm hakları saklıdır.",
+    "builtWith": "Next.js ve .NET ile geliştirildi."
+  },
+  "notFound": {
+    "title": "Bu sayfa yok",
+    "description": "Adres yanlış yazılmış olabilir ya da içerik kaldırılmış olabilir.",
+    "home": "Ana sayfaya dön",
+    "jobs": "İlanlara göz at"
+  },
+  "errorPage": {
+    "title": "Bir şeyler ters gitti",
+    "description": "İstek tamamlanamadı. Tekrar denemek sorunu çözebilir.",
+    "retry": "Yeniden dene",
+    "home": "Ana sayfaya dön"
+  },
+  "errors": {
+    "validation": "Gönderilen bilgilerde hata var. Alanları kontrol edin.",
+    "unauthorized": "Bu işlem için giriş yapmanız gerekiyor.",
+    "session_expired": "Oturumunuz sona erdi. Lütfen yeniden giriş yapın.",
+    "forbidden": "Bu işlem için yetkiniz yok.",
+    "not_found": "Aradığınız kayıt bulunamadı.",
+    "conflict": "Bu işlem mevcut durumla çelişiyor.",
+    "rate_limited": "Çok fazla deneme yapıldı. Kısa bir süre sonra tekrar deneyin.",
+    "server": "Sunucu kaynaklı bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
+    "network": "Sunucuya ulaşılamadı. Bağlantınızı kontrol edin.",
+    "unknown": "Beklenmeyen bir hata oluştu."
+  }
+}

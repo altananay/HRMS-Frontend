@@ -1,24 +1,59 @@
 import type { Metadata } from 'next';
+import Box from '@mui/material/Box';
+import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
+import { NextIntlClientProvider } from 'next-intl';
+import { getLocale, getTranslations } from 'next-intl/server';
+
+import { Footer } from '@/components/shell/Footer';
+import { Header } from '@/components/shell/Header';
+import { SkipLink } from '@/components/ui/SkipLink';
+import { fontClassNames } from '@/theme/fonts';
+import { ThemeRegistry } from '@/theme/ThemeRegistry';
 
 import './globals.css';
 
-export const metadata: Metadata = {
-  title: {
-    default: 'HRMS',
-    template: '%s · HRMS',
-  },
-  description: 'İş arayanlar ve işverenler için insan kaynakları yönetim sistemi.',
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations('meta');
 
-// Minimal for now. P3 replaces this with the MUI registry (AppRouterCacheProvider → ThemeProvider →
-// CssBaseline → ToastProvider), the session provider and the next-intl provider — plus a self-hosted
-// font via next/font/local rather than a Google Fonts request at runtime.
-//
-// This stays a server component throughout; only the registry itself is a client component.
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return {
+    title: { default: t('title'), template: t('titleTemplate') },
+    description: t('description'),
+  };
+}
+
+/**
+ * Stays a server component. The only client boundary is `ThemeRegistry`; `Header` is a client
+ * component in its own right and is composed in as a child rather than by making this file one.
+ *
+ * Two details are load-bearing:
+ *
+ *   `InitColorSchemeScript` must be the first thing in `<body>`. It writes the `light`/`dark` class
+ *   onto `<html>` from localStorage *before* the browser paints, which is the only way to avoid a
+ *   flash of the wrong theme. Move it below the providers and the flash comes back.
+ *
+ *   `suppressHydrationWarning` on `<html>` is required *because* of that script: the server cannot
+ *   know which class it will add, so the attribute legitimately differs between server and client. It
+ *   applies to this element only and silences nothing below it.
+ */
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const locale = await getLocale();
+
   return (
-    <html lang="tr" suppressHydrationWarning>
-      <body>{children}</body>
+    <html lang={locale} className={fontClassNames} suppressHydrationWarning>
+      <body>
+        <InitColorSchemeScript attribute="class" defaultMode="system" />
+
+        <NextIntlClientProvider>
+          <ThemeRegistry>
+            <SkipLink />
+            <Header />
+            <Box component="main" id="main" sx={{ flex: '1 1 auto' }}>
+              {children}
+            </Box>
+            <Footer />
+          </ThemeRegistry>
+        </NextIntlClientProvider>
+      </body>
     </html>
   );
 }
