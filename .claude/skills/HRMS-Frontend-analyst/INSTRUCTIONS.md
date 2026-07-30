@@ -69,9 +69,17 @@ These are the points where a generic Next.js audit would get this codebase wrong
 - **The browser never talks to the API.** Every request goes through the BFF. An audit that inventories
   "API calls" by grepping for the backend host will find nothing and conclude the app has no data
   layer. Follow `lib/http.ts` → Route Handler → `server/api-client.ts` instead.
-- **`middleware.ts` is not the guard.** It checks cookie presence, nothing more, because the Edge
-  runtime cannot verify a JWT and the backend's signing key must never be copied here. The real role
-  check is in each segment `layout.tsx`. **Rule 5 in `STANDARDS.md` carries this — do not delete it.**
+- **`middleware.ts` is not the guard, but it is not *only* a guard either.** It does two things, and
+  conflating them produces a wrong finding in either direction.
+  1. *Presence check.* Cookie exists or it does not — the Edge runtime cannot verify a JWT and the
+     backend's signing key must never be copied here. The real role check is in each segment
+     `layout.tsx`. **Rule 5 in `STANDARDS.md` carries this — do not delete it.**
+  2. *Proactive token refresh.* This is the **only** place that runs before a render and can still
+     write a cookie: `cookies().set()` throws during a Server Component render. A page that finds its
+     access token expired mid-render therefore cannot renew it, and must not refresh without
+     persisting — the API rotates refresh tokens and treats the old one's reappearance as theft.
+     Do not report the upstream `fetch` in middleware as a layering violation; removing it is what
+     would break the app.
 - **`src/server/allowlist.ts` is load-bearing.** The catch-all proxy rejects anything not on it, so a
   UI call to a missing entry fails at runtime with no compile error. Reconcile in both directions:
   dead calls *and* dead surface.

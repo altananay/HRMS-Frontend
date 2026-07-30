@@ -123,6 +123,7 @@
   },
   "errors": {
     "validation": "Gönderilen bilgilerde hata var. Alanları kontrol edin.",
+    "business": "Bu işlem gerçekleştirilemedi.",
     "unauthorized": "Bu işlem için giriş yapmanız gerekiyor.",
     "session_expired": "Oturumunuz sona erdi. Lütfen yeniden giriş yapın.",
     "forbidden": "Bu işlem için yetkiniz yok.",

@@ -4,9 +4,11 @@ import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getTranslations } from 'next-intl/server';
 
+import { SessionProvider } from '@/components/providers/SessionProvider';
 import { Footer } from '@/components/shell/Footer';
 import { Header } from '@/components/shell/Header';
 import { SkipLink } from '@/components/ui/SkipLink';
+import { getSession } from '@/server/session';
 import { fontClassNames } from '@/theme/fonts';
 import { ThemeRegistry } from '@/theme/ThemeRegistry';
 
@@ -36,7 +38,9 @@ export async function generateMetadata(): Promise<Metadata> {
  *   applies to this element only and silences nothing below it.
  */
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const locale = await getLocale();
+  // Resolved on the server on every render, so the header is never briefly wrong. For an anonymous
+  // visitor this costs nothing — no cookie, no upstream call.
+  const [locale, user] = await Promise.all([getLocale(), getSession()]);
 
   return (
     <html lang={locale} className={fontClassNames} suppressHydrationWarning>
@@ -45,12 +49,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
         <NextIntlClientProvider>
           <ThemeRegistry>
-            <SkipLink />
-            <Header />
-            <Box component="main" id="main" sx={{ flex: '1 1 auto' }}>
-              {children}
-            </Box>
-            <Footer />
+            <SessionProvider user={user}>
+              <SkipLink />
+              <Header />
+              <Box component="main" id="main" sx={{ flex: '1 1 auto' }}>
+                {children}
+              </Box>
+              <Footer />
+            </SessionProvider>
           </ThemeRegistry>
         </NextIntlClientProvider>
       </body>

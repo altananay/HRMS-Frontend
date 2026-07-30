@@ -123,6 +123,7 @@
   },
   "errors": {
     "validation": "Some of the submitted information is invalid. Please check the fields.",
+    "business": "That action could not be completed.",
     "unauthorized": "You need to sign in to do that.",
     "session_expired": "Your session has expired. Please sign in again.",
     "forbidden": "You don't have permission to do that.",

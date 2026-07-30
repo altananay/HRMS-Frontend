@@ -271,11 +271,19 @@ with `RateLimiting__Auth__PermitLimit` raised, exactly as the backend's own func
 ## 10) Security
 
 - **Session is server-side.** `hrms_at` / `hrms_rt`, httpOnly, `sameSite=lax`, `secure` in production.
-- **Refresh is single-flight, in three layers** — proactive (before expiry), per-process, and
-  per-browser. This is not over-engineering: replaying a rotated refresh token makes the backend
+- **Refresh is single-flight, in three layers** — proactive (`middleware.ts`, before expiry),
+  per-process (`server/tokens.ts`, keyed by refresh token), and per-browser (`lib/http.ts`, one
+  promise per tab). This is not over-engineering: replaying a rotated refresh token makes the backend
   revoke the entire chain and bump the security stamp, which logs the user out everywhere and
   surfaces as an ordinary 401.
-- **CSRF**: `sameSite=lax` plus an `Origin` check on every mutating proxy request.
+- **Only a Route Handler, Server Action or middleware may write a cookie.** `cookies().set()` throws
+  during a Server Component render. That is why `getSession()` reads and never refreshes, why
+  `ensureAccessToken()` is handler-only, and why the proactive refresh lives in middleware.
+- **Refresh has three outcomes, not two.** `rejected` (the API refused — session over, clear cookies)
+  and `unavailable` (no answer — cookies untouched) must stay distinct. Collapsing them signs users
+  out whenever the API blips, and nothing in a test would notice.
+- **CSRF**: `sameSite=lax` plus an `Origin` check on every mutating request. A missing `Origin` is
+  rejected — browsers always send it on non-GET.
 - **Guards are two-tier.** `middleware.ts` only checks that a cookie exists (the Edge runtime cannot
   verify a JWT and the signing key must never be copied here); the real role check happens in the
   segment layout against a verified `/auth/me`. The backend remains the only authority.
