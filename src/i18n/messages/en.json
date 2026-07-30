@@ -97,7 +97,10 @@
       "title": "All it takes to start is an account",
       "subtitle": "Job seeker or employer — signing up is free, and browsing openings needs no account at all.",
       "primary": "Sign up",
-      "secondary": "Browse jobs"
+      "secondary": "Browse jobs",
+      "signedInTitle": "Pick up where you left off",
+      "signedInSubtitle": "Your dashboard is waiting.",
+      "signedInPrimary": "Go to my dashboard"
     }
   },
   "footer": {
@@ -125,6 +128,7 @@
     "validation": "Some of the submitted information is invalid. Please check the fields.",
     "business": "That action could not be completed.",
     "unauthorized": "You need to sign in to do that.",
+    "invalid_credentials": "Incorrect email or password.",
     "session_expired": "Your session has expired. Please sign in again.",
     "forbidden": "You don't have permission to do that.",
     "not_found": "The record you're looking for was not found.",
@@ -133,5 +137,163 @@
     "server": "A server-side error occurred. Please try again later.",
     "network": "The server could not be reached. Check your connection.",
     "unknown": "An unexpected error occurred."
+  },
+  "validation": {
+    "required": "This field is required.",
+    "email": "Enter a valid email address.",
+    "minLength": "Must be at least {min} characters.",
+    "maxLength": "Must be at most {max} characters.",
+    "integer": "Enter a whole number.",
+    "positive": "Must be greater than zero.",
+    "nationalId": "A national ID must be 11 digits.",
+    "passwordsDoNotMatch": "The passwords do not match."
+  },
+  "auth": {
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "email": "Email",
+    "password": "Password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm new password",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "nationalId": "National ID",
+    "nationalIdHint": "Optional. Used for identity verification only.",
+    "dateOfBirth": "Date of birth",
+    "companyName": "Company name",
+    "companyPhone": "Phone",
+    "webSite": "Website",
+    "description": "About the company",
+    "numberOfEmployees": "Number of employees",
+    "sectors": "Sectors",
+    "sectorsPlaceholder": "Type and press Enter",
+    "passwordHint": "At least {min} characters.",
+    "login": {
+      "title": "Welcome back",
+      "subtitle": "Job seekers, employers and administrators all sign in here.",
+      "submit": "Sign in",
+      "forgot": "Forgot your password?",
+      "noAccount": "No account yet?",
+      "register": "Sign up"
+    },
+    "register": {
+      "title": "Create an account",
+      "subtitle": "Which side are you on?",
+      "seekerTitle": "Job seeker account",
+      "seekerBody": "Build your résumé once and apply to any opening in a click.",
+      "employerTitle": "Employer account",
+      "employerBody": "Publish openings and manage every application in one panel.",
+      "seekerFormTitle": "Sign up as a job seeker",
+      "employerFormTitle": "Sign up as an employer",
+      "submit": "Create account",
+      "haveAccount": "Already have an account?",
+      "signIn": "Sign in",
+      "accountSection": "Account details",
+      "personalSection": "Personal details",
+      "companySection": "Company details",
+      "success": "Your account has been created."
+    },
+    "forgot": {
+      "title": "Forgot your password?",
+      "subtitle": "Enter your email address and we will send a reset link if it is registered.",
+      "submit": "Send reset link",
+      "sentTitle": "Check your email",
+      "sentBody": "If that address is registered, the reset link is on its way. It is valid for one hour.",
+      "backToLogin": "Back to sign in"
+    },
+    "reset": {
+      "title": "Set a new password",
+      "subtitle": "Changing your password signs you out on every device.",
+      "submit": "Update password",
+      "missingToken": "This link is not valid. Use the link from the reset email.",
+      "successTitle": "Your password has been updated",
+      "successBody": "You can now sign in with your new password.",
+      "requestAgain": "Request a new link"
+    },
+    "signOut": "Sign out",
+    "account": "My account",
+    "dashboard": "My dashboard"
+  },
+  "jobs": {
+    "title": "Jobs",
+    "subtitle": "{count, plural, =0 {No openings found} one {# opening} other {# openings}}.",
+    "searchLabel": "Search",
+    "searchPlaceholder": "Role, title or description",
+    "cityLabel": "City",
+    "skillLabel": "Skill",
+    "apply": "Filter",
+    "clear": "Clear filters",
+    "empty": "No opening matches your search.",
+    "emptyHint": "Try relaxing the filters.",
+    "sortNewest": "Newest first",
+    "sortSalary": "Highest salary first",
+    "openPositions": "{count} open positions",
+    "deadline": "Closes {date}",
+    "postedAt": "Posted {date}",
+    "salaryFrom": "From {min}",
+    "salaryTo": "Up to {max}",
+    "salaryRange": "{min} – {max}",
+    "salaryUndisclosed": "Salary not disclosed",
+    "remoteCity": "Location not specified",
+    "backToJobs": "Back to all jobs",
+    "aboutRole": "About the role",
+    "requiredSkills": "Skills wanted",
+    "experience": "Experience",
+    "companySection": "The company",
+    "viewCompany": "Go to company page",
+    "applyNow": "Apply",
+    "applySignIn": "Sign in to apply",
+    "closed": "This opening has closed.",
+    "inactive": "This opening is not published.",
+    "jobType": {
+      "FullTime": "Full-time",
+      "PartTime": "Part-time",
+      "Contract": "Contract",
+      "Internship": "Internship",
+      "Freelance": "Freelance",
+      "Temporary": "Temporary"
+    }
+  },
+  "companies": {
+    "title": "Companies",
+    "subtitle": "Discover the companies hiring here.",
+    "empty": "No companies are registered yet.",
+    "employees": "{count} employees",
+    "openings": "Open positions",
+    "noOpenings": "This company has no open positions right now.",
+    "contact": "Contact",
+    "website": "Website",
+    "about": "About",
+    "departments": "Departments",
+    "backToCompanies": "Back to all companies",
+    "viewJobs": "View their jobs",
+    "sectorsLabel": "Sectors"
+  },
+  "contact": {
+    "title": "Get in touch",
+    "subtitle": "Write your question and we will get back to you.",
+    "subject": "Subject",
+    "message": "Your message",
+    "submit": "Send",
+    "success": "Your message has been sent. Thank you.",
+    "sentTitle": "Your message reached us",
+    "sentBody": "We will get back to you shortly.",
+    "another": "Send another message"
+  },
+  "skills": {
+    "title": "Skills in demand",
+    "subtitle": "The skills that appear most in live openings. Click one to see the jobs that ask for it.",
+    "listLabel": "Skill list",
+    "empty": "Not enough openings yet."
+  },
+  "latest": {
+    "title": "Latest openings",
+    "subtitle": "The most recently published roles.",
+    "viewAll": "All jobs"
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "{page} of {total}"
   }
 }

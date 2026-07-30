@@ -22,6 +22,10 @@ import { useTranslations } from 'next-intl';
 
 import { Logo } from '@/components/ui/Logo';
 
+import { useSession } from '@/components/providers/SessionProvider';
+import { DASHBOARD_BY_USER_TYPE } from '@/lib/dashboards';
+
+import { AccountMenu } from './AccountMenu';
 import { ColorSchemeToggle } from './ColorSchemeToggle';
 import { LocaleSwitcher } from './LocaleSwitcher';
 
@@ -40,7 +44,9 @@ const NAV = [
  */
 export function Header() {
   const t = useTranslations('nav');
+  const tAuth = useTranslations('auth');
   const pathname = usePathname();
+  const { user, signOut, isSigningOut } = useSession();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const scrolled = useScrollTrigger({ disableHysteresis: true, threshold: 8 });
 
@@ -117,21 +123,7 @@ export function Header() {
               sx={{ mx: 1, my: 1.5, display: { xs: 'none', sm: 'block' } }}
             />
 
-            <Button
-              href="/login"
-              color="inherit"
-              sx={{ display: { xs: 'none', sm: 'inline-flex' }, color: 'text.primary' }}
-            >
-              {t('signIn')}
-            </Button>
-
-            <Button
-              href="/register"
-              variant="contained"
-              sx={{ display: { xs: 'none', sm: 'inline-flex' } }}
-            >
-              {t('signUp')}
-            </Button>
+            <AccountMenu />
 
             <IconButton
               onClick={() => setDrawerOpen(true)}
@@ -173,23 +165,52 @@ export function Header() {
 
         <Divider sx={{ my: 2 }} />
 
+        {/* The drawer is the only navigation on a phone, so it has to know about the session too —
+            offering "Sign up" to someone who is already signed in is the kind of detail that makes an
+            app feel unfinished. */}
         <Stack spacing={1}>
-          <Button
-            href="/login"
-            variant="outlined"
-            size="large"
-            onClick={() => setDrawerOpen(false)}
-          >
-            {t('signIn')}
-          </Button>
-          <Button
-            href="/register"
-            variant="contained"
-            size="large"
-            onClick={() => setDrawerOpen(false)}
-          >
-            {t('signUp')}
-          </Button>
+          {user ? (
+            <>
+              <Button
+                href={DASHBOARD_BY_USER_TYPE[user.userType] ?? '/'}
+                variant="contained"
+                size="large"
+                onClick={() => setDrawerOpen(false)}
+              >
+                {tAuth('dashboard')}
+              </Button>
+              <Button
+                variant="outlined"
+                size="large"
+                disabled={isSigningOut}
+                onClick={() => {
+                  setDrawerOpen(false);
+                  void signOut();
+                }}
+              >
+                {tAuth('signOut')}
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button
+                href="/login"
+                variant="outlined"
+                size="large"
+                onClick={() => setDrawerOpen(false)}
+              >
+                {t('signIn')}
+              </Button>
+              <Button
+                href="/register"
+                variant="contained"
+                size="large"
+                onClick={() => setDrawerOpen(false)}
+              >
+                {t('signUp')}
+              </Button>
+            </>
+          )}
         </Stack>
       </Drawer>
     </AppBar>

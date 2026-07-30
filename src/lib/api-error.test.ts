@@ -1,24 +1,16 @@
 import { describe, expect, it } from 'vitest';
 
-import type { ApiError, ApiErrorCode } from '@/contracts/api-error';
+import { API_ERROR_CODES, type ApiError, type ApiErrorCode } from '@/contracts/api-error';
 import en from '@/i18n/messages/en.json';
 import tr from '@/i18n/messages/tr.json';
 
 import { apiErrorMessage, errorMessageKey, hasFieldErrors } from './api-error';
 
-const ALL_CODES: ApiErrorCode[] = [
-  'validation',
-  'business',
-  'unauthorized',
-  'session_expired',
-  'forbidden',
-  'not_found',
-  'conflict',
-  'rate_limited',
-  'server',
-  'network',
-  'unknown',
-];
+/**
+ * Walked from the runtime array in `contracts/api-error.ts`, not copied into this file. A new code
+ * with no message would otherwise render its own key path on screen and no test would notice.
+ */
+const ALL_CODES = API_ERROR_CODES;
 
 /** Stands in for `useTranslations()`; returns the key so assertions can name it. */
 const echo = (key: `errors.${ApiErrorCode}`) => key;

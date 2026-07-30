@@ -97,7 +97,10 @@
       "title": "Başlamak için hesap açmanız yeterli",
       "subtitle": "İş arayan ya da işveren — kayıt ücretsiz, ilanlara göz atmak için hesap gerekmiyor.",
       "primary": "Kayıt ol",
-      "secondary": "İlanlara göz at"
+      "secondary": "İlanlara göz at",
+      "signedInTitle": "Kaldığınız yerden devam edin",
+      "signedInSubtitle": "Paneliniz sizi bekliyor.",
+      "signedInPrimary": "Panelime git"
     }
   },
   "footer": {
@@ -125,6 +128,7 @@
     "validation": "Gönderilen bilgilerde hata var. Alanları kontrol edin.",
     "business": "Bu işlem gerçekleştirilemedi.",
     "unauthorized": "Bu işlem için giriş yapmanız gerekiyor.",
+    "invalid_credentials": "E-posta veya parola hatalı.",
     "session_expired": "Oturumunuz sona erdi. Lütfen yeniden giriş yapın.",
     "forbidden": "Bu işlem için yetkiniz yok.",
     "not_found": "Aradığınız kayıt bulunamadı.",
@@ -133,5 +137,163 @@
     "server": "Sunucu kaynaklı bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
     "network": "Sunucuya ulaşılamadı. Bağlantınızı kontrol edin.",
     "unknown": "Beklenmeyen bir hata oluştu."
+  },
+  "validation": {
+    "required": "Bu alan zorunludur.",
+    "email": "Geçerli bir e-posta adresi girin.",
+    "minLength": "En az {min} karakter olmalıdır.",
+    "maxLength": "En fazla {max} karakter olabilir.",
+    "integer": "Tam sayı girin.",
+    "positive": "Sıfırdan büyük olmalıdır.",
+    "nationalId": "T.C. kimlik numarası 11 haneli olmalıdır.",
+    "passwordsDoNotMatch": "Parolalar eşleşmiyor."
+  },
+  "auth": {
+    "showPassword": "Parolayı göster",
+    "hidePassword": "Parolayı gizle",
+    "email": "E-posta",
+    "password": "Parola",
+    "newPassword": "Yeni parola",
+    "confirmPassword": "Yeni parola (tekrar)",
+    "firstName": "Ad",
+    "lastName": "Soyad",
+    "nationalId": "T.C. kimlik no",
+    "nationalIdHint": "İsteğe bağlı. Yalnızca kimlik doğrulama için kullanılır.",
+    "dateOfBirth": "Doğum tarihi",
+    "companyName": "Şirket adı",
+    "companyPhone": "Telefon",
+    "webSite": "Web sitesi",
+    "description": "Şirket hakkında",
+    "numberOfEmployees": "Çalışan sayısı",
+    "sectors": "Sektörler",
+    "sectorsPlaceholder": "Yazıp Enter’a basın",
+    "passwordHint": "En az {min} karakter.",
+    "login": {
+      "title": "Tekrar hoş geldiniz",
+      "subtitle": "İş arayan, işveren ve yönetici hesapları aynı formdan giriş yapar.",
+      "submit": "Giriş yap",
+      "forgot": "Parolamı unuttum",
+      "noAccount": "Hesabınız yok mu?",
+      "register": "Kayıt olun"
+    },
+    "register": {
+      "title": "Hesap oluşturun",
+      "subtitle": "Hangi taraftasınız?",
+      "seekerTitle": "İş arayan hesabı",
+      "seekerBody": "Özgeçmişinizi bir kez oluşturun, ilanlara tek tıkla başvurun.",
+      "employerTitle": "İşveren hesabı",
+      "employerBody": "İlan yayınlayın, başvuruları tek panelden yönetin.",
+      "seekerFormTitle": "İş arayan olarak kayıt",
+      "employerFormTitle": "İşveren olarak kayıt",
+      "submit": "Hesabı oluştur",
+      "haveAccount": "Zaten hesabınız var mı?",
+      "signIn": "Giriş yapın",
+      "accountSection": "Hesap bilgileri",
+      "personalSection": "Kişisel bilgiler",
+      "companySection": "Şirket bilgileri",
+      "success": "Hesabınız oluşturuldu."
+    },
+    "forgot": {
+      "title": "Parolanızı mı unuttunuz?",
+      "subtitle": "E-posta adresinizi girin; kayıtlıysa sıfırlama bağlantısı gönderelim.",
+      "submit": "Sıfırlama bağlantısı gönder",
+      "sentTitle": "E-postanızı kontrol edin",
+      "sentBody": "Bu adres kayıtlıysa sıfırlama bağlantısını gönderdik. Bağlantı 1 saat geçerlidir.",
+      "backToLogin": "Girişe dön"
+    },
+    "reset": {
+      "title": "Yeni parola belirleyin",
+      "subtitle": "Parolanız değiştiğinde tüm cihazlardaki oturumlarınız kapanır.",
+      "submit": "Parolayı güncelle",
+      "missingToken": "Bu bağlantı geçersiz. Sıfırlama e-postasındaki bağlantıyı kullanın.",
+      "successTitle": "Parolanız güncellendi",
+      "successBody": "Yeni parolanızla giriş yapabilirsiniz.",
+      "requestAgain": "Yeni bağlantı iste"
+    },
+    "signOut": "Çıkış yap",
+    "account": "Hesabım",
+    "dashboard": "Panelim"
+  },
+  "jobs": {
+    "title": "İş ilanları",
+    "subtitle": "{count, plural, =0 {İlan bulunamadı} one {# ilan} other {# ilan}} listeleniyor.",
+    "searchLabel": "Ara",
+    "searchPlaceholder": "Pozisyon, başlık veya açıklama",
+    "cityLabel": "Şehir",
+    "skillLabel": "Yetenek",
+    "apply": "Filtrele",
+    "clear": "Filtreleri temizle",
+    "empty": "Aramanıza uyan ilan bulunamadı.",
+    "emptyHint": "Filtreleri gevşetmeyi deneyin.",
+    "sortNewest": "Önce en yeni",
+    "sortSalary": "Önce en yüksek maaş",
+    "openPositions": "{count} açık pozisyon",
+    "deadline": "Son başvuru: {date}",
+    "postedAt": "{date} tarihinde yayınlandı",
+    "salaryFrom": "{min} üzeri",
+    "salaryTo": "{max} altı",
+    "salaryRange": "{min} – {max}",
+    "salaryUndisclosed": "Maaş belirtilmemiş",
+    "remoteCity": "Konum belirtilmemiş",
+    "backToJobs": "Tüm ilanlara dön",
+    "aboutRole": "İlan detayı",
+    "requiredSkills": "Aranan yetenekler",
+    "experience": "Deneyim",
+    "companySection": "İlanı veren şirket",
+    "viewCompany": "Şirket sayfasına git",
+    "applyNow": "Başvur",
+    "applySignIn": "Başvurmak için giriş yapın",
+    "closed": "Bu ilanın süresi doldu.",
+    "inactive": "Bu ilan yayında değil.",
+    "jobType": {
+      "FullTime": "Tam zamanlı",
+      "PartTime": "Yarı zamanlı",
+      "Contract": "Sözleşmeli",
+      "Internship": "Staj",
+      "Freelance": "Serbest",
+      "Temporary": "Geçici"
+    }
+  },
+  "companies": {
+    "title": "Şirketler",
+    "subtitle": "İlan yayınlayan şirketleri keşfedin.",
+    "empty": "Henüz kayıtlı şirket yok.",
+    "employees": "{count} çalışan",
+    "openings": "Açık ilanlar",
+    "noOpenings": "Bu şirketin şu anda açık ilanı yok.",
+    "contact": "İletişim",
+    "website": "Web sitesi",
+    "about": "Hakkında",
+    "departments": "Departmanlar",
+    "backToCompanies": "Tüm şirketlere dön",
+    "viewJobs": "İlanlarını gör",
+    "sectorsLabel": "Sektörler"
+  },
+  "contact": {
+    "title": "Bize ulaşın",
+    "subtitle": "Sorunuzu yazın, en kısa sürede dönüş yapalım.",
+    "subject": "Konu",
+    "message": "Mesajınız",
+    "submit": "Gönder",
+    "success": "Mesajınız iletildi. Teşekkürler.",
+    "sentTitle": "Mesajınız bize ulaştı",
+    "sentBody": "En kısa sürede size dönüş yapacağız.",
+    "another": "Yeni mesaj gönder"
+  },
+  "skills": {
+    "title": "Aranan yetenekler",
+    "subtitle": "Yayındaki ilanlarda en çok geçen yetenekler. Birine tıklayın, o yetenekle eşleşen ilanlar açılsın.",
+    "listLabel": "Yetenek listesi",
+    "empty": "Henüz yeterli ilan yok."
+  },
+  "latest": {
+    "title": "Yeni ilanlar",
+    "subtitle": "Yayına en son giren pozisyonlar.",
+    "viewAll": "Tüm ilanlar"
+  },
+  "pagination": {
+    "previous": "Önceki",
+    "next": "Sonraki",
+    "page": "{page} / {total}"
   }
 }

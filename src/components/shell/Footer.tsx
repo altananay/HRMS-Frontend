@@ -7,31 +7,45 @@ import Typography from '@mui/material/Typography';
 import { getTranslations } from 'next-intl/server';
 
 import { Logo } from '@/components/ui/Logo';
+import { DASHBOARD_BY_USER_TYPE } from '@/lib/dashboards';
+import { getSession } from '@/server/session';
 
-const COLUMNS = [
-  {
-    heading: 'explore',
-    links: [
-      { href: '/jobs', key: 'jobs' },
-      { href: '/companies', key: 'companies' },
-      { href: '/contact', key: 'contact' },
-    ],
-  },
-  {
-    heading: 'account',
-    links: [
-      { href: '/login', key: 'signIn' },
-      { href: '/register', key: 'signUp' },
-    ],
-  },
-] as const;
+const EXPLORE = {
+  heading: 'explore',
+  links: [
+    { href: '/jobs', key: 'jobs' },
+    { href: '/companies', key: 'companies' },
+    { href: '/contact', key: 'contact' },
+  ],
+} as const;
+
+/** Anonymous visitors get the way in; signed-in ones get the way to their own area. */
+const ANONYMOUS_ACCOUNT = {
+  heading: 'account',
+  links: [
+    { href: '/login', key: 'signIn' },
+    { href: '/register', key: 'signUp' },
+  ],
+} as const;
 
 /** A server component: nothing here is interactive, so none of it needs to reach the browser. */
 export async function Footer() {
-  const t = await getTranslations();
+  const [t, user] = await Promise.all([getTranslations(), getSession()]);
   // A string, not a number: ICU formats a numeric argument through `Intl.NumberFormat`, which in
   // `tr` renders 2026 as "2.026".
   const year = String(new Date().getFullYear());
+
+  const columns = [
+    EXPLORE,
+    user
+      ? {
+          heading: 'account' as const,
+          links: [
+            { href: DASHBOARD_BY_USER_TYPE[user.userType] ?? '/', key: 'dashboard' as const },
+          ],
+        }
+      : ANONYMOUS_ACCOUNT,
+  ];
 
   return (
     <Box component="footer" sx={{ mt: 'auto', bgcolor: 'background.subtle' }}>
@@ -51,7 +65,7 @@ export async function Footer() {
           </Box>
 
           <Stack direction="row" spacing={{ xs: 6, sm: 10 }}>
-            {COLUMNS.map((column) => (
+            {columns.map((column) => (
               <Stack key={column.heading} spacing={1.25}>
                 <Typography variant="overline" color="text.secondary">
                   {t(`footer.${column.heading}`)}
@@ -64,7 +78,7 @@ export async function Footer() {
                     variant="body2"
                     color="text.primary"
                   >
-                    {t(`nav.${link.key}`)}
+                    {link.key === 'dashboard' ? t('auth.dashboard') : t(`nav.${link.key}`)}
                   </MuiLink>
                 ))}
               </Stack>

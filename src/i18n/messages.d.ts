@@ -1,4 +1,5 @@
 import type messages from './messages/tr.json';
+import type { formats } from './formats';
 import type { AppLocale } from './config';
 
 /**
@@ -19,5 +20,11 @@ declare module 'next-intl' {
   interface AppConfig {
     Locale: AppLocale;
     Messages: typeof messages;
+    /**
+     * Type-checks the named formats. An undeclared name does not throw either — `dateTime(d, 'shrt')`
+     * renders the raw `Date.toString()`, which is how `Thu Oct 29 2026 03:00:00 GMT+0300` ended up on
+     * the job board. This makes it a build error.
+     */
+    Formats: typeof formats;
   }
 }

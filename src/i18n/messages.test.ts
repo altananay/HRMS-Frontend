@@ -91,6 +91,15 @@ function resolve(bundle: Json, path: string): string {
   return value;
 }
 
+/**
+ * The ICU argument names in a message.
+ *
+ * The trailing `[},]` is load-bearing. An argument is always `{name}` or `{name, type, …}`, but a
+ * plural's branches are also braces — `{count, plural, one {# opening} other {# openings}}` — and a
+ * naive `\{(\w+)` happily reports `opening` and `openings` as arguments. That produced a failure on a
+ * pair of messages that were perfectly consistent, which is the worst kind of test: one that has to
+ * be argued with rather than trusted.
+ */
 function placeholders(message: string): string[] {
-  return [...message.matchAll(/\{(\w+)/g)].map((match) => match[1] ?? '').sort();
+  return [...message.matchAll(/\{(\w+)\s*[},]/g)].map((match) => match[1] ?? '').sort();
 }

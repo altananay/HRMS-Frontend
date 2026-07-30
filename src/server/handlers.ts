@@ -98,7 +98,17 @@ export async function authenticate(path: string, request: Request): Promise<Next
   const result = await forwardJson(path, request);
 
   if (!(result instanceof Response)) return apiErrorResponse(result);
-  if (!result.ok) return apiErrorResponse(await toApiError(result));
+
+  if (!result.ok) {
+    const error = await toApiError(result);
+
+    // On these endpoints a 401 can only mean the credentials were wrong — this handler is the only
+    // place that knows which endpoint was called, so it is the only place that can say so. The
+    // generic `unauthorized` message ("you need to sign in") is nonsense on a sign-in form.
+    return apiErrorResponse(
+      error.status === 401 ? { ...error, code: 'invalid_credentials' } : error,
+    );
+  }
 
   const auth = await readData<AuthResponse>(result);
 
