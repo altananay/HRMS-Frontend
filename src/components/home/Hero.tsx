@@ -2,7 +2,6 @@ import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import BusinessCenterOutlinedIcon from '@mui/icons-material/BusinessCenterOutlined';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
@@ -55,18 +54,34 @@ export async function Hero() {
       <Container sx={{ position: 'relative' }}>
         <Grid container spacing={{ xs: 6, md: 8 }} sx={{ alignItems: 'center' }}>
           <Grid size={{ xs: 12, md: 7 }}>
-            <Chip
-              label={t('eyebrow')}
-              size="small"
-              variant="outlined"
-              icon={<BusinessCenterOutlinedIcon />}
+            {/*
+              A plain Box, not a `Chip` with an `icon` prop.
+
+              `Chip` is a client component and clones its `icon` element to inject a class. Handing it
+              JSX created in *this* server component made the server emit the label first and the
+              client emit the icon first — a hydration mismatch that React resolves by throwing the
+              whole hero subtree away and re-rendering it. Nothing about this badge needs Chip: it is
+              not interactive, not deletable, and not a selection.
+            */}
+            <Box
               sx={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 0.75,
                 mb: 3,
+                px: 1.5,
+                py: 0.75,
+                borderRadius: 999,
+                border: '1px solid',
+                borderColor: 'divider',
                 bgcolor: 'background.paper',
+                fontSize: '0.8125rem',
                 fontWeight: 500,
-                '& .MuiChip-icon': { color: 'primary.main' },
               }}
-            />
+            >
+              <BusinessCenterOutlinedIcon sx={{ fontSize: 16, color: 'primary.main' }} />
+              {t('eyebrow')}
+            </Box>
 
             <Typography variant="h1" sx={{ mb: 3 }}>
               {t('titleLead')}{' '}

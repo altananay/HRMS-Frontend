@@ -55,12 +55,24 @@ export const MAX = {
 /** `PasswordPolicy.MinimumLength`. Length only — no character-class rules, by decision. */
 export const PASSWORD_MIN_LENGTH = 5;
 
+/**
+ * Matches FluentValidation's `EmailAddress()`, which defaults to `AspNetCoreCompatible`: one `@`,
+ * something either side, no whitespace. Nothing more.
+ *
+ * Zod's `.email()` is **stricter than the server**, and that is a bug rather than a nicety. It rejects
+ * a top-level domain containing a digit, so `admin@hrms.e2e` — and any real address at `@3m.com` or
+ * `@web2.de` — is refused by the form while the API would have accepted it. A client rule that is
+ * tighter than the server's does not protect anything; it just locks people out of the product with a
+ * message insisting their own address is invalid.
+ */
+const EMAIL = /^[^@\s]+@[^@\s]+$/;
+
 export function email(t: Translate) {
   return z
     .string()
     .trim()
     .min(1, t('validation.required'))
-    .email(t('validation.email'))
+    .regex(EMAIL, t('validation.email'))
     .max(MAX.email, t('validation.maxLength', { max: MAX.email }));
 }
 

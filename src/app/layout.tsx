@@ -43,7 +43,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const [locale, user] = await Promise.all([getLocale(), getSession()]);
 
   return (
-    <html lang={locale} className={fontClassNames} suppressHydrationWarning>
+    <html
+      lang={locale}
+      className={fontClassNames}
+      // Tells the router to suppress the smooth scroll on a route change. Without it Next warns, and a
+      // navigation animates the scroll instead of landing at the top.
+      data-scroll-behavior="smooth"
+      suppressHydrationWarning
+    >
       <body>
         <InitColorSchemeScript attribute="class" defaultMode="system" />
 
