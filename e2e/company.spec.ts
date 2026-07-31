@@ -10,9 +10,11 @@ import { expect, test } from './fixtures';
  */
 /**
  * Job positions are global and resolved by name, so a fixed name would have every parallel worker
- * racing to create the same row — `ResolveOrCreateAsync` checks then inserts, and the unique index on
- * job_positions.name rejects the loser with a 500. A per-run name keeps the suite testing this app
- * rather than that race. (The race itself is a real backend defect; it is reported, not hidden here.)
+ * creating the same row at once. That used to be a real backend defect — `ResolveOrCreateAsync`
+ * checked then inserted, and the unique index on `job_positions.name` answered the loser with a 500.
+ * It is fixed upstream now (an `ON CONFLICT DO NOTHING` upsert, with its own concurrency test), so
+ * this per-run name is no longer hiding anything: it just keeps one worker's posting out of another's
+ * assertions.
  */
 const POSITION = `E2E Position ${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 
