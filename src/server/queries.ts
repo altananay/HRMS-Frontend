@@ -1,6 +1,7 @@
 import 'server-only';
 
 import { apiFetch, readData } from './api-client';
+import { readTokens } from './session';
 import type { PagedResult } from '@/contracts/envelope';
 
 /**
@@ -23,6 +24,45 @@ type Query = Record<string, string | number | boolean | undefined>;
  * optional panel could not load.
  */
 export async function fetchPublic<T>(path: string, query: Query = {}): Promise<T | null> {
+  try {
+    const response = await apiFetch({ path, search: buildSearch(query) });
+
+    if (!response.ok) return null;
+
+    return await readData<T>(response);
+  } catch {
+    // The API is down. The page still renders — with an empty section and no stack trace.
+    return null;
+  }
+}
+
+/**
+ * An authenticated read for a panel screen.
+ *
+ * Sends the access token from the cookie and **does not refresh it**. Refreshing means writing a
+ * cookie, which throws during a Server Component render — the proactive refresh in `middleware.ts`
+ * runs before this and is what keeps the token good. If it somehow is not, this returns `null` and the
+ * caller renders an empty state rather than the page exploding.
+ */
+export async function fetchMine<T>(path: string, query: Query = {}): Promise<T | null> {
+  const { access } = await readTokens();
+
+  if (!access) return null;
+
+  const search = buildSearch(query);
+
+  try {
+    const response = await apiFetch({ path, search, accessToken: access });
+
+    if (!response.ok) return null;
+
+    return await readData<T>(response);
+  } catch {
+    return null;
+  }
+}
+
+function buildSearch(query: Query): string {
   const search = new URLSearchParams();
 
   for (const [key, value] of Object.entries(query)) {
@@ -32,16 +72,7 @@ export async function fetchPublic<T>(path: string, query: Query = {}): Promise<T
 
   const qs = search.toString();
 
-  try {
-    const response = await apiFetch({ path, search: qs ? `?${qs}` : '' });
-
-    if (!response.ok) return null;
-
-    return await readData<T>(response);
-  } catch {
-    // The API is down. The page still renders — with an empty section and no stack trace.
-    return null;
-  }
+  return qs ? `?${qs}` : '';
 }
 
 /** An empty page, for when a read fails and the caller wants to render the shell regardless. */

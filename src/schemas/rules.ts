@@ -30,7 +30,9 @@ export type ValidationKey =
   | 'validation.integer'
   | 'validation.positive'
   | 'validation.nationalId'
-  | 'validation.passwordsDoNotMatch';
+  | 'validation.passwordsDoNotMatch'
+  | 'validation.year'
+  | 'validation.endBeforeStart';
 
 export type Translate = (key: ValidationKey, values?: Record<string, string | number>) => string;
 

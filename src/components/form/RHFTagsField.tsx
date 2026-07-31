@@ -59,7 +59,14 @@ export function RHFTagsField<T extends FieldValues>({
           placeholder={value.length === 0 ? placeholder : undefined}
           error={Boolean(fieldState.error)}
           helperText={fieldState.error?.message ?? hint ?? ' '}
-          slotProps={{ formHelperText: { sx: { minHeight: '1.25rem' } } }}
+          // Merged with `params.slotProps`, never replacing it. That object carries the input ref the
+          // Autocomplete wires itself up through; overwriting it makes MUI log "Unable to find the
+          // input element" and then silently render no chips and fire no `onChange` — the field looks
+          // present but is inert, which is a slow thing to notice.
+          slotProps={{
+            ...params.slotProps,
+            formHelperText: { sx: { minHeight: '1.25rem' } },
+          }}
         />
       )}
     />
