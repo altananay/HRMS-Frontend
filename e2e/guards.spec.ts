@@ -3,7 +3,7 @@ import { expect, test } from './fixtures';
 /**
  * Who can reach what.
  *
- * The guard is two-tier by design: `middleware.ts` only checks that a cookie exists, and the segment
+ * The guard is two-tier by design: `proxy.ts` only checks that a cookie exists, and the segment
  * layout does the real role check against a verified `/auth/me`. Both tiers are exercised here — an
  * anonymous visitor hits the first, a signed-in visitor with the wrong role hits the second.
  */
@@ -40,7 +40,7 @@ test.describe('route guards', () => {
   });
 
   test('an admin cannot wander into the job seeker panel', async ({ page, actors }) => {
-    // The cookie exists, so the middleware lets it through — the segment layout is what turns it away.
+    // The cookie exists, so the proxy lets it through — the segment layout is what turns it away.
     await actors.signInAsAdmin();
     await page.goto('/profile');
 

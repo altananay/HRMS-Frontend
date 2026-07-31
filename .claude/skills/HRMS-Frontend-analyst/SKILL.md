@@ -15,11 +15,10 @@ dependency posture. The primary deliverable is a paired Markdown + interactive H
 
 ## Verify this context before trusting it
 
-The Project Context below is a **starting map, not evidence**. This codebase replaced a Create React
-App SPA wholesale, and the file you are reading was written **before the application existed** — it
-describes the architecture the rewrite plan intended, not necessarily what shipped. **Step 1
-re-confirms every claim here from the filesystem.** If the two disagree, the filesystem wins and the
-drift is finding #1.
+The Project Context below is a **starting map, not evidence**. It was drafted before the application
+existed and reconciled against the shipped code on **2026-07-31**; every line of it was true on that
+date. It will not stay true. **Step 1 re-confirms every claim here from the filesystem**, and if the
+two disagree the filesystem wins and the drift is finding #1 — including drift in this file.
 
 The sibling repo has already been burned by exactly this: its analyst skill went stale and asserted a
 stack that no longer existed. What saved that audit was the Evidence Rules below.
@@ -44,18 +43,21 @@ stack that no longer existed. What saved that audit was the Evidence Rules below
 - **Session**: access and refresh tokens live in httpOnly cookies (`hrms_at`, `hrms_rt`). Nothing is
   readable by JavaScript. Refresh is single-flight in three layers because replaying a rotated
   refresh token makes the backend revoke the whole chain.
-- **Guards are two-tier**: `middleware.ts` checks cookie *presence* only; the real role check lives in
-  each segment `layout.tsx` against a verified `/auth/me`.
+- **Guards are two-tier**: `src/proxy.ts` (the Next 16 rename of `middleware.ts`, and it runs on the
+  Node runtime) checks cookie *presence* only; the real role check lives in each segment `layout.tsx`
+  against a verified `/auth/me`.
 - **Contracts**: `src/contracts/` holds hand-written `type` aliases mirroring
   `../HRMS-Backend/Core/Application/Common/Contracts/Responses.cs`. **`interface` is not used.**
   Enums are `as const` objects, never TypeScript `enum`.
-- **Forms**: React Hook Form + **Zod 4**, with schemas in `src/schemas/<feature>.ts` and wire mappers
-  in `<feature>.map.ts`. The schemas mirror
+- **Forms**: React Hook Form + **Zod 4**. Each `src/schemas/<feature>.ts` holds the schema, the form
+  types and the `toXRequest` / `fromXResponse` mappers together; shared rule builders live in
+  `src/schemas/rules.ts`. The schemas mirror
   `../HRMS-Backend/Core/Application/Validation/Validators.cs`.
 - **i18n**: `next-intl`, cookie-based (`NEXT_LOCALE`), no URL prefix. `tr` is the default; `en` must
   have every key `tr` has.
-- **Testing**: **Vitest** (unit, `msw` for upstream) and **Playwright** (E2E against the *real*
-  backend, real PostgreSQL `hrms_e2e`, and Mailpit for password reset).
+- **Testing**: **Vitest** (two projects — `node` for `*.test.ts`, `jsdom` for `*.test.tsx`; upstream
+  stubbed with `vi.spyOn(globalThis, 'fetch')`) and **Playwright** (E2E against the *real* backend,
+  real PostgreSQL `hrms_e2e`, and Mailpit for password reset).
 
 ## Baseline Versions
 
@@ -64,13 +66,16 @@ Detected versions — flag anything that has drifted from these:
 | Component | Expected |
 |---|---|
 | next | 16.2.12 |
-| react / react-dom | 19.x |
-| typescript | 5.x, `strict: true`, `noUncheckedIndexedAccess: true` |
-| @mui/material | 6.x, adapter `@mui/material-nextjs/v16-appRouter` |
-| zod | 4.x (note: `z.email()`, not `z.string().email()`) |
-| react-hook-form | 7.x + `@hookform/resolvers` 5.x |
-| next-intl | current |
-| vitest / @playwright/test | current |
+| react / react-dom | 19.2.4 |
+| typescript | 5.9.3, `strict: true`, `noUncheckedIndexedAccess: true`, `verbatimModuleSyntax: true` |
+| @mui/material, @mui/icons-material | 9.2.0 |
+| @mui/material-nextjs | 9.1.1, imported from `/v16-appRouter` |
+| @mui/x-data-grid, x-charts, x-date-pickers | 9.10.1 |
+| zod | 4.4.3 (note: `z.email()`, not `z.string().email()`) |
+| react-hook-form | 7.83.0 + `@hookform/resolvers` 5.5.7 |
+| next-intl | 4.13.4 |
+| vitest | 4.1.10 |
+| @playwright/test | 1.62.0 |
 
 Versions live in `package.json` and framework-critical packages are pinned without `^`. Report both
 unpinned framework packages and any dependency that is declared but never imported — the previous app
@@ -91,9 +96,9 @@ carried more than twenty of those.
 - Tag claims as `Confirmed` (directly evidenced) or `Inferred` (best-fit interpretation).
 - If evidence is missing, state `Not found in scanned files` — never guess.
 - Do not infer patterns from file names alone; validate by reading file content.
-- **`middleware.ts` does not prove a route is protected.** It only checks that a cookie exists.
-  Resolve the whole chain: middleware matcher → segment `layout.tsx` role check → the BFF handler →
-  the backend's own `[Authorize]`. Reporting "protected" from the matcher alone is wrong.
+- **`proxy.ts` does not prove a route is protected.** It only checks that a cookie exists. Resolve
+  the whole chain: proxy matcher → segment `layout.tsx` role check → the BFF handler → the backend's
+  own `[Authorize]`. Reporting "protected" from the matcher alone is wrong.
 - **An endpoint the UI calls but `allowlist.ts` omits is dead.** Check the allow-list before believing
   a component's fetch works.
 - **`'use client'` is contagious.** It applies to the module *and everything it imports*. A
@@ -127,8 +132,9 @@ under `src/` or `e2e/`. Confirm whether `.env.local` is gitignored and **do not 
 
 ### Step 2 — Route & Screen Inventory
 Walk `src/app/`. For every `page.tsx`, record: the URL path, its route group and layout chain,
-whether it is a server or client component, what it fetches, and its **effective guard** (middleware
-matcher + layout role check). Do the same for `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`.
+whether it is a server or client component, what it fetches, and its **effective guard** (proxy
+matcher + layout role check). Do the same for `layout.tsx`, `loading.tsx`, `error.tsx`, `not-found.tsx`, and for the
+crawler-facing `robots.ts` / `sitemap.ts` — a private path leaking into either is a finding.
 Produce a complete table covering the public site, the auth flow, and all three panels. Flag any page
 reachable without the guard its content implies.
 
@@ -152,7 +158,7 @@ Trace sign-in end to end: form → `api/auth/login` → cookie write → `getSes
 Verify cookie flags (`httpOnly`, `sameSite`, `secure`, `path`, `maxAge`). Verify **no token is readable
 by client code** — grep for `localStorage`, `sessionStorage`, and any non-httpOnly cookie write.
 Verify the refresh design: proactive renewal, per-process single-flight, browser single-flight. Verify
-the `Origin` check on mutating proxy requests. Confirm `middleware.ts` matchers cover every private
+the `Origin` check on mutating proxy requests. Confirm the `proxy.ts` matcher covers every private
 segment and that each of those segments has a real role check in its layout.
 
 ### Step 6 — Test Coverage Audit

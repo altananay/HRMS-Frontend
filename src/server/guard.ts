@@ -9,8 +9,8 @@ import { getSession, hasRole } from './session';
 /**
  * **The real authorization check**, run in a segment layout before anything in that segment renders.
  *
- * `middleware.ts` only sees whether a cookie exists — the Edge runtime cannot verify a JWT and the
- * backend's signing key must never be copied into this app. This runs on the server with a verified
+ * `proxy.ts` only sees whether a cookie exists — it does not verify the JWT, because the backend's
+ * signing key must never be copied into this app. This runs on the server with a verified
  * `/auth/me` behind it, so a forged or revoked cookie gets nothing.
  *
  * It is still not the last line: every request the panel makes goes to the API, which checks the same

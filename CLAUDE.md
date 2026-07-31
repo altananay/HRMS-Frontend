@@ -69,11 +69,6 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 > Read automatically at the start of every session. Single source of truth for how to work in this
 > codebase. Keep it honest — every line should earn its place.
 
-> **⚠ Written ahead of the code.** This file was authored in P0, before the application existed, and
-> describes the *target* architecture the rewrite plan defines. P10 re-reads it against the real code
-> and corrects the drift. Until that phase closes, treat a disagreement between this file and the
-> filesystem as this file being wrong. **Delete this notice in P10.**
-
 ---
 
 ## 1) Project Overview
@@ -149,6 +144,7 @@ npm run test:watch
 npm run e2e            # Playwright, against the real backend
 npm run e2e:ui
 npm run lint
+npm run typecheck      # tsc --noEmit
 ```
 
 `NODE_OPTIONS=--use-system-ca` is needed in the everyday dev loop so Node trusts the ASP.NET dev
@@ -159,11 +155,12 @@ certificate on `https://localhost:7129`. E2E sidesteps it by running the API ove
 ## 5) Working Agreement
 
 **Before changing code** — open the sibling screen first. To change the company job form, read
-`src/components/company/JobAdvertisementForm.tsx`, `src/schemas/job-advertisement.ts` and its
-`.map.ts`, then mirror the pattern.
+`src/components/company/JobAdvertisementForm.tsx` and `src/schemas/job-advertisement.ts` — schema,
+form types and mappers are all in that one schema file — then mirror the pattern.
 
 **While changing code** — a new endpoint means a new allow-list entry. A new form means a Zod schema
-and a mapper. A new user-facing string means a key in **both** `messages/tr.json` and `messages/en.json`.
+and a mapper. A new user-facing string means a key in **both** `messages/tr.json` and `messages/en.json`
+(`src/i18n/messages.test.ts` fails the build if one side is missing a key or a placeholder).
 
 **After changing code** — `npm run build` clean, `npm run test` green. If you touched the BFF or a
 guard, run `npm run e2e` too.
@@ -177,9 +174,12 @@ guard, run `npm run e2e` too.
 
 - **Contracts** (`src/contracts/`): one file per concern — `enums.ts`, `envelope.ts`, `responses.ts`,
   `requests.ts`. Types only, no logic, no imports from outside `contracts/`.
-- **Schemas** (`src/schemas/`): `<feature>.ts` holds the Zod schema and its inferred form type;
-  `<feature>.map.ts` holds `toXRequest` / `fromXResponse`. Mappers carry a compile-time
-  `Assert<Equals<…>>` so a contract change fails `tsc` rather than runtime.
+- **Schemas** (`src/schemas/`): `<feature>.ts` holds the Zod schema, its inferred form types, and the
+  `toXRequest` / `fromXResponse` mappers beside them — the form shape and the wire shape are read
+  together far more often than separately. Each mapper is annotated with its `*Request` return type,
+  so a renamed backend field fails `tsc` instead of silently sending `undefined`.
+  `src/schemas/rules.ts` holds the shared builders that mirror the backend's FluentValidation rules;
+  a new constraint belongs there, not inline in one schema.
 - **Server-only modules** (`src/server/`): never imported by a client component. Add
   `import 'server-only'` at the top so the boundary is enforced by the bundler, not by discipline.
 - **Form fields**: use the `RHF*` wrappers in `src/components/form/`. A bare MUI `TextField` inside a
@@ -188,6 +188,19 @@ guard, run `npm run e2e` too.
 - **Theme** (`src/theme/`): `palette.ts` holds the raw scales, `theme.ts` builds the theme,
   `tokens.ts` holds plain-string tokens for server components, `fonts.ts` owns `next/font`.
   Component look belongs in `theme.ts` `components.*`, not repeated in `sx` on every screen.
+- **Crawler-facing metadata**: `src/app/robots.ts` and `src/app/sitemap.ts` are generated at request
+  time and need **absolute** URLs, which come from `SITE_URL` in `src/server/site.ts` (defaults to
+  `http://localhost:3000`, never throws). `metadataBase` in the root layout uses the same value.
+- **Colour is a contract, not a preference.** `main` on every palette entry has to clear 4.5:1 twice
+  over: against its own `contrastText` when it fills something, and against the page background when
+  it colours text. The two pull opposite ways once the scheme flips, which is why `palette.ts` carries
+  a separate `*Dark` set — light gets dark fills with white text, dark gets bright fills with
+  near-black text. `e2e/a11y.spec.ts` scans both schemes, so a regression here is caught, not argued.
+
+> **⚠ A `loading.tsx` turns a `notFound()` into a soft 404.** The boundary makes Next stream: the
+> shell goes out — and with it **HTTP 200** — before the page component runs, so a later `notFound()`
+> renders the 404 screen under a 200 status. Add one only to a segment where no page calls
+> `notFound()`; today that is `(admin)` alone.
 
 > **⚠ No function props from a server component.** MUI components are client components, so anything
 > passed to them must be serializable. These all throw at request time — and `next build` will not
@@ -223,8 +236,9 @@ contracts  ←  schemas  ←  components
 |---|---|---|
 | `src/contracts` | wire types, enums, envelope | **nothing** |
 | `src/schemas` | Zod schemas + mappers | `contracts`, `zod` |
-| `src/server` | session, api-client, problem-details, allow-list | `contracts`, Node built-ins |
+| `src/server` | session, tokens, api-client, problem-details, allow-list, guards | `contracts`, Node built-ins |
 | `src/app/api` | BFF Route Handlers | `server`, `contracts` |
+| `src/lib` | the browser's side: `http.ts`, formatting, error copy | `contracts`, `i18n` |
 | `src/components` | UI | `contracts`, `schemas`, `lib`, MUI |
 | `src/app/(groups)` | pages and layouts | everything above |
 
@@ -256,11 +270,15 @@ Everything the API returns is normalized once, in `src/server/problem-details.ts
 
 Two runners, both must stay green.
 
-- **Vitest** — the BFF handlers, `problem-details`, `field-errors`, `session` (including the
-  single-flight refresh), Zod schemas at their exact boundaries, mappers, hooks, a few components.
-  Upstream is mocked with `msw` so real `fetch` semantics are exercised.
+- **Vitest** — `problem-details`, `field-errors`, `tokens` (including the single-flight refresh), the
+  allow-list, `lib/http`, the Zod schemas at their exact boundaries, the mappers, and the i18n message
+  files. Two projects: `node` for `*.test.ts`, `jsdom` for `*.test.tsx`. Upstream is stubbed with
+  `vi.spyOn(globalThis, 'fetch')` — one mechanism, no mock-server layer to keep in sync.
 - **Playwright** — against the **real** backend and a real PostgreSQL (`hrms_e2e`), with Mailpit for
-  the password-reset flow. `globalSetup` brings up docker; `webServer` starts the API and `next dev`.
+  the password-reset flow. `e2e/prepare.mjs` (run by `npm run e2e`, *before* Playwright) brings up
+  docker and recreates the database; `webServer` then starts the API and `next dev`. Not `globalSetup`
+  — that runs after `webServer`, so it would reset the database under an API that had already seeded
+  it. `e2e/a11y.spec.ts` adds an axe pass over one screen of each shape, in both colour schemes.
 
 > **Neither runner executes React Server Components.** Don't try to unit-test an RSC page — test the
 > modules it calls and assert the rendered result in Playwright.
@@ -271,21 +289,21 @@ with `RateLimiting__Auth__PermitLimit` raised, exactly as the backend's own func
 ## 10) Security
 
 - **Session is server-side.** `hrms_at` / `hrms_rt`, httpOnly, `sameSite=lax`, `secure` in production.
-- **Refresh is single-flight, in three layers** — proactive (`middleware.ts`, before expiry),
+- **Refresh is single-flight, in three layers** — proactive (`proxy.ts`, before expiry),
   per-process (`server/tokens.ts`, keyed by refresh token), and per-browser (`lib/http.ts`, one
   promise per tab). This is not over-engineering: replaying a rotated refresh token makes the backend
   revoke the entire chain and bump the security stamp, which logs the user out everywhere and
   surfaces as an ordinary 401.
-- **Only a Route Handler, Server Action or middleware may write a cookie.** `cookies().set()` throws
+- **Only a Route Handler, Server Action or the proxy may write a cookie.** `cookies().set()` throws
   during a Server Component render. That is why `getSession()` reads and never refreshes, why
-  `ensureAccessToken()` is handler-only, and why the proactive refresh lives in middleware.
+  `ensureAccessToken()` is handler-only, and why the proactive refresh lives in `proxy.ts`.
 - **Refresh has three outcomes, not two.** `rejected` (the API refused — session over, clear cookies)
   and `unavailable` (no answer — cookies untouched) must stay distinct. Collapsing them signs users
   out whenever the API blips, and nothing in a test would notice.
 - **CSRF**: `sameSite=lax` plus an `Origin` check on every mutating request. A missing `Origin` is
   rejected — browsers always send it on non-GET.
-- **Guards are two-tier.** `middleware.ts` only checks that a cookie exists (the Edge runtime cannot
-  verify a JWT and the signing key must never be copied here); the real role check happens in the
+- **Guards are two-tier.** `proxy.ts` only checks that a cookie exists (it does not verify the JWT —
+  the backend signing key must never be copied into this app); the real role check happens in the
   segment layout against a verified `/auth/me`. The backend remains the only authority.
 - **CV files** are personal data: they stream through an authorized proxy, are never given a URL that
   works without the session cookie, and are `cache-control: private, no-store`.
@@ -301,11 +319,12 @@ covers it. The rewrite deleted 20+ dependencies that were installed and never im
 |---|---|
 | Framework | `next` **16.2.12**, `react` / `react-dom` 19 |
 | UI | `@mui/material`, `@mui/material-nextjs` (`/v16-appRouter`), `@mui/icons-material`, `@mui/x-data-grid`, `@mui/x-charts`, `@mui/x-date-pickers` |
-| Styling engine | `@emotion/react`, `@emotion/styled` |
+| Styling engine | `@emotion/react`, `@emotion/styled`, `@emotion/cache` (peer of the MUI Next adapter) |
+| Server boundary | `server-only` — turns a client import of `src/server/**` into a build error |
 | Forms | `react-hook-form`, `zod` (4.x), `@hookform/resolvers` |
 | i18n | `next-intl` |
 | Dates | `dayjs` |
-| Tests | `vitest`, `@testing-library/*`, `jsdom`, `msw`, `@playwright/test` |
+| Tests | `vitest`, `@testing-library/*`, `jsdom`, `@playwright/test`, `@axe-core/playwright` |
 
 **Deliberately absent:** axios, formik, yup, bootstrap, react-bootstrap, jquery, sass,
 styled-components, react-toastify, react-select, react-transition-group, jwt-decode, uuid,

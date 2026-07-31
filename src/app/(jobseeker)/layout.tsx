@@ -4,7 +4,7 @@ import { requireRole } from '@/server/guard';
 /**
  * **The real guard for the job seeker panel.**
  *
- * `middleware.ts` only checked that a cookie exists — it cannot verify a JWT on the Edge runtime. This
+ * `proxy.ts` only checked that a cookie exists — it does not verify the JWT. This
  * runs on the server against a verified `/auth/me`, so a forged cookie gets a redirect rather than a
  * panel. The API checks the same thing again on every request it receives; this exists so the wrong
  * visitor sees the sign-in page instead of a screen full of 403s.

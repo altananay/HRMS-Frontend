@@ -44,7 +44,7 @@ checklists, and file locations are authoritative and must be completed in full.
 
 - **Route inventory**: for every `page.tsx` under `src/app/`, record the URL path, route group and
   layout chain, server/client rendering, what it fetches, and the **effective** guard — resolved
-  through the whole chain: `middleware.ts` matcher → segment `layout.tsx` role check → allow-list →
+  through the whole chain: `src/proxy.ts` matcher → segment `layout.tsx` role check → allow-list →
   the backend's own `[Authorize]`.
 - **BFF map**: every Route Handler under `src/app/api/` — method, path, whether it touches cookies,
   what it forwards. Reconcile `src/server/allowlist.ts` in **both** directions: UI calls with no
@@ -76,7 +76,7 @@ checklists, and file locations are authoritative and must be completed in full.
 - Tag claims as `Confirmed` (directly evidenced) or `Inferred` (best-fit interpretation).
 - If evidence is missing, state `Not found in scanned files` — never guess.
 - Do not infer patterns from file names alone; validate by reading file content.
-- **`middleware.ts` does not prove a route is protected.** It checks cookie presence only. Resolve the
+- **`src/proxy.ts` does not prove a route is protected.** It checks cookie presence only. Resolve the
   whole chain before reporting a guard.
 - **`'use client'` is contagious** — it applies to the module and everything it imports transitively.
 - **An endpoint absent from `allowlist.ts` is unreachable**, whatever the component calls.

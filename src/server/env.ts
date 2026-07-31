@@ -5,8 +5,9 @@
  * its address has no business being in the client bundle. `import 'server-only'` turns an accidental
  * client import into a build error rather than a leak.
  *
- * Not imported by `middleware.ts` — the Edge sandbox has its own module instance and reads
- * `process.env` directly there.
+ * Not imported by `proxy.ts`, which reads `process.env` directly: a missing variable throws here at
+ * import time, and a proxy that throws fails *every* request including the public ones. There it
+ * degrades to "no proactive refresh" instead.
  */
 import 'server-only';
 

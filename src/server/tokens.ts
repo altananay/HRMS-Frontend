@@ -1,11 +1,11 @@
 /**
  * Token primitives and the process-wide single-flight refresh.
  *
- * Deliberately free of `next/headers` **and** of `server-only`, because `middleware.ts` imports this
- * and runs in the Edge sandbox where neither is available. Everything here works on both runtimes:
- * `fetch`, `atob` and `JSON` are all standard in Node 20+ and on Edge.
+ * Deliberately free of `next/headers`, because `proxy.ts` imports this and there is no request-scoped
+ * cookie store to read from before a render. Nothing here needs one: `fetch`, `atob` and `JSON` are
+ * enough.
  *
- * The cookie *writing* lives in `session.ts` (Node) and in the middleware itself.
+ * The cookie *writing* lives in `session.ts` and in the proxy itself.
  */
 
 export const ACCESS_TOKEN_COOKIE = 'hrms_at';

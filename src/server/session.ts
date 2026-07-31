@@ -22,7 +22,7 @@ import {
  * `cookies().set()` throws — Next has already begun streaming the response by then. That single
  * constraint shapes the whole design: `getSession()` reads and never refreshes, `ensureAccessToken()`
  * refreshes and is only ever called from a handler, and the *proactive* refresh lives in
- * `middleware.ts`, which is the one place that runs before a render and can still set a cookie.
+ * `proxy.ts`, which is the one place that runs before a render and can still set a cookie.
  */
 
 const BASE_COOKIE = {
@@ -46,7 +46,7 @@ export async function clearSession(): Promise<void> {
   const store = await cookies();
 
   // `delete` rather than an empty value: an empty string still satisfies "cookie present", which is
-  // exactly what the middleware guard checks.
+  // exactly what the proxy guard checks.
   store.delete(ACCESS_TOKEN_COOKIE);
   store.delete(REFRESH_TOKEN_COOKIE);
 }

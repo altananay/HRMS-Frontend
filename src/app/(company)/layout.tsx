@@ -2,7 +2,7 @@ import { Role } from '@/contracts/enums';
 import { requireRole } from '@/server/guard';
 
 /**
- * The company panel's real guard. `middleware.ts` only saw that a cookie existed; this checks the role
+ * The company panel's real guard. `proxy.ts` only saw that a cookie existed; this checks the role
  * against a verified `/auth/me` before anything in the segment renders.
  *
  * Admins are not admitted. They moderate postings and applications from their own screens, and letting

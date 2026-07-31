@@ -31,7 +31,19 @@ invocation are native — there is no orchestration layer to maintain:
 
 **This skill was written before the application existed.** It was authored in P0 of the rewrite, from
 the plan, describing a Next.js app that had not been scaffolded yet. Every claim in its Project
-Context is a *prediction* until P10 verifies it against real code.
+Context was a *prediction* until P10 read it back against the shipped code on **2026-07-31**.
+
+What that reconciliation actually found, in one phase, is the argument for doing it at all:
+
+| Claimed | Shipped |
+|---|---|
+| `middleware.ts` on the Edge runtime | `src/proxy.ts` on Node — Next 16 renamed the convention |
+| wire mappers in `<feature>.map.ts` | mappers live beside the schema in `<feature>.ts` |
+| `msw` mocks upstream in unit tests | `vi.spyOn(globalThis, 'fetch')`; `msw` was installed and never imported |
+| `@mui/material` 6.x | 9.2.0 |
+
+None of those is exotic. Three of the four were true when written and were overtaken by ordinary
+work — which is precisely why the re-read is a scheduled step and not a matter of remembering.
 
 That is not hypothetical carelessness — the sibling repo's analyst skill went stale exactly this way.
 It was written against a .NET 7 / MongoDB / Autofac codebase, that codebase was rewritten, and the
@@ -69,16 +81,17 @@ These are the points where a generic Next.js audit would get this codebase wrong
 - **The browser never talks to the API.** Every request goes through the BFF. An audit that inventories
   "API calls" by grepping for the backend host will find nothing and conclude the app has no data
   layer. Follow `lib/http.ts` → Route Handler → `server/api-client.ts` instead.
-- **`middleware.ts` is not the guard, but it is not *only* a guard either.** It does two things, and
-  conflating them produces a wrong finding in either direction.
-  1. *Presence check.* Cookie exists or it does not — the Edge runtime cannot verify a JWT and the
-     backend's signing key must never be copied here. The real role check is in each segment
+- **`src/proxy.ts` is not the guard, but it is not *only* a guard either.** (It was `middleware.ts`
+  until Next 16 renamed the convention; a file by that name reappearing is drift, and Next warns.) It
+  does two things, and conflating them produces a wrong finding in either direction.
+  1. *Presence check.* Cookie exists or it does not — it deliberately does not verify the JWT, because
+     the backend's signing key must never be copied here. The real role check is in each segment
      `layout.tsx`. **Rule 5 in `STANDARDS.md` carries this — do not delete it.**
   2. *Proactive token refresh.* This is the **only** place that runs before a render and can still
      write a cookie: `cookies().set()` throws during a Server Component render. A page that finds its
      access token expired mid-render therefore cannot renew it, and must not refresh without
      persisting — the API rotates refresh tokens and treats the old one's reappearance as theft.
-     Do not report the upstream `fetch` in middleware as a layering violation; removing it is what
+     Do not report the upstream `fetch` in the proxy as a layering violation; removing it is what
      would break the app.
 - **`src/server/allowlist.ts` is load-bearing.** The catch-all proxy rejects anything not on it, so a
   UI call to a missing entry fails at runtime with no compile error. Reconcile in both directions:
@@ -114,6 +127,22 @@ These are the points where a generic Next.js audit would get this codebase wrong
   `MuiLink.component` so `href` alone routes. **`next build` does not catch this** — the pages are
   dynamic, so nothing renders them until a request arrives and then every one 500s. Report a function
   prop in a non-`'use client'` file as a High finding.
+- **A `loading.tsx` costs the 404 status.** The boundary makes Next stream, so the shell and HTTP 200
+  are committed before the page component runs and a later `notFound()` renders under a 200. Only
+  `(admin)` has one, because nothing there 404s. A `loading.tsx` in a segment whose pages call
+  `notFound()` is a finding — the screen still looks right, which is why nobody notices.
+- **Semantic colours are per-scheme by necessity.** `palette.ts` carries `success`/`successDark` and
+  friends because `main` both fills components and colours text, and those need opposite luminance on
+  a light vs a dark background. A single shared set is how the chips ended up at 3.47:1. Report a
+  semantic entry whose `main` fails 4.5:1 against its own `contrastText`.
+- **A named date/number format must be declared.** `next-intl`'s `t('x', { date: 'short' })` fails
+  *silently* on an undeclared format name and prints a raw `Date` — `Thu Oct 29 2026 03:00:00 GMT+0300`
+  in the middle of a page. `src/i18n/formats.ts` declares them and the `AppConfig` augmentation makes
+  an unknown name a compile error. Report a format name that is not in that file.
+- **Zod's `.email()` is stricter than the backend's rule.** It rejects addresses FluentValidation
+  accepts (`admin@hrms.e2e`, any TLD containing a digit), so the client refuses input the server would
+  have taken. Email validation belongs to the shared builder in `src/schemas/rules.ts`; a bare
+  `z.email()` in a feature schema is a finding.
 - **MUI v9 removed the system props from `Stack` and `Grid`.** `alignItems` / `justifyContent` as
   direct props no longer type-check; they belong in `sx`. `Grid` also has no `item` prop — sizing is
   `size={{ xs: 12, md: 6 }}`.

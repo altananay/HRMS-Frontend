@@ -8,15 +8,19 @@ import {
 } from '@/server/tokens';
 
 /**
+ * Runs before every matched request. This was `middleware.ts` until Next 16 renamed the convention;
+ * the file, the exported function and the runtime all changed, the behaviour did not. Proxy always
+ * runs on **Node.js**, so there is no Edge sandbox and no route segment config here.
+ *
  * Two jobs, and it is important to be precise about which is which.
  *
  * **1. A presence check, not an authorization check.** It looks at whether a session cookie exists,
- * nothing more. It cannot verify the JWT — the Edge runtime has no access to the backend's signing
- * key, and copying that key into this app would be a genuine regression. Anyone can send a cookie
- * called `hrms_at` containing rubbish and get past this. That is fine and expected: the point is to
- * send a signed-out visitor to the sign-in screen instead of to a panel that renders empty, not to
- * protect anything. **Role checks live in the segment layouts against a verified `/auth/me`, and the
- * API is the only real authority.**
+ * nothing more. It does not verify the JWT: that would mean holding the backend's signing key in this
+ * app, which is a genuine regression — a second place that can mint or trust credentials. Anyone can
+ * send a cookie called `hrms_at` containing rubbish and get past this. That is fine and expected: the
+ * point is to send a signed-out visitor to the sign-in screen instead of to a panel that renders
+ * empty, not to protect anything. **Role checks live in the segment layouts against a verified
+ * `/auth/me`, and the API is the only real authority.**
  *
  * **2. Proactive refresh.** This is the one place that runs *before* a render and can still write a
  * cookie. During a Server Component render `cookies().set()` throws, so a page that discovers its
@@ -32,7 +36,7 @@ import {
 /** Prefixes that require a session. Everything else — the public job board, auth screens — is open. */
 const PROTECTED = ['/profile', '/company', '/admin'] as const;
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
   const access = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
@@ -47,8 +51,6 @@ export async function middleware(request: NextRequest) {
 
   if (!refresh || !needsRefresh(access)) return NextResponse.next();
 
-  // `API_BASE_URL` is read here rather than from `src/server/env.ts`: that module is `server-only`
-  // and this runs in the Edge sandbox, which has its own module graph.
   const apiBaseUrl = process.env.API_BASE_URL?.replace(/\/+$/, '');
 
   if (!apiBaseUrl) return NextResponse.next();
@@ -113,8 +115,10 @@ export const config = {
    * Everything except Next's own assets and the auth handlers.
    *
    * `api/auth` is excluded deliberately: `refresh-session` would otherwise be preceded by a
-   * middleware refresh of the very token it is about to spend, and `login` would be pointless work.
+   * proactive refresh of the very token it is about to spend, and `login` would be pointless work.
    * `api/proxy` **is** included, so a data call benefits from the proactive refresh too.
    */
-  matcher: ['/((?!_next/static|_next/image|api/auth|favicon.ico|images|robots.txt).*)'],
+  matcher: [
+    '/((?!_next/static|_next/image|api/auth|favicon.ico|images|robots.txt|sitemap.xml).*)',
+  ],
 };

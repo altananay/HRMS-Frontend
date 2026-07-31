@@ -13,7 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /**
  * `Suspense` is required, not decorative: `LoginForm` calls `useSearchParams()` to read the `next`
- * parameter the middleware sets, and Next refuses to build a page that does so outside a boundary.
+ * parameter the proxy sets, and Next refuses to build a page that does so outside a boundary.
  */
 export default async function LoginPage() {
   const t = await getTranslations('auth.login');

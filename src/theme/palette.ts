@@ -52,32 +52,74 @@ export const neutral = {
   950: '#0A1320',
 } as const;
 
+/**
+ * The semantic colours, one set per colour scheme.
+ *
+ * They cannot be shared. `main` does double duty — it fills a chip or an alert **and** it colours
+ * text on the page background — and those two jobs pull in opposite directions once the background
+ * flips. A green dark enough for white text on a light page is nearly invisible as text on a dark
+ * one, and the reverse is worse: the original single set filled chips at 3.47:1, which is what axe
+ * caught on `/admin/users`.
+ *
+ * So: light gets dark fills with white text, dark gets bright fills with near-black text. Every pair
+ * below is ≥ 4.5:1 (checked at both ends — fill against its own text, and `main` as text against the
+ * page). Change one and re-check the other; `e2e/a11y.spec.ts` scans both schemes.
+ */
 export const success = {
   light: '#34D399',
-  main: '#0F9D6B',
-  dark: '#046C4E',
+  main: '#0A7F57', // 5.02:1 with white
+  dark: '#04563E',
   contrastText: '#FFFFFF',
 } as const;
 
 export const warning = {
   light: '#FBBF24',
-  main: '#D97706',
-  dark: '#92400E',
+  main: '#B45309', // 5.02:1
+  dark: '#7C3D06',
   contrastText: '#FFFFFF',
 } as const;
 
 export const error = {
   light: '#F87171',
-  main: '#DC2626',
+  main: '#DC2626', // 4.83:1 — already passing, left alone
   dark: '#991B1B',
   contrastText: '#FFFFFF',
 } as const;
 
 export const info = {
   light: '#38BDF8',
-  main: '#0284C7',
-  dark: '#075985',
+  main: '#0369A1', // 5.93:1
+  dark: '#0B4A6F',
   contrastText: '#FFFFFF',
+} as const;
+
+/** The dark-scheme counterparts: bright fills, dark text on them. */
+export const successDark = {
+  light: '#6EE7B7',
+  main: '#34D399',
+  dark: '#0F9D6B',
+  contrastText: '#04231A',
+} as const;
+
+export const warningDark = {
+  light: '#FCD34D',
+  main: '#FBBF24',
+  dark: '#D97706',
+  contrastText: '#2A1603',
+} as const;
+
+export const errorDark = {
+  light: '#FCA5A5',
+  main: '#F87171',
+  dark: '#DC2626',
+  contrastText: '#2A0A0A',
+} as const;
+
+export const infoDark = {
+  light: '#7DD3FC',
+  main: '#38BDF8',
+  dark: '#0284C7',
+  contrastText: '#042536',
 } as const;
 
 /**

@@ -42,7 +42,7 @@ export function LoginForm() {
         body: toLoginRequest(values),
       });
 
-      // `next` is set by the middleware when it turns an anonymous visitor away from a protected
+      // `next` is set by the proxy when it turns an anonymous visitor away from a protected
       // page. Only a same-origin path is honoured — an absolute URL here would make the sign-in form
       // an open redirect, which is a classic phishing primitive.
       const next = searchParams.get('next');

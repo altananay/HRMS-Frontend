@@ -9,17 +9,31 @@ import { Footer } from '@/components/shell/Footer';
 import { Header } from '@/components/shell/Header';
 import { SkipLink } from '@/components/ui/SkipLink';
 import { getSession } from '@/server/session';
+import { SITE_URL } from '@/server/site';
 import { fontClassNames } from '@/theme/fonts';
 import { ThemeRegistry } from '@/theme/ThemeRegistry';
 
 import './globals.css';
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('meta');
+  const [t, locale] = await Promise.all([getTranslations('meta'), getLocale()]);
 
   return {
+    // Absolute-izes every relative URL below and in each page's own metadata. Without it Next warns
+    // on every build and social cards resolve image paths against nothing.
+    metadataBase: new URL(SITE_URL),
     title: { default: t('title'), template: t('titleTemplate') },
     description: t('description'),
+    applicationName: t('title'),
+    openGraph: {
+      type: 'website',
+      siteName: t('title'),
+      title: t('title'),
+      description: t('description'),
+      locale,
+      url: '/',
+    },
+    twitter: { card: 'summary_large_image', title: t('title'), description: t('description') },
   };
 }
 

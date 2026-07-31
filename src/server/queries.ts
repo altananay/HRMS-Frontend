@@ -40,7 +40,7 @@ export async function fetchPublic<T>(path: string, query: Query = {}): Promise<T
  * An authenticated read for a panel screen.
  *
  * Sends the access token from the cookie and **does not refresh it**. Refreshing means writing a
- * cookie, which throws during a Server Component render — the proactive refresh in `middleware.ts`
+ * cookie, which throws during a Server Component render — the proactive refresh in `proxy.ts`
  * runs before this and is what keeps the token good. If it somehow is not, this returns `null` and the
  * caller renders an empty state rather than the page exploding.
  */

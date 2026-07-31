@@ -1,7 +1,19 @@
 import { createTheme, type Shadows } from '@mui/material/styles';
 
 import { LinkBehavior } from './LinkBehavior';
-import { accent, brand, error, info, neutral, success, warning } from './palette';
+import {
+  accent,
+  brand,
+  error,
+  errorDark,
+  info,
+  infoDark,
+  neutral,
+  success,
+  successDark,
+  warning,
+  warningDark,
+} from './palette';
 import { bodyFontFamily, displayFontFamily } from './tokens';
 
 /**
@@ -66,7 +78,11 @@ export const theme = createTheme({
         secondary: {
           lighter: accent[100],
           light: accent[300],
-          main: accent[600],
+          // `accent[700]`, not the `600` the rest of the scale would suggest: amber goes light fast,
+          // and 600 (#DD5D02) is only 3.72:1 on white — under AA for text and for white-on-fill.
+          // 700 is 5.60:1 and passes both. Anything lighter belongs on a `lighter` background, not
+          // as a foreground.
+          main: accent[700],
           dark: accent[800],
           contrastText: '#FFFFFF',
         },
@@ -112,10 +128,11 @@ export const theme = createTheme({
           dark: accent[500],
           contrastText: '#2A1603',
         },
-        success,
-        warning,
-        error,
-        info,
+        // The dark-scheme semantic set: bright fills with near-black text. See palette.ts.
+        success: successDark,
+        warning: warningDark,
+        error: errorDark,
+        info: infoDark,
         grey: neutral,
         divider: 'rgba(148, 163, 184, 0.18)',
         text: {

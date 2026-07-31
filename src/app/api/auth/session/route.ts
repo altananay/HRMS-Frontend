@@ -10,7 +10,7 @@ import { ensureAccessToken, getSession } from '@/server/session';
  * verifies against `/auth/me` rather than decoding the token, so a revoked session reports `null` here
  * even while the cookie is still technically present.
  *
- * `ensureAccessToken()` first, because this route is excluded from the middleware matcher — the
+ * `ensureAccessToken()` first, because this route is excluded from the proxy matcher — the
  * proactive refresh that covers every page render does not run here. Without it, a browser holding a
  * usable refresh token but no access token would be told it is signed out, and the only cure would be
  * signing in again.

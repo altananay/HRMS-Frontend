@@ -106,7 +106,7 @@ Use this scaffold. Replace all `{{PLACEHOLDER}}` values with real content found 
           <tr><td>Material UI</td><td>{{version}}</td><td>{{adapter: @mui/material-nextjs/v16-appRouter}}</td></tr>
           <tr><td>React Hook Form / Zod</td><td>{{versions}}</td><td>{{@hookform/resolvers}}</td></tr>
           <tr><td>next-intl</td><td>{{version}}</td><td>{{cookie-based, tr default}}</td></tr>
-          <tr><td>Vitest / Playwright</td><td>{{versions}}</td><td>{{msw for upstream; E2E vs real backend}}</td></tr>
+          <tr><td>Vitest / Playwright</td><td>{{versions}}</td><td>{{fetch stubbed per test; E2E vs real backend}}</td></tr>
         </tbody>
       </table>
       </div>
@@ -117,7 +117,7 @@ Use this scaffold. Replace all `{{PLACEHOLDER}}` values with real content found 
     <section id="routes">
       <h2>3. Route &amp; Screen Inventory</h2>
       <p>{{Route count by group. Note that the guard column is the EFFECTIVE guard, resolved through
-      middleware matcher → segment layout → BFF → backend, not the middleware matcher alone.}}</p>
+      proxy matcher → segment layout → BFF → backend, not the proxy matcher alone.}}</p>
       <div class="scroll">
       <table>
         <thead><tr><th>Path</th><th>Group / Layout</th><th>Rendering</th><th>Data</th><th>Effective guard</th></tr></thead>
@@ -233,13 +233,13 @@ Node ids are alphanumeric only. Put punctuation, slashes and brackets inside the
 
 Resolve the whole chain before reporting a route as protected:
 
-1. Does `middleware.ts`'s `matcher` cover the path? — this proves only that a **cookie exists**.
+1. Does `src/proxy.ts`'s `matcher` cover the path? — this proves only that a **cookie exists**.
 2. Does the segment `layout.tsx` check the role against a verified `/auth/me`?
 3. Is the endpoint the page calls on `src/server/allowlist.ts`?
 4. What does the backend's own `[Authorize]` require?
 
-> **The middleware is not the guard.** It cannot verify a JWT — the Edge runtime has no signing key,
-> and copying one into the frontend would be a real regression. A page whose layout performs no role
+> **The proxy is not the guard.** It deliberately does not verify the JWT: that would mean holding
+> the backend signing key here, which would be a real regression. A page whose layout performs no role
 > check is reachable by **any signed-in user**, whatever the matcher implies. Report that as a
 > finding, not as "protected".
 
@@ -266,7 +266,7 @@ Run every item. Fix and re-validate until all pass.
 6. [ ] Every `page.tsx` under `src/app/` appears in the route table — **count them from the filesystem; do not assume a number**
 7. [ ] Every Route Handler under `src/app/api/` appears in the handler table
 8. [ ] The allow-list is reconciled in **both** directions
-9. [ ] Guard column reflects the resolved chain (Rule 5), not the middleware matcher
+9. [ ] Guard column reflects the resolved chain (Rule 5), not the proxy matcher
 10. [ ] Rendering column reflects the import chain (Rule 2)
 11. [ ] Contract parity was checked field-by-field against the backend, not summarised
 12. [ ] Zod schemas compared boundary-by-boundary against `Validators.cs`
