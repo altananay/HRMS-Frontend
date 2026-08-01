@@ -150,6 +150,7 @@ describe('refreshOnce', () => {
   it.each([
     [401, 'rejected'],
     [400, 'rejected'],
+    [429, 'unavailable'],
     [500, 'unavailable'],
     [503, 'unavailable'],
   ])('should_Map%dTo%s', async (status, expected) => {

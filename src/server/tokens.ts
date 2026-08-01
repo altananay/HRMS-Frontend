@@ -71,7 +71,12 @@ async function requestRefresh(refreshToken: string, apiBaseUrl: string): Promise
   }
 
   if (!response.ok) {
-    return response.status >= 500 ? { status: 'unavailable' } : { status: 'rejected' };
+    // 429 is the auth rate limiter, not the API saying this refresh token is invalid — treating it as
+    // `rejected` would clear a perfectly good session over a transient limit, exactly the "signs users
+    // out whenever the API blips" failure this three-outcome design exists to avoid.
+    return response.status >= 500 || response.status === 429
+      ? { status: 'unavailable' }
+      : { status: 'rejected' };
   }
 
   try {
