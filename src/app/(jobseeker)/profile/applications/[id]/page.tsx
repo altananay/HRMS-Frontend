@@ -24,14 +24,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('detailTitle') };
 }
 
-/**
- * One application.
- *
- * `GetByIdJobApplicationQuery` takes `RequestedBy` from the token and refuses anyone who is not a
- * party to it, so a guessed id gets a 403 — which `fetchMine` turns into `null` and this turns into a
- * 404. Not found and not yours look identical from here, which is the right amount to tell someone
- * probing for other people's applications.
- */
 export default async function ApplicationDetailPage({ params }: Params) {
   await requireRole(Role.JobSeeker);
 

@@ -4,12 +4,6 @@ import Typography from '@mui/material/Typography';
 
 import { displayFontFamily } from '@/theme/tokens';
 
-/**
- * The mark is a knocked-out H in a rounded square, drawn with `fill-rule: evenodd` and painted with
- * `currentColor` — no gradient, no `<defs>`, no generated ids. That matters because the logo renders
- * twice per page (header and footer) and duplicate SVG gradient ids are invalid markup; using
- * `currentColor` also means the mark follows the palette into dark mode for free.
- */
 export function Logo({
   size = 32,
   showWordmark = true,

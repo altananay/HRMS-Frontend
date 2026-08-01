@@ -1,17 +1,3 @@
-/**
- * Prepares the infrastructure the E2E suite runs against. Invoked by `npm run e2e` **before**
- * Playwright starts.
- *
- * The ordering is the whole reason this is a separate step rather than `globalSetup`: Playwright
- * launches `webServer` first and only then runs `globalSetup`. Dropping the database from
- * globalSetup therefore pulls it out from under an API that had already migrated and seeded it,
- * leaving the suite pointed at an empty schema — every request 500s and it looks like a broken
- * feature rather than a broken harness.
- *
- * Dropping rather than truncating: the API applies migrations on startup in Development, so a cold
- * drop gives every run an identical schema and seed for about two seconds, and the developer's own
- * `hrms` database is never touched.
- */
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 

@@ -23,13 +23,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('title') };
 }
 
-/**
- * The company panel's front door.
- *
- * Both reads pull a generous page and count in memory rather than issuing one request per status. The
- * API has no aggregate endpoint, and seven round trips to draw one chart would be worse than one page
- * of rows — the numbers here are per-employer and small.
- */
 export default async function CompanyOverviewPage() {
   const employer = await requireRole(Role.Employer);
 

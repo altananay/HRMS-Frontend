@@ -5,13 +5,6 @@ import Chip from '@mui/material/Chip';
 import TextField from '@mui/material/TextField';
 import { useController, type FieldPath, type FieldValues } from 'react-hook-form';
 
-/**
- * A free-text chip list — sectors on an employer, skills on an advertisement or CV.
- *
- * `freeSolo` with `multiple`: the backend stores these as a plain `text[]` with no lookup table, so
- * there is nothing to pick *from*. Suggestions can still be supplied via `options` once real data is
- * available, without changing a call site.
- */
 export function RHFTagsField<T extends FieldValues>({
   name,
   label,
@@ -38,8 +31,6 @@ export function RHFTagsField<T extends FieldValues>({
       value={value}
       disabled={disabled}
       onChange={(_event, next) => {
-        // Trim, drop blanks, and de-duplicate. Without this, Enter on an empty input adds `''`, which
-        // then fails the server's `NotEmpty()` on an entry the user cannot see to remove.
         const cleaned = next
           .map((entry) => entry.trim())
           .filter((entry, index, all) => entry.length > 0 && all.indexOf(entry) === index);
@@ -59,10 +50,6 @@ export function RHFTagsField<T extends FieldValues>({
           placeholder={value.length === 0 ? placeholder : undefined}
           error={Boolean(fieldState.error)}
           helperText={fieldState.error?.message ?? hint ?? ' '}
-          // Merged with `params.slotProps`, never replacing it. That object carries the input ref the
-          // Autocomplete wires itself up through; overwriting it makes MUI log "Unable to find the
-          // input element" and then silently render no chips and fire no `onChange` — the field looks
-          // present but is inert, which is a slow thing to notice.
           slotProps={{
             ...params.slotProps,
             formHelperText: { sx: { minHeight: '1.25rem' } },

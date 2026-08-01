@@ -35,8 +35,6 @@ export function CvEducationStep() {
       onAdd={() => append(BLANK)}
     >
       {fields.map((field, index) => (
-        // `field.id` is RHF's own stable key. Using `index` here would reuse a row's DOM when an
-        // earlier entry is removed, and the values below would visibly jump to the wrong card.
         <FieldArrayCard
           key={field.id}
           index={index}

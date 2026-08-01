@@ -12,12 +12,6 @@ import type { PagedResult } from '@/contracts/envelope';
 import type { JobAdvertisementResponse } from '@/contracts/responses';
 import { fetchPublic } from '@/server/queries';
 
-/**
- * The most recent openings, on the landing page.
- *
- * Renders nothing at all when there are none — an empty-state box on a marketing page tells a first
- * visitor that the product has no content, which is worse than one less section.
- */
 export async function LatestJobs() {
   const [result, t] = await Promise.all([
     fetchPublic<PagedResult<JobAdvertisementResponse>>('JobAdvertisements/getall', {

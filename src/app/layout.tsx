@@ -19,8 +19,6 @@ export async function generateMetadata(): Promise<Metadata> {
   const [t, locale] = await Promise.all([getTranslations('meta'), getLocale()]);
 
   return {
-    // Absolute-izes every relative URL below and in each page's own metadata. Without it Next warns
-    // on every build and social cards resolve image paths against nothing.
     metadataBase: new URL(SITE_URL),
     title: { default: t('title'), template: t('titleTemplate') },
     description: t('description'),
@@ -37,31 +35,13 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-/**
- * Stays a server component. The only client boundary is `ThemeRegistry`; `Header` is a client
- * component in its own right and is composed in as a child rather than by making this file one.
- *
- * Two details are load-bearing:
- *
- *   `InitColorSchemeScript` must be the first thing in `<body>`. It writes the `light`/`dark` class
- *   onto `<html>` from localStorage *before* the browser paints, which is the only way to avoid a
- *   flash of the wrong theme. Move it below the providers and the flash comes back.
- *
- *   `suppressHydrationWarning` on `<html>` is required *because* of that script: the server cannot
- *   know which class it will add, so the attribute legitimately differs between server and client. It
- *   applies to this element only and silences nothing below it.
- */
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  // Resolved on the server on every render, so the header is never briefly wrong. For an anonymous
-  // visitor this costs nothing — no cookie, no upstream call.
   const [locale, user] = await Promise.all([getLocale(), getSession()]);
 
   return (
     <html
       lang={locale}
       className={fontClassNames}
-      // Tells the router to suppress the smooth scroll on a route change. Without it Next warns, and a
-      // navigation animates the scroll instead of landing at the top.
       data-scroll-behavior="smooth"
       suppressHydrationWarning
     >

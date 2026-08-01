@@ -31,12 +31,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('jobDetailTitle') };
 }
 
-/**
- * One posting and everyone who applied to it.
- *
- * The applications are filtered server-side by `jobAdvertisementId` — one of the filters added in P1
- * for exactly this screen — rather than fetched wholesale and narrowed here.
- */
 export default async function CompanyJobDetailPage({ params }: Params) {
   const employer = await requireRole(Role.Employer);
   const { id } = await params;
@@ -49,8 +43,6 @@ export default async function CompanyJobDetailPage({ params }: Params) {
     fetchMine<JobAdvertisementResponse>(`JobAdvertisements/getbyid/${id}`),
   ]);
 
-  // `getbyid` is anonymous upstream, so it happily returns another employer's posting. The ownership
-  // check has to happen here, or this panel would display someone else's listing and applications.
   if (!job || job.employerId !== employer.id) notFound();
 
   const applications = await fetchMine<PagedResult<JobApplicationResponse>>(

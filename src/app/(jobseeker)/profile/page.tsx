@@ -24,12 +24,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('title') };
 }
 
-/**
- * The panel's front door: what the user has, and the one thing they most likely came to do.
- *
- * The three reads run together and each degrades on its own — a résumé that fails to load leaves the
- * other two cards intact rather than taking the page down.
- */
 export default async function ProfileOverviewPage() {
   const user = await requireRole(Role.JobSeeker);
 
@@ -40,8 +34,6 @@ export default async function ProfileOverviewPage() {
     fetchMine<PagedResult<JobApplicationResponse>>('JobApplications/getall', { pageSize: 1 }),
   ]);
 
-  // How much of the résumé is actually filled in — a more honest signal than "exists" for someone who
-  // created one and stopped after the first step.
   const filledSections = cv
     ? [
         Boolean(cv.information),

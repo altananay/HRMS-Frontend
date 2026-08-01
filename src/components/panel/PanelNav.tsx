@@ -11,17 +11,9 @@ export type PanelNavItem = {
   href: string;
   label: string;
   icon: React.ReactNode;
-  /** Marks the section root, whose children should still light it up. */
   exact?: boolean;
 };
 
-/**
- * The panel's own navigation.
- *
- * A client component only because the active item depends on the current path. `exact` exists because
- * `/profile` is a prefix of every other item — without it the dashboard entry would stay highlighted
- * on every screen, and nothing would ever look selected.
- */
 export function PanelNav({ items }: { items: readonly PanelNavItem[] }) {
   const pathname = usePathname();
 

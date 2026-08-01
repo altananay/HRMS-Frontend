@@ -36,12 +36,6 @@ const NAV = [
   { href: '/contact', key: 'contact' },
 ] as const;
 
-/**
- * The site header: transparent over the hero, then frosted once the page scrolls.
- *
- * `useScrollTrigger` rather than a `scroll` listener — MUI throttles it through
- * `requestAnimationFrame`, so dragging the scrollbar does not re-render this on every pixel.
- */
 export function Header() {
   const t = useTranslations('nav');
   const tAuth = useTranslations('auth');
@@ -56,18 +50,14 @@ export function Header() {
     <AppBar
       position="sticky"
       sx={(theme) => ({
-        // The blur is what makes a translucent bar read as glass rather than as a faded rectangle.
         backdropFilter: scrolled ? 'saturate(180%) blur(12px)' : 'none',
         backgroundColor: scrolled ? 'rgba(255,255,255,0.74)' : 'transparent',
         borderBottom: '1px solid',
         borderColor: scrolled ? theme.vars.palette.divider : 'transparent',
         transition: 'background-color .25s, border-color .25s, backdrop-filter .25s',
-        // The light tint would read as grey haze over the dark background.
         ...theme.applyStyles('dark', {
           backgroundColor: scrolled ? 'rgba(10, 19, 32, 0.74)' : 'transparent',
         }),
-        // Where the blur is unsupported the translucency has nothing behind it to soften, so fall
-        // back to a solid bar instead of letting content show through.
         ...(scrolled && {
           '@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px)))': {
             backgroundColor: theme.vars.palette.background.default,
@@ -77,8 +67,6 @@ export function Header() {
     >
       <Container>
         <Toolbar disableGutters sx={{ minHeight: { xs: 64, md: 76 }, gap: 1 }}>
-          {/* A Box has no href semantics of its own, so this one still needs `component`. Everything
-              else in this file is ButtonBase-derived and picks up `LinkBehavior` from the theme. */}
           <Box
             component={Link}
             href="/"
@@ -165,9 +153,6 @@ export function Header() {
 
         <Divider sx={{ my: 2 }} />
 
-        {/* The drawer is the only navigation on a phone, so it has to know about the session too —
-            offering "Sign up" to someone who is already signed in is the kind of detail that makes an
-            app feel unfinished. */}
         <Stack spacing={1}>
           {user ? (
             <>

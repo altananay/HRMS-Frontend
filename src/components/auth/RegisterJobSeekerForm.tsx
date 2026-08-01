@@ -23,7 +23,6 @@ import {
 
 import { FormSection } from './FormSection';
 
-/** Registration signs the user straight in — the API answers with a full session. */
 export function RegisterJobSeekerForm() {
   const t = useTranslations();
   const router = useRouter();
@@ -90,10 +89,6 @@ export function RegisterJobSeekerForm() {
             />
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
-            {/*
-              A national ID is personal data. It is optional, never echoed back into the page after
-              submission, and never logged — see the non-negotiables in CLAUDE.md.
-            */}
             <RHFTextField<RegisterJobSeekerInput>
               name="nationalId"
               label={t('auth.nationalId')}

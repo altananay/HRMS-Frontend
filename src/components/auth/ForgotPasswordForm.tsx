@@ -19,14 +19,6 @@ import {
   type ForgotPasswordValues,
 } from '@/schemas/auth';
 
-/**
- * Requests a reset mail.
- *
- * **The confirmation is deliberately uninformative.** It says the same thing whether or not the
- * address is registered, because the API answers the same way for both — telling a visitor "no
- * account with that email" would turn this form into a way to test whether any given person has an
- * account here. Nothing in this component may branch on the response.
- */
 export function ForgotPasswordForm() {
   const t = useTranslations();
   const [sent, setSent] = useState(false);

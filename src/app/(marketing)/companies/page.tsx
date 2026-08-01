@@ -26,14 +26,6 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const PAGE_SIZE = 12;
 
-/**
- * The public company directory.
- *
- * Reads `Employers/public`, **not** `Employers/getall`. The two differ deliberately: `getall` is
- * admin-only and its response carries the employer's email address and account status, neither of
- * which belongs in an anonymous, paged, scrapeable list. The address does appear — on the company's
- * own page, one at a time, which is a different thing entirely.
- */
 export default async function CompaniesPage({
   searchParams,
 }: {

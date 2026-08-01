@@ -43,17 +43,6 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   };
 }
 
-/**
- * A company's own page: profile, contact details and every opening it has published.
- *
- * **This is the one place the employer's email address appears**, and that is a deliberate line. The
- * directory at `/companies` reads a narrower response that omits it, so the address is never in a
- * paged list a scraper can walk — but a visitor who has arrived at a specific company can see how to
- * reach them.
- *
- * The two reads run in parallel. A company with no openings is a normal state, not an error, so the
- * openings panel degrades to an empty state on its own without taking the profile down with it.
- */
 export default async function CompanyDetailPage({ params }: Params) {
   const { id } = await params;
 
@@ -171,10 +160,6 @@ export default async function CompanyDetailPage({ params }: Params) {
 
                 {company.webSite ? (
                   <ContactRow icon={<LanguageOutlinedIcon />}>
-                    {/*
-                      `noopener noreferrer` on an outbound link the company controls: without it the
-                      target page gets a handle on this window through `window.opener`.
-                    */}
                     <MuiLink
                       href={company.webSite}
                       target="_blank"

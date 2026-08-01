@@ -16,14 +16,6 @@ import { useLocale, useTranslations } from 'next-intl';
 import { locales, type AppLocale } from '@/i18n/config';
 import { setLocaleCookie } from '@/i18n/locale';
 
-/**
- * Language switch. Writes the cookie through the one Server Action in the codebase, then calls
- * `router.refresh()`.
- *
- * The refresh is required, not belt-and-braces: setting a cookie does not invalidate the router
- * cache, so without it the current page keeps rendering the previous locale's messages and the
- * change only appears on the next navigation.
- */
 export function LocaleSwitcher() {
   const t = useTranslations('locale');
   const active = useLocale();

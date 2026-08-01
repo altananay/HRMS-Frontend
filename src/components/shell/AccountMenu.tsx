@@ -20,12 +20,6 @@ import { useTranslations } from 'next-intl';
 import { useSession } from '@/components/providers/SessionProvider';
 import { DASHBOARD_BY_USER_TYPE } from '@/lib/dashboards';
 
-/**
- * Sign-in / sign-up buttons when anonymous, an account menu when not.
- *
- * The user comes from the server on every render, so the header is never briefly wrong — no flash of
- * "Sign in" for someone who is already signed in, which is what a client-side session fetch produces.
- */
 export function AccountMenu() {
   const t = useTranslations();
   const { user, signOut, isSigningOut } = useSession();

@@ -10,13 +10,6 @@ import Stack from '@mui/material/Stack';
 import Tooltip from '@mui/material/Tooltip';
 import Typography from '@mui/material/Typography';
 
-/**
- * One entry in a repeating section — an education, a job, a language, a project.
- *
- * The remove button is an `IconButton` with a tooltip and a real `aria-label` rather than a bare ✕:
- * on a form where every row looks the same, "Remove" alone tells a screen-reader user nothing about
- * *which* row they are about to delete, so the label names the entry.
- */
 export function FieldArrayCard({
   index,
   label,
@@ -60,7 +53,6 @@ export function FieldArrayCard({
   );
 }
 
-/** The empty state and add button that sit under every repeating section. */
 export function FieldArraySection({
   isEmpty,
   emptyLabel,

@@ -8,16 +8,6 @@ import { getTranslations } from 'next-intl/server';
 
 import type { CvResponse } from '@/contracts/responses';
 
-/**
- * A résumé, read-only.
- *
- * Shared by the seeker's own page and the employer's view of a candidate, so the two can never drift
- * into showing different things — which would make "this is what employers see" a lie on the seeker's
- * screen.
- *
- * It renders no files. Those are personal data behind an authorization rule, and the two callers
- * differ on whether they may be listed at all.
- */
 export async function CvView({ cv }: { cv: CvResponse }) {
   const [t, tLevel] = await Promise.all([getTranslations('cv'), getTranslations('cv.level')]);
 

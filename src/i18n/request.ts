@@ -5,12 +5,6 @@ import { defaultLocale, isAppLocale, timeZone } from './config';
 import { formats } from './formats';
 import { LOCALE_COOKIE } from './config';
 
-/**
- * Resolves the request's locale and messages. Called by next-intl on every server render.
- *
- * An unrecognised cookie value falls back to the default rather than throwing — the cookie is user
- * input and a hand-edited `NEXT_LOCALE=de` must not 500 the site.
- */
 export default getRequestConfig(async () => {
   const cookieStore = await cookies();
   const requested = cookieStore.get(LOCALE_COOKIE)?.value;

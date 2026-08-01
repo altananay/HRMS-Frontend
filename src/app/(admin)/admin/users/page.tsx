@@ -32,8 +32,6 @@ export default async function Page({
 
   return (
     <PanelLayout title={t('usersTitle')} description={t('usersSubtitle')} items={nav}>
-      {/* There is no generic user CRUD in the API — editing happens on each type's own screen — so
-          saying so beats a table whose rows look clickable and are not. */}
       <Alert severity="info" sx={{ mb: 3 }}>
         {t('usersReadOnly')}
       </Alert>

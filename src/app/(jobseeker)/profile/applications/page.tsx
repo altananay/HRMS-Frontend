@@ -26,13 +26,6 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const PAGE_SIZE = 15;
 
-/**
- * The applicant's own applications.
- *
- * No `jobSeekerId` filter is sent, and none would help: `JobApplicationsController.GetAll` overwrites
- * it from the bearer token for this role. The scoping is the server's, which is what makes it a
- * security property rather than a query parameter.
- */
 export default async function ApplicationsPage({
   searchParams,
 }: {

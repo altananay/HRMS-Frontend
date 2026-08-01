@@ -16,7 +16,6 @@ function Trigger({ onRender }: { onRender?: (show: ReturnType<typeof useToast>) 
       <button onClick={() => toasts.error('hata oldu')}>error</button>
       <button
         onClick={() => {
-          // Both in one tick — this is the case that used to drop the first message.
           show('birinci');
           show('ikinci');
         }}
@@ -59,17 +58,10 @@ describe('ToastProvider', () => {
 
     const alert = await screen.findByRole('alert');
     expect(alert).toHaveTextContent('hata oldu');
-    // Matched loosely on purpose — MUI has moved this class name between majors, and the assertion
-    // that matters is "styled as an error", not the exact slot name.
     expect(alert.className).toMatch(/error/i);
   });
 
   it('should_ShowTheFirstMessage_WhenTwoAreQueuedInTheSameTick', async () => {
-    // Regression test, and it caught two different bugs in a row. First `show` branched on the `open`
-    // *state*, stale within a tick, so both calls concluded nothing was showing and the second
-    // replaced the first before it rendered. Switching that flag to a ref then made the second call
-    // close a Snackbar that had not finished opening, and *neither* message appeared. Both failures
-    // were silent.
     render(
       <ToastProvider>
         <Trigger />
@@ -83,8 +75,6 @@ describe('ToastProvider', () => {
   });
 
   it('should_ShowTheSecondMessage_AfterTheFirstAutoHides', async () => {
-    // The queue actually draining, end to end: the head is dropped on `onExited`, and the next message
-    // takes its place. Without this, "shows the first one" would pass even if the second never came.
     render(
       <ToastProvider>
         <Trigger />
@@ -99,8 +89,6 @@ describe('ToastProvider', () => {
   });
 
   it('should_KeepShowStable_AcrossRenders', async () => {
-    // `show` lands in `useEffect` dependency arrays. When it changed identity on every open/close, an
-    // effect that fired a toast re-fired forever.
     const seen: unknown[] = [];
 
     render(

@@ -6,12 +6,6 @@ import Typography from '@mui/material/Typography';
 
 import { PanelNav, type PanelNavItem } from './PanelNav';
 
-/**
- * The frame every signed-in panel screen renders into: a side navigation and a titled content column.
- *
- * Shared by all three roles so the job seeker, company and admin areas feel like one application
- * rather than three that happen to share a header.
- */
 export function PanelLayout({
   title,
   description,

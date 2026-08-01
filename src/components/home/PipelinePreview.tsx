@@ -8,13 +8,6 @@ import { getTranslations } from 'next-intl/server';
 
 import { darkScheme } from '@/theme/tokens';
 
-/**
- * The illustration beside the hero headline: the application pipeline as the product models it.
- *
- * Deliberately **not** a mock job listing. A fake card with a plausible company name and salary is
- * indistinguishable from real content, and a visitor who clicks it finds nothing. The stage names are
- * the real `JobApplicationStatus` values, so this shows the product without inventing data.
- */
 export async function PipelinePreview() {
   const t = await getTranslations('home.hero');
 
@@ -31,7 +24,6 @@ export async function PipelinePreview() {
       sx={{
         borderRadius: 4,
         boxShadow: 6,
-        // A slight lift and rotation so it sits *in* the hero rather than next to it.
         transform: { md: 'rotate(-1.2deg)' },
         backdropFilter: 'blur(6px)',
         backgroundColor: 'rgba(255,255,255,0.82)',

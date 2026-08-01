@@ -9,13 +9,6 @@ import { DASHBOARD_BY_USER_TYPE } from '@/lib/dashboards';
 import { getSession } from '@/server/session';
 import { brand } from '@/theme/palette';
 
-/**
- * The closing call to action.
- *
- * It asks a signed-in visitor to create an account otherwise — the same class of detail as a footer
- * offering "Sign up" to someone who is already signed in. This is the landing page, so it is the first
- * thing they see; it costs two message keys to say the right thing instead.
- */
 export async function CtaBand() {
   const [t, user] = await Promise.all([getTranslations('home.cta'), getSession()]);
 
@@ -29,8 +22,6 @@ export async function CtaBand() {
             borderRadius: 5,
             px: { xs: 4, md: 8 },
             py: { xs: 6, md: 8 },
-            // The one saturated surface on the page. It stays dark in both colour schemes on
-            // purpose: an inverted band is what makes it read as the end of the page.
             backgroundImage: `linear-gradient(135deg, ${brand[900]}, ${brand[700]} 55%, ${brand[600]})`,
             color: '#FFFFFF',
           }}

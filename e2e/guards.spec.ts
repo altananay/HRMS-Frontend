@@ -1,12 +1,5 @@
 import { expect, test } from './fixtures';
 
-/**
- * Who can reach what.
- *
- * The guard is two-tier by design: `proxy.ts` only checks that a cookie exists, and the segment
- * layout does the real role check against a verified `/auth/me`. Both tiers are exercised here — an
- * anonymous visitor hits the first, a signed-in visitor with the wrong role hits the second.
- */
 const PROTECTED = ['/profile', '/profile/cv', '/profile/applications', '/profile/security'];
 
 test.describe('route guards', () => {
@@ -24,7 +17,6 @@ test.describe('route guards', () => {
 
     const seeker = `redirect-${Date.now().toString(36)}@e2e.test`;
 
-    // Register in another tab-less request so the `next` parameter survives the sign-in.
     await page.request.post('/api/auth/register/jobseeker', {
       data: { email: seeker, password: 'parola123', firstName: 'Ada', lastName: 'Lovelace' },
       headers: { origin: new URL(page.url()).origin },
@@ -40,7 +32,6 @@ test.describe('route guards', () => {
   });
 
   test('an admin cannot wander into the job seeker panel', async ({ page, actors }) => {
-    // The cookie exists, so the proxy lets it through — the segment layout is what turns it away.
     await actors.signInAsAdmin();
     await page.goto('/profile');
 
@@ -65,7 +56,6 @@ test.describe('route guards', () => {
   test('the proxy refuses an endpoint that is not on the allow-list', async ({ page }) => {
     const response = await page.request.get('/api/proxy/Logs/getall');
 
-    // 404 rather than 403, so the allow-list cannot be probed to map the API.
     expect(response.status()).toBe(404);
   });
 

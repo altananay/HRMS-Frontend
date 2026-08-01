@@ -8,8 +8,6 @@ import { ResetPasswordForm } from '@/components/auth/ResetPasswordForm';
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('auth.reset');
-  // Reset links get pasted into chat apps, which fetch the page to build a preview card. Keeping it
-  // out of any index is the least we can do for a URL that carries a single-use credential.
   return { title: t('title'), robots: { index: false, follow: false } };
 }
 

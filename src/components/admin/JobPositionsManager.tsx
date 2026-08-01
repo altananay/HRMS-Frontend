@@ -24,16 +24,6 @@ import { api } from '@/lib/http';
 import { DeleteRecordButton } from './DeleteRecordButton';
 import { ServerDataGrid } from './ServerDataGrid';
 
-/**
- * Job positions: full CRUD in one screen.
- *
- * The entity is a single name, so a dialog beats two routes and a form component. Creating one here is
- * a convenience, not the main path — positions are usually created implicitly when an employer types a
- * new one into a posting and `ResolveOrCreateAsync` picks it up.
- *
- * ⚠ Names are unique in the database. Adding one that already exists comes back as a 409 with a
- * specific message, which the toast surfaces as-is rather than replacing with a generic one.
- */
 export function JobPositionsManager({
   page,
 }: {
@@ -60,7 +50,6 @@ export function JobPositionsManager({
     startSaving(async () => {
       try {
         if (editing === 'new') {
-          // `addjobposition`, not `add` — this controller does not follow the others' naming.
           await api('JobPosition/addjobposition', { method: 'POST', body: { name: trimmed } });
           toasts.success(t('jobPositionCreated'));
         } else {

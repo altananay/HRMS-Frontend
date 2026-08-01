@@ -1,21 +1,5 @@
 import { expect, test } from './fixtures';
 
-/**
- * The company panel: publishing, the application pipeline, and the profile.
- *
- * The department test is here for a specific reason — adding a department to an existing employer is
- * the same "insert a child row into a tracked parent" shape that made every résumé save throw
- * `DbUpdateConcurrencyException`. It was fixed by generating entity keys at save time; this is the
- * second path that fix covers, and nothing else exercises it.
- */
-/**
- * Job positions are global and resolved by name, so a fixed name would have every parallel worker
- * creating the same row at once. That used to be a real backend defect — `ResolveOrCreateAsync`
- * checked then inserted, and the unique index on `job_positions.name` answered the loser with a 500.
- * It is fixed upstream now (an `ON CONFLICT DO NOTHING` upsert, with its own concurrency test), so
- * this per-run name is no longer hiding anything: it just keeps one worker's posting out of another's
- * assertions.
- */
 const POSITION = `E2E Position ${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 
 const POSTING = {
@@ -35,7 +19,6 @@ const POSTING = {
 
 const origin = (url: string) => ({ origin: new URL(url || 'http://localhost:3000').origin });
 
-/** Publishes a posting through the proxy and returns its id, failing loudly if the API refused. */
 async function publish(page: import('@playwright/test').Page): Promise<string> {
   const response = await page.request.post('/api/proxy/JobAdvertisements/add', {
     data: POSTING,
@@ -65,12 +48,10 @@ test.describe('company panel', () => {
 
     await page.getByRole('button', { name: 'İlanı yayınla' }).click();
 
-    // Create answers 201 with the new id, so the employer lands on the posting itself.
     await expect(page).toHaveURL(/\/company\/jobs\/[0-9a-f-]{36}$/);
     await expect(page.locator('main')).toContainText('E2E Frontend Developer');
     await expect(page.locator('main')).toContainText('Yayında');
 
-    // And a candidate can find it.
     await page.goto('/jobs?search=E2E%20Frontend');
     await expect(page.locator('main')).toContainText('E2E Frontend Developer');
     await expect(page.locator('main')).toContainText(employer.displayName);
@@ -83,7 +64,6 @@ test.describe('company panel', () => {
     const employer = await actors.signInAsNewEmployer();
     const jobId = await publish(page);
 
-    // A candidate applies, in their own session.
     await actors.signOut();
     await actors.signInAsNewJobSeeker();
     await page.request.post('/api/proxy/JobApplications/add', {
@@ -91,7 +71,6 @@ test.describe('company panel', () => {
       headers: origin(page.url()),
     });
 
-    // Back to the employer.
     await actors.signOut();
     await page.request.post('/api/auth/login', {
       data: { email: employer.email, password: employer.password },
@@ -114,8 +93,6 @@ test.describe('company panel', () => {
   });
 
   test('adding a department to an existing employer saves', async ({ page, actors }) => {
-    // The regression path. Before the key-generation fix this threw a concurrency exception and
-    // answered 500 — the identical shape that broke every résumé with a child row.
     await actors.signInAsNewEmployer();
 
     await page.goto('/company/profile');
@@ -140,8 +117,6 @@ test.describe('company panel', () => {
     await actors.signOut();
     await actors.signInAsNewEmployer();
 
-    // `getbyid` is anonymous upstream, so the panel has to refuse this itself rather than relying on
-    // the API — otherwise it would render someone else's posting and its applications.
     const response = await page.goto(`/company/jobs/${jobId}`);
     expect(response?.status()).toBe(404);
 

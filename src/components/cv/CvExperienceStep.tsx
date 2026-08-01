@@ -67,8 +67,6 @@ export function CvExperienceStep() {
               />
             </Grid>
             <Grid size={{ xs: 6, sm: 3 }}>
-              {/* Left blank for a job the user is still in — the backend stores `null`, and the
-                  hint says so rather than making them guess or type this year. */}
               <RHFTextField<CvInput>
                 name={`jobExperiences.${index}.endYear`}
                 label={t('endYear')}

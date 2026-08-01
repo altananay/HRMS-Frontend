@@ -35,7 +35,6 @@ describe('request', () => {
   });
 
   it('should_DropEmptyQueryParameters', async () => {
-    // `?city=` upstream is not the same as omitting it — the filter would match the empty string.
     const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(jsonResponse({}));
 
     await api('JobAdvertisements/getall', {
@@ -58,8 +57,6 @@ describe('request', () => {
   });
 
   it('should_NotSetContentType_ForFormData', async () => {
-    // The browser has to add the multipart boundary. Setting the header by hand produces a body the
-    // server cannot parse — and the failure looks like a corrupt upload, not a header bug.
     const fetchMock = vi.spyOn(globalThis, 'fetch').mockResolvedValue(jsonResponse({}));
     const form = new FormData();
     form.set('files', new Blob(['x']), 'cv.pdf');
@@ -98,7 +95,6 @@ describe('request', () => {
   });
 
   it('should_SynthesizeAnError_WhenTheBodyIsNotAnApiError', async () => {
-    // Something upstream of our handlers — Next's own 500 page, for instance.
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(
       new Response('<html>oops</html>', { status: 500, headers: { 'content-type': 'text/html' } }),
     );
@@ -112,11 +108,6 @@ describe('request', () => {
 
 describe('single-flight refresh', () => {
   it('should_RefreshOnce_ForTenConcurrentCallsThatAllExpire', async () => {
-    // **The browser half of the exit gate.**
-    //
-    // Ten components mount, all ten get `session_expired`. If each one refreshed, ten requests would
-    // present the same rotated refresh token and the API would treat that as theft — revoking the
-    // whole chain and signing the user out of every device, reported as an ordinary 401.
     let refreshCalls = 0;
     let proxyCalls = 0;
 
@@ -125,7 +116,6 @@ describe('single-flight refresh', () => {
 
       if (url.includes('refresh-session')) {
         refreshCalls += 1;
-        // Deliberately slow, so every caller is waiting when it resolves.
         await new Promise((resolve) => setTimeout(resolve, 10));
         return new Response(null, { status: 204 });
       }
@@ -139,13 +129,11 @@ describe('single-flight refresh', () => {
     );
 
     expect(refreshCalls).toBe(1);
-    expect(proxyCalls).toBe(20); // ten failures, one refresh, ten retries
+    expect(proxyCalls).toBe(20);
     expect(results.every((result) => result.data === 'ok')).toBe(true);
   });
 
   it('should_RetryOnlyOnce', async () => {
-    // If the retry also 401s, the session is genuinely gone. A second retry would loop forever
-    // against a backend that is answering perfectly consistently.
     let refreshCalls = 0;
     let proxyCalls = 0;
 
@@ -168,8 +156,6 @@ describe('single-flight refresh', () => {
   });
 
   it('should_NotRefresh_ForAnAnonymous401', async () => {
-    // `unauthorized` means no session was presented. There is nothing to refresh, and trying would
-    // add a round trip to every anonymous request that touches a protected endpoint.
     let refreshCalls = 0;
 
     vi.spyOn(globalThis, 'fetch').mockImplementation(async (input) => {
@@ -200,8 +186,6 @@ describe('single-flight refresh', () => {
   });
 
   it('should_StartAFreshRefresh_AfterTheFirstOneCompletes', async () => {
-    // The promise is cleared on settle. Caching it would mean a session that expires twice in one
-    // page-view could only ever be renewed once.
     let refreshCalls = 0;
     let proxyCalls = 0;
 

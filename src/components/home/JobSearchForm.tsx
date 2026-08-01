@@ -11,14 +11,6 @@ import InputAdornment from '@mui/material/InputAdornment';
 import InputBase from '@mui/material/InputBase';
 import { useTranslations } from 'next-intl';
 
-/**
- * The hero search. Two fields in one bordered shell rather than two `TextField`s: at hero scale a
- * pair of separate outlined inputs reads as a form, and this should read as a search bar.
- *
- * Submitting navigates to `/jobs` with the query in the URL — the listing page owns the actual
- * filtering, and the URL stays shareable and back-button friendly. Blank fields are dropped instead
- * of sent as empty parameters.
- */
 export function JobSearchForm() {
   const t = useTranslations('home.hero');
   const router = useRouter();

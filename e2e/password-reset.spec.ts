@@ -1,12 +1,5 @@
 import { expect, test, waitForResetLink } from './fixtures';
 
-/**
- * The reset flow, end to end through a real SMTP server.
- *
- * Everything here is a security property, not a convenience: the response must not reveal whether an
- * address is registered, the token must work once, and a completed reset must end every session the
- * user had.
- */
 test.describe('password reset', () => {
   test('a registered address gets a working link, and the reset ends every session', async ({
     page,
@@ -15,8 +8,6 @@ test.describe('password reset', () => {
   }) => {
     const seeker = await actors.signInAsNewJobSeeker();
 
-    // Keep this browser's session, then reset from a clean one — the point is that the old session
-    // dies even though nothing signed it out.
     const sessionBefore = await page.request.get('/api/auth/session');
     expect((await sessionBefore.json()).user).not.toBeNull();
 
@@ -37,14 +28,12 @@ test.describe('password reset', () => {
 
     await expect(page.getByText('Parolanız güncellendi')).toBeVisible();
 
-    // The old password is dead.
     const oldPassword = await page.request.post('/api/auth/login', {
       data: { email: seeker.email, password: seeker.password },
       headers: { origin: new URL(page.url()).origin },
     });
     expect(oldPassword.status()).toBe(401);
 
-    // The new one works.
     const newPassword = await page.request.post('/api/auth/login', {
       data: { email: seeker.email, password: 'yeniparola' },
       headers: { origin: new URL(page.url()).origin },
@@ -53,7 +42,6 @@ test.describe('password reset', () => {
   });
 
   test('an unknown address is answered exactly like a known one', async ({ page }) => {
-    // No branch anywhere may reveal that the address is not registered.
     await page.goto('/forgot-password');
     await page.getByLabel('E-posta').fill(`kimse-yok-${Date.now()}@e2e.test`);
     await page.getByRole('button', { name: 'Sıfırlama bağlantısı gönder' }).click();
@@ -92,7 +80,6 @@ test.describe('password reset', () => {
 
     const banner = page.locator('form').getByRole('alert');
     await expect(banner).toBeVisible();
-    // A single-use credential must not end up in an error message, a log or a screenshot.
     await expect(banner).not.toContainText('kesinlikle-gecersiz-bir-token');
   });
 

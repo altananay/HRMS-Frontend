@@ -31,13 +31,6 @@ const CHOICES = [
   },
 ] as const;
 
-/**
- * The fork in the registration flow.
- *
- * A single form with a "I am a…" toggle would be shorter, but the two accounts share only an email
- * and a password — the rest of the fields have nothing in common, and the API has two endpoints. A
- * deliberate choice up front is clearer than a form that changes shape underneath the user.
- */
 export default async function RegisterPage() {
   const t = await getTranslations('auth.register');
 

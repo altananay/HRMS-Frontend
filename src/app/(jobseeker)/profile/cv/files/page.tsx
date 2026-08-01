@@ -17,11 +17,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('title') };
 }
 
-/**
- * Files hang off the résumé, so there is nowhere to put them until one exists — the API's upload
- * resolves the CV from the caller's identity and fails without one. Saying so is better than an
- * upload button that always errors.
- */
 export default async function CvFilesPage() {
   const user = await requireRole(Role.JobSeeker);
 

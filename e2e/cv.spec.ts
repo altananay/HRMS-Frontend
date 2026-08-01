@@ -2,22 +2,9 @@ import type { Page } from '@playwright/test';
 
 import { expect, test } from './fixtures';
 
-/**
- * A wizard step button.
- *
- * Scoped to the stepper because 'Eğitim' also names the 'Eğitim ekle' button inside the step, and the
- * accessible name of a MUI StepButton includes its number ('2Eğitim') rather than the label alone.
- */
 const step = (page: Page, label: string) =>
   page.locator('.MuiStepper-root').locator('button', { hasText: label });
 
-/**
- * The résumé editor, and the data-loss trap it exists to avoid.
- *
- * `UpdateCvCommand` replaces every collection wholesale and answers 200 either way, so a form that
- * saved only the section on screen would delete the rest silently. The headline test edits one field
- * on step one and asserts that education, experience, languages and projects all survive.
- */
 const FULL_CV = {
   imageUrl: null,
   information: 'Ödeme sistemleri üzerine çalışan backend geliştirici.',
@@ -59,8 +46,6 @@ test.describe('résumé', () => {
 
     await page.goto('/profile/cv/edit');
 
-    // Every step is mounted even while hidden, so the field arrays keep their values across the
-    // stepper. Loading only the visible step is what would delete the rest on save.
     await expect(step(page, 'Genel')).toBeVisible();
 
     await page.getByLabel('Hakkımda').fill('E2E ile güncellendi.');
@@ -88,7 +73,6 @@ test.describe('résumé', () => {
 
     await page.getByLabel('Hakkımda').fill('Yeni başlayan bir geliştirici.');
 
-    // A skill chip, which is the field that was silently inert until the Autocomplete slotProps fix.
     const skills = page.getByLabel('Yetenekler');
     await skills.fill('TypeScript');
     await skills.press('Enter');
@@ -110,7 +94,6 @@ test.describe('résumé', () => {
     page,
     actors,
   }) => {
-    // Unmounting a hidden step would drop its field array, and the loss would look like a save bug.
     await actors.signInAsNewJobSeeker();
     await page.goto('/profile/cv/edit');
 

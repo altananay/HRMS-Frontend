@@ -10,14 +10,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { useTranslations } from 'next-intl';
 
-/**
- * The route error boundary. It sits inside the root layout, so the header, footer and the i18n and
- * theme providers are all still mounted — which is why `useTranslations` works here.
- *
- * The `error` object is deliberately not rendered. In production Next replaces the message with a
- * digest anyway, and in development it can carry a .NET exception message straight from the API.
- * It goes to the console and nowhere else.
- */
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   const t = useTranslations('errorPage');
 

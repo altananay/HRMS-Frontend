@@ -4,10 +4,8 @@ import type { CvResponse } from '@/contracts/responses';
 
 import { cvSchema, fromCvResponse, toUpdateCvRequest } from './cv';
 
-/** Echoes the key, so assertions read as "which rule fired" rather than as prose matching. */
 const t = (key: string) => key;
 
-/** A résumé with something in every collection — the shape the round-trip test needs. */
 const fullCv: CvResponse = {
   id: '018f4a2b-9c1d-7e3f-8a4b-000000000001',
   jobSeekerId: '018f4a2b-9c1d-7e3f-8a4b-000000000002',
@@ -49,13 +47,6 @@ const fullCv: CvResponse = {
 };
 
 describe('the full-replacement round trip', () => {
-  /**
-   * The one that matters.
-   *
-   * `UpdateCvCommand` replaces every collection wholesale and answers 200 either way, so a form that
-   * loads only the section being edited deletes the rest with no error anywhere. Loading a résumé,
-   * parsing it and sending it back must be a no-op.
-   */
   it('should_PreserveEverySection_WhenLoadedAndSavedUnchanged', () => {
     const parsed = cvSchema(t).parse(fromCvResponse(fullCv));
     const request = toUpdateCvRequest(parsed, fullCv);
@@ -79,22 +70,17 @@ describe('the full-replacement round trip', () => {
       companyName: 'Kuzey Yazılım',
       position: 'Senior Developer',
       startYear: 2015,
-      // Still employed — must survive as null rather than becoming this year.
       endYear: null,
     });
   });
 
   it('should_CarryTheImageUrlThrough_EvenThoughNoFieldShowsIt', () => {
-    // The form has no image input. Sending `null` would clear a value the user never saw and had no
-    // way to restore.
     const parsed = cvSchema(t).parse(fromCvResponse(fullCv));
 
     expect(toUpdateCvRequest(parsed, fullCv).imageUrl).toBe('https://cdn.example/ada.png');
   });
 
   it('should_SendEmptyStringsAsNull_NotAsEmptyStrings', () => {
-    // `''` is a value the API stores; `null` is "not set". A linkedin field the user cleared should
-    // come back empty, not as a zero-length string that renders as a broken link.
     const parsed = cvSchema(t).parse(fromCvResponse(fullCv));
     const request = toUpdateCvRequest(parsed, fullCv);
 
@@ -146,7 +132,6 @@ describe('cvSchema', () => {
   });
 
   it('should_RejectAnEndYearBeforeTheStartYear', () => {
-    // Mirrors `EducationRequestValidator`. Reported on `endYear` so it lands on a field.
     const result = parse({
       educations: [
         { school: 'x', major: 'y', grade: '', startYear: '2015', endYear: '2010', isGraduated: false },
@@ -178,7 +163,6 @@ describe('cvSchema', () => {
   });
 
   it('should_CoerceYearStringsToNumbers', () => {
-    // The input is a text box, so the year arrives as a string; the wire contract wants a number.
     const result = parse({
       educations: [
         { school: 'x', major: 'y', grade: '', startYear: '2008', endYear: '2012', isGraduated: true },

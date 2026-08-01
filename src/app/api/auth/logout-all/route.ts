@@ -5,13 +5,6 @@ import { apiErrorResponse, crossOriginRejected, isSameOrigin } from '@/server/ha
 import { toApiError } from '@/server/problem-details';
 import { clearSession, ensureAccessToken } from '@/server/session';
 
-/**
- * Ends every session for this user, on every device.
- *
- * Unlike plain logout, this one reports upstream failures: the user asked for something specific and
- * security-relevant, and telling them it worked when it did not would be a lie. On success the local
- * cookies go too — this browser is one of the devices being signed out.
- */
 export async function POST(request: Request) {
   if (!isSameOrigin(request)) return crossOriginRejected();
 

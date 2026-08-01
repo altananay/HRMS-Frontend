@@ -34,14 +34,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('applicationDetail') };
 }
 
-/**
- * One application, with the candidate's résumé and files.
- *
- * **The employer sees this because the candidate applied to them** — `CandidateAccessPolicy` opens the
- * résumé to an employer holding an application from that seeker, and to nobody else. The CV read is
- * attempted rather than assumed: if the policy refuses, `fetchMine` returns `null` and the panel shows
- * "no résumé" instead of failing. That keeps an authorization decision on the server where it belongs.
- */
 export default async function CompanyApplicationDetailPage({ params }: Params) {
   await requireRole(Role.Employer);
 
@@ -55,9 +47,6 @@ export default async function CompanyApplicationDetailPage({ params }: Params) {
     fetchMine<JobApplicationResponse>(`JobApplications/getbyid/${id}`),
   ]);
 
-  // `GetByIdJobApplicationQuery` refuses anyone who is not a party to it, so somebody else's
-  // application and a non-existent one look identical from here — which is the right amount to tell
-  // someone probing ids.
   if (!application) notFound();
 
   const cv = await fetchMine<CvResponse>(`Cvs/getbyjobseekerid/${application.jobSeekerId}`);
@@ -148,8 +137,6 @@ export default async function CompanyApplicationDetailPage({ params }: Params) {
                     <ListItem
                       key={file.id}
                       secondaryAction={
-                        // A link, not a fetch: the proxy streams the file with its content-disposition
-                        // intact and the URL only works with this employer's session cookie.
                         <Button
                           component="a"
                           href={`/api/proxy/Cvs/files/${file.id}`}

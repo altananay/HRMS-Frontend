@@ -3,17 +3,6 @@ import Grid from '@mui/material/Grid';
 import Skeleton from '@mui/material/Skeleton';
 import Stack from '@mui/material/Stack';
 
-/**
- * What a panel route shows while its server component fetches.
- *
- * Every panel screen is dynamic and reads the API before it can render anything, so without this the
- * browser sits on the previous page after a click and the app feels stuck. The shape deliberately
- * matches `PanelLayout` — nav column, title block, content — so the real screen replaces it in place
- * instead of appearing to jump.
- *
- * `aria-busy` on the wrapper, and nothing readable inside: a screen reader should hear "busy", not a
- * list of empty boxes.
- */
 export function PanelSkeleton({ rows = 4 }: { rows?: number }) {
   return (
     <Container sx={{ py: { xs: 4, md: 6 } }} aria-busy>

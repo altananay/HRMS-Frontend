@@ -22,17 +22,6 @@ import {
   type ResetPasswordValues,
 } from '@/schemas/auth';
 
-/**
- * Consumes the emailed token and sets a new password.
- *
- * The token comes from the query string and is never rendered — not in a hidden input, not in a
- * message. It is a single-use credential; putting it in the DOM would leak it to anything that can
- * read the page, and echoing it into an error message would leak it into logs and screenshots.
- *
- * The token is *not* validated client-side beyond "present". Whether it is genuine, unexpired and
- * unused is the server's decision, and a client-side guess would only produce a second, contradictory
- * source of truth.
- */
 export function ResetPasswordForm() {
   const t = useTranslations();
   const searchParams = useSearchParams();
@@ -109,10 +98,6 @@ export function ResetPasswordForm() {
         autoFocus
       />
 
-      {/*
-        The one place a confirmation box earns its keep: the user cannot see what they typed, cannot
-        sign in to check it, and a typo locks them out of the account they are trying to recover.
-      */}
       <RHFPasswordField<ResetPasswordInput>
         name="confirmPassword"
         label={t('auth.confirmPassword')}

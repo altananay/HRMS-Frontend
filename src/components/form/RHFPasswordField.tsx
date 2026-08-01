@@ -10,15 +10,6 @@ import type { FieldPath, FieldValues } from 'react-hook-form';
 
 import { RHFTextField, type RHFTextFieldProps } from './RHFTextField';
 
-/**
- * A password box with a reveal toggle.
- *
- * The toggle matters more than it looks: the single most common cause of a failed sign-in is a typo
- * in a field the user cannot read back, and the alternative — a second confirmation box — is worse
- * everywhere except password *reset*, where the user is about to lock themselves out.
- *
- * `tabIndex={-1}` on the button keeps Tab going from the password straight to Submit.
- */
 export function RHFPasswordField<T extends FieldValues>(
   props: Omit<RHFTextFieldProps<T>, 'type'> & { name: FieldPath<T> },
 ) {

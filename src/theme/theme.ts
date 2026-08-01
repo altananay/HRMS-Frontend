@@ -16,30 +16,15 @@ import {
 } from './palette';
 import { bodyFontFamily, displayFontFamily } from './tokens';
 
-/**
- * Opts into MUI's CSS-variable theme. Without this augmentation `createTheme` rejects
- * `colorSchemes` and `theme.vars` stays optional. Declaration merging only works on an
- * `interface` — this is the one place the no-`interface` rule cannot apply.
- */
 declare module '@mui/material/styles' {
   interface CssThemeVariables {
     enabled: true;
   }
 }
 
-/**
- * The stacks arrive from `tokens.ts` as plain strings rather than from `next/font` directly:
- * `next/font` is a build-time transform only Next can perform, and this module is also loaded by
- * Vitest. `src/theme/fonts.ts` defines the CSS variables and `layout.tsx` puts them on `<html>`.
- */
 const display = displayFontFamily;
 const body = bodyFontFamily;
 
-/**
- * MUI's stock shadows are single-layer and quite dark, which makes every surface look stamped on.
- * These are two-layer (a tight contact shadow plus a wide soft one) and tinted with the brand's
- * blue rather than black — the difference is subtle per element and obvious across a page.
- */
 const softShadows = [
   'none',
   '0 1px 2px 0 rgba(16, 30, 66, 0.06), 0 1px 3px 0 rgba(16, 30, 66, 0.08)',
@@ -51,7 +36,6 @@ const softShadows = [
   '0 8px 16px -6px rgba(16, 30, 66, 0.10), 0 24px 48px -12px rgba(16, 30, 66, 0.18)',
 ];
 
-// Slots 8-24 are rarely used; repeat the deepest rather than inventing 17 more values.
 const shadows = [
   ...softShadows,
   ...Array.from({ length: 25 - softShadows.length }, () => softShadows[softShadows.length - 1]),
@@ -59,8 +43,6 @@ const shadows = [
 
 export const theme = createTheme({
   cssVariables: {
-    // Class-based rather than the default data attribute so `.dark`-scoped CSS is possible and the
-    // selector stays readable in devtools.
     colorSchemeSelector: 'class',
   },
 
@@ -78,10 +60,6 @@ export const theme = createTheme({
         secondary: {
           lighter: accent[100],
           light: accent[300],
-          // `accent[700]`, not the `600` the rest of the scale would suggest: amber goes light fast,
-          // and 600 (#DD5D02) is only 3.72:1 on white — under AA for text and for white-on-fill.
-          // 700 is 5.60:1 and passes both. Anything lighter belongs on a `lighter` background, not
-          // as a foreground.
           main: accent[700],
           dark: accent[800],
           contrastText: '#FFFFFF',
@@ -100,8 +78,6 @@ export const theme = createTheme({
         background: {
           default: '#FFFFFF',
           paper: '#FFFFFF',
-          // Not a MUI key by default — added via augmentation below. Used for page sections that
-          // need to separate from the surrounding white without a border.
           subtle: neutral[50],
         },
         action: {
@@ -128,7 +104,6 @@ export const theme = createTheme({
           dark: accent[500],
           contrastText: '#2A1603',
         },
-        // The dark-scheme semantic set: bright fills with near-black text. See palette.ts.
         success: successDark,
         warning: warningDark,
         error: errorDark,
@@ -159,8 +134,6 @@ export const theme = createTheme({
 
   typography: {
     fontFamily: body,
-    // 15px base rather than 16: at 16px MUI's body1 next to a dense DataGrid looks oversized, and
-    // every heading below scales off this.
     fontSize: 15,
     h1: {
       fontFamily: display,
@@ -211,23 +184,11 @@ export const theme = createTheme({
     MuiCssBaseline: {
       styleOverrides: {
         html: { WebkitFontSmoothing: 'antialiased', textSizeAdjust: '100%' },
-        // Deliberately no `body { overflow-x: hidden }`. Setting one axis to `hidden` computes the
-        // other to `auto`, which makes <body> the scroll container instead of the viewport — and
-        // scroll events on a non-viewport container do not reach `window`. Everything that listens
-        // for page scroll then silently stops working, `useScrollTrigger` included: the header simply
-        // never frosts and there is no error anywhere. Anything too wide gets its own
-        // `overflow-x: auto` wrapper instead.
-        // Anchor targets sit below the sticky header without a scroll-margin hack per section.
         ':target': { scrollMarginTop: '96px' },
         '::selection': { backgroundColor: brand[200], color: brand[950] },
       },
     },
 
-    /**
-     * Routing for every button, icon button, menu item and tab in one place. `ButtonBase` uses
-     * `LinkComponent` whenever an `href` is present, so `<Button href="/jobs">` navigates through the
-     * Next router — including from a server component, where `component={Link}` is not allowed.
-     */
     MuiButtonBase: {
       defaultProps: { LinkComponent: LinkBehavior },
     },
@@ -263,8 +224,6 @@ export const theme = createTheme({
 
     MuiPaper: {
       styleOverrides: {
-        // MUI paints an alpha overlay via background-image in dark mode; with our own paper tone it
-        // just washes the surface out.
         root: { backgroundImage: 'none' },
       },
     },
@@ -301,8 +260,6 @@ export const theme = createTheme({
           '&:hover .MuiOutlinedInput-notchedOutline': {
             borderColor: theme.vars.palette.grey[400],
           },
-          // A 3px ring instead of MUI's 2px border swap: the field no longer shifts by a pixel on
-          // focus, which is visible when several sit in a column.
           '&.Mui-focused': {
             boxShadow: `0 0 0 3px rgba(59, 106, 245, 0.16)`,
             '& .MuiOutlinedInput-notchedOutline': { borderWidth: 1 },
@@ -316,7 +273,6 @@ export const theme = createTheme({
     MuiFormHelperText: { styleOverrides: { root: { marginLeft: 2, fontSize: '0.8125rem' } } },
 
     MuiLink: {
-      // `Link` does not extend ButtonBase, so it needs its own default component.
       defaultProps: { underline: 'hover', component: LinkBehavior },
       styleOverrides: { root: { fontWeight: 500 } },
     },
@@ -369,10 +325,6 @@ export const theme = createTheme({
   },
 });
 
-/**
- * Extra palette slots used above. `lighter` gives tinted backgrounds a named home instead of an
- * `alpha()` call at every call site; `background.subtle` is the alternating section tone.
- */
 declare module '@mui/material/styles' {
   interface PaletteColor {
     lighter: string;

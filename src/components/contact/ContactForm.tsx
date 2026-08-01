@@ -20,7 +20,6 @@ import {
   type ContactValues,
 } from '@/schemas/contact';
 
-/** The public contact form. `POST Contacts` is anonymous upstream, so no session is involved. */
 export function ContactForm() {
   const t = useTranslations();
   const [sent, setSent] = useState(false);

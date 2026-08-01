@@ -33,10 +33,6 @@ export async function FeaturesSection() {
           </Typography>
         </Stack>
 
-        {/*
-          A plain grid of bordered tiles, no cards: six elevated cards in a row is visual noise, and
-          the section already sits on its own background tone.
-        */}
         <Grid container spacing={3}>
           {FEATURES.map(({ id, Icon }) => (
             <Grid key={id} size={{ xs: 12, sm: 6, md: 4 }}>

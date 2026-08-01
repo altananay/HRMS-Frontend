@@ -21,15 +21,6 @@ const ICONS = {
   system: SettingsBrightnessOutlinedIcon,
 } as const;
 
-/**
- * Light / dark / system, backed by MUI's CSS-variable color scheme.
- *
- * `mode` is `undefined` on the very first client render — the provider has not yet read
- * localStorage. Rendering the "wrong" icon for that one frame is what produces the flash every
- * hand-rolled Next.js theme toggle suffers from, so we render a disabled placeholder of the same size
- * instead: no icon swap, no layout shift, no hydration mismatch. `InitColorSchemeScript` in the root
- * layout has already applied the correct *colours* before paint; only this control waits.
- */
 export function ColorSchemeToggle() {
   const t = useTranslations('colorScheme');
   const { mode, setMode } = useColorScheme();

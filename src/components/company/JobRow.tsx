@@ -13,12 +13,6 @@ import { getFormatter, getTranslations } from 'next-intl/server';
 import { isDeadlinePassed } from '@/components/jobs/deadline';
 import type { JobAdvertisementResponse } from '@/contracts/responses';
 
-/**
- * One posting in the employer's own list.
- *
- * Shows what an employer needs to triage at a glance — is it live, has it closed, how many people
- * applied — rather than the marketing view a candidate sees.
- */
 export async function JobRow({
   job,
   applicationCount,

@@ -35,16 +35,6 @@ import {
   type JobAdvertisementValues,
 } from '@/schemas/job-advertisement';
 
-/**
- * Create and edit in one component.
- *
- * The two screens it replaces were 945 duplicated lines that had drifted apart, and one of them
- * carried a hard-coded employer id left over from the Mongo build. Here `employerId` is never sent at
- * all — the controller takes it from the token.
- *
- * The modes differ in exactly three things: the schema's deadline rule, the `isActive` switch (edit
- * only, because a new posting is published by definition), and where the submit goes.
- */
 export function JobAdvertisementForm({ job }: { job?: JobAdvertisementResponse }) {
   const t = useTranslations('company');
   const tRoot = useTranslations();
@@ -70,8 +60,6 @@ export function JobAdvertisementForm({ job }: { job?: JobAdvertisementResponse }
           method: 'POST',
           body: toCreateJobAdvertisementRequest(values),
         });
-        // The API answers 201 with the new id, so the employer lands on the posting they just made
-        // rather than on a list they have to search.
         router.push(created.data?.id ? `/company/jobs/${created.data.id}` : '/company/jobs');
       }
 
@@ -157,8 +145,6 @@ export function JobAdvertisementForm({ job }: { job?: JobAdvertisementResponse }
               <RHFDateField<JobAdvertisementInput>
                 name="deadline"
                 label={t('form.deadline')}
-                // Only on create: an expired posting must stay editable, or it could never even be
-                // switched off. The schema draws the same line.
                 {...(mode === 'create' ? { minDate: new Date() } : {})}
               />
             </Grid>

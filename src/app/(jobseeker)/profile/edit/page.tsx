@@ -26,8 +26,6 @@ export default async function ProfileEditPage() {
     fetchMine<JobSeekerResponse>(`JobSeekers/getbyid/${user.id}`),
   ]);
 
-  // `GetByIdJobSeekerQuery` takes `RequestedBy` from the token, so this can only ever be the signed-in
-  // user's own record. A null here means the API is unreachable, not that someone else's is hidden.
   if (!seeker) notFound();
 
   return (

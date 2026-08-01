@@ -12,16 +12,6 @@ import {
   type Translate,
 } from './rules';
 
-/**
- * The employer's own profile. Mirrors `UpdateEmployerCommandValidator`.
- *
- * ⚠ **`departments` is replaced wholesale**, exactly like the résumé's collections: the manager clears
- * the list and re-inserts what it receives. So the form is always loaded from the complete record and
- * always sends every department back. `fromEmployer` is the half that makes that true.
- *
- * `id` is not a field. The controller sets it from the token for a non-admin, and a body-supplied
- * owner would be an IDOR.
- */
 export function employerProfileSchema(t: Translate) {
   return z.object({
     companyName: requiredText(t, { min: 2, max: MAX.companyName }),

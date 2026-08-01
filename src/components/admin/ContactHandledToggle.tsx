@@ -11,13 +11,6 @@ import type { ContactResponse } from '@/contracts/responses';
 import { apiErrorMessage } from '@/lib/api-error';
 import { api } from '@/lib/http';
 
-/**
- * Flips a contact message between open and handled.
- *
- * `UpdateContactCommand` replaces the whole record — subject, message, sender and all — so the entire
- * contact is echoed back with only `isHandled` changed. Sending just the flag would blank the message
- * body and the API would answer 200. Same shape as the résumé's collections, on a smaller scale.
- */
 export function ContactHandledToggle({ contact }: { contact: ContactResponse }) {
   const t = useTranslations('admin');
   const tRoot = useTranslations();

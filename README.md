@@ -65,9 +65,10 @@ backend's `appsettings.Development.json` under `Seed`. Everyone else registers t
 | `npm run e2e` | Playwright, against the real backend |
 | `npm run e2e:ui` | the same suite in Playwright's UI |
 
-`npm run e2e` needs no server running: it brings up docker, recreates the `hrms_e2e` database, then
-starts both the API and `next dev` itself. It refuses to reuse a server already listening on 5129 or
-3000 — reusing one would silently run the whole suite against your own database.
+`npm run e2e` needs no server running: it brings up docker, recreates the `hrms_e2e` database, builds
+the app, then starts both the API and the production server itself. It refuses to reuse a server
+already listening on 5129 or 3000 — reusing one would silently run the whole suite against your own
+database.
 
 ## How it is put together
 

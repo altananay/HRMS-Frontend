@@ -36,8 +36,6 @@ export default async function CompanyJobsPage({
   const [t, nav, result] = await Promise.all([
     getTranslations('company'),
     companyNav(),
-    // Scoped by employerId explicitly: unlike applications, the advertisement list is not narrowed by
-    // role server-side — `getall` is the public board's endpoint too.
     fetchMine<PagedResult<JobAdvertisementResponse>>('JobAdvertisements/getall', {
       employerId: employer.id,
       page,

@@ -10,7 +10,6 @@ import { ApplicationStatusChip } from '@/components/applications/ApplicationStat
 import { CompanyAvatar } from '@/components/companies/CompanyAvatar';
 import type { JobApplicationResponse } from '@/contracts/responses';
 
-/** One application in the employer's inbox. */
 export async function ApplicationRow({
   application,
   showJob = true,
@@ -30,8 +29,6 @@ export async function ApplicationRow({
             sx={{ justifyContent: 'space-between', alignItems: { sm: 'center' } }}
           >
             <Stack direction="row" spacing={2} sx={{ alignItems: 'center', minWidth: 0 }}>
-              {/* The monogram is derived from the name, so a list of candidates is scannable without
-                  photographs the system does not have. */}
               <CompanyAvatar name={application.jobSeekerFullName} size={40} />
 
               <Box sx={{ minWidth: 0 }}>

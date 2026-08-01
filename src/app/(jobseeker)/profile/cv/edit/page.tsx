@@ -14,11 +14,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('editTitle') };
 }
 
-/**
- * Create and edit are the same screen, because the API's create and update take the same body. Which
- * one it is depends on whether a résumé already exists — and the **whole** existing record is loaded,
- * not just the part being edited, because the update replaces every collection.
- */
 export default async function CvEditPage() {
   const user = await requireRole(Role.JobSeeker);
 

@@ -3,10 +3,6 @@ import CardContent from '@mui/material/CardContent';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-/**
- * The card every auth screen renders into. Keeps the five of them visually identical, which is what
- * makes the whole flow read as one thing.
- */
 export function AuthCard({
   title,
   subtitle,

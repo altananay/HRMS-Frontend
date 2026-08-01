@@ -13,18 +13,6 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import { useTranslations } from 'next-intl';
 
-/**
- * Filters for the job board.
- *
- * They live in the **URL**, not in component state, and the list is rendered on the server from those
- * parameters. That is what makes a filtered search shareable, bookmarkable and survivable by the back
- * button — and it means the list has no loading state to design, because the page is simply rendered
- * with the results already in it.
- *
- * `skill` is set by the skill cloud rather than typed here: the backend matches it exactly against the
- * skills array, so a free-text box would mostly produce empty results. It is preserved across
- * filtering, and cleared with everything else.
- */
 export function JobFilters() {
   const t = useTranslations('jobs');
   const router = useRouter();
@@ -43,8 +31,6 @@ export function JobFilters() {
     if (search.trim()) params.set('search', search.trim());
     if (city.trim()) params.set('city', city.trim());
     if (skill) params.set('skill', skill);
-    // Any change to the filters means page 1; keeping the old page number is how a search silently
-    // returns "no results" while there are plenty on page 1.
 
     router.push(params.toString() ? `/jobs?${params}` : '/jobs');
   };

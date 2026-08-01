@@ -28,7 +28,6 @@ const SIDES = [
 
 const STEPS = ['stepOne', 'stepTwo', 'stepThree'] as const;
 
-/** `id="how-it-works"` is the header's anchor target; `:target` scroll-margin is set in the theme. */
 export async function AudienceSection() {
   const t = await getTranslations('home.audience');
 

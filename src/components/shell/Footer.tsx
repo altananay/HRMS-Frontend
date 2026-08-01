@@ -19,7 +19,6 @@ const EXPLORE = {
   ],
 } as const;
 
-/** Anonymous visitors get the way in; signed-in ones get the way to their own area. */
 const ANONYMOUS_ACCOUNT = {
   heading: 'account',
   links: [
@@ -28,11 +27,8 @@ const ANONYMOUS_ACCOUNT = {
   ],
 } as const;
 
-/** A server component: nothing here is interactive, so none of it needs to reach the browser. */
 export async function Footer() {
   const [t, user] = await Promise.all([getTranslations(), getSession()]);
-  // A string, not a number: ICU formats a numeric argument through `Intl.NumberFormat`, which in
-  // `tr` renders 2026 as "2.026".
   const year = String(new Date().getFullYear());
 
   const columns = [

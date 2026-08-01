@@ -26,12 +26,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('title') };
 }
 
-/**
- * The admin panel's front door: how much of everything there is, and the way in to each list.
- *
- * The counts come from `totalCount` on a one-row page rather than by reading the tables — the API has
- * no aggregate endpoint, and pulling four full lists to count them would get slower every month.
- */
 export default async function AdminOverviewPage() {
   await requireRole(Role.Admin);
 
@@ -41,8 +35,6 @@ export default async function AdminOverviewPage() {
     fetchMine<PagedResult<UserSummaryResponse>>('Users/getall', { pageSize: 1 }),
     fetchMine<PagedResult<JobAdvertisementResponse>>('JobAdvertisements/getall', { pageSize: 1 }),
     fetchMine<PagedResult<JobApplicationResponse>>('JobApplications/getall', { pageSize: 1 }),
-    // Contacts has no `isHandled` filter upstream, so the open ones are counted from a page rather
-    // than asked for. A hundred rows is plenty for a mailbox nobody has triaged yet.
     fetchMine<PagedResult<ContactResponse>>('Contacts', { pageSize: 100 }),
   ]);
 

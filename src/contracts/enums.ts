@@ -1,12 +1,3 @@
-/**
- * Mirrors `Core/Domain/Enums/*`. The API serializes enums with `JsonStringEnumConverter`, so the
- * wire values are the C# member names verbatim.
- *
- * `as const` objects plus a union type rather than TypeScript `enum`: erasable syntax (so nothing
- * survives into the bundle), structurally typed, tree-shakeable, and `Object.values` feeds Zod for
- * free. A TS `enum` would give none of that and would not compare equal to the string on the wire.
- */
-
 export const JobType = {
   FullTime: 'FullTime',
   PartTime: 'PartTime',
@@ -50,7 +41,6 @@ export const UserType = {
 
 export type UserType = (typeof UserType)[keyof typeof UserType];
 
-/** Only `Local` ships today; `R2` exists in the backend enum but is not configured. */
 export const StorageProvider = {
   Local: 'Local',
   R2: 'R2',
@@ -58,10 +48,6 @@ export const StorageProvider = {
 
 export type StorageProvider = (typeof StorageProvider)[keyof typeof StorageProvider];
 
-/**
- * Role claim values, from `Core/Application/Utilities/Constants/Roles.cs`. Lower-case on the wire —
- * comparing against `UserType` values (`'JobSeeker'`) would silently never match.
- */
 export const Role = {
   JobSeeker: 'jobseeker',
   Employer: 'employer',
@@ -70,7 +56,6 @@ export const Role = {
 
 export type Role = (typeof Role)[keyof typeof Role];
 
-/** Ordered for display: the hiring pipeline, not alphabetical. */
 export const jobApplicationStatusOrder: readonly JobApplicationStatus[] = [
   JobApplicationStatus.Submitted,
   JobApplicationStatus.UnderReview,
@@ -81,7 +66,6 @@ export const jobApplicationStatusOrder: readonly JobApplicationStatus[] = [
   JobApplicationStatus.Withdrawn,
 ];
 
-/** Ordered weakest to strongest, matching the backend's ordinals. */
 export const languageLevelOrder: readonly LanguageLevel[] = [
   LanguageLevel.Beginner,
   LanguageLevel.Elementary,

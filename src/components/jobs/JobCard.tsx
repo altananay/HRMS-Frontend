@@ -16,13 +16,6 @@ import type { JobAdvertisementResponse } from '@/contracts/responses';
 import { CompanyAvatar } from '@/components/companies/CompanyAvatar';
 import { formatSalary } from './salary';
 
-/**
- * One opening in a list. The whole card is the link — a small "view" button would be a smaller
- * target for no benefit.
- *
- * At most four skills are shown, with a count for the rest: a card with fourteen chips pushes the
- * next card off the screen and stops being scannable, which is the only job a card in a list has.
- */
 export async function JobCard({ job }: { job: JobAdvertisementResponse }) {
   const t = await getTranslations('jobs');
   const format = await getFormatter();

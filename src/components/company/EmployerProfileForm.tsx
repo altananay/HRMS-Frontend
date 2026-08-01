@@ -25,13 +25,6 @@ import {
   type EmployerProfileValues,
 } from '@/schemas/employer';
 
-/**
- * The company profile, departments included.
- *
- * ⚠ Departments are **replaced wholesale** on save, exactly like the résumé's collections. The form is
- * therefore loaded from the complete record and always sends every department back; sending a subset
- * would delete the rest and the API would answer 200.
- */
 export function EmployerProfileForm({ employer }: { employer: EmployerDetailResponse }) {
   const t = useTranslations('company');
   const tRoot = useTranslations();
@@ -43,7 +36,6 @@ export function EmployerProfileForm({ employer }: { employer: EmployerDetailResp
   const submit = useCallback(
     async (values: EmployerProfileValues) => {
       await api('Employers/update', { method: 'PUT', body: toUpdateEmployerRequest(values) });
-      // The company name shows in the header and on every posting, both rendered on the server.
       router.refresh();
     },
     [router],
@@ -143,8 +135,6 @@ function Departments() {
     >
       <Stack spacing={2}>
         {fields.map((field, index) => (
-          // `field.id` is RHF's stable key. Indexing would reuse a row's DOM when an earlier entry is
-          // removed and the values would visibly jump to the wrong card.
           <FieldArrayCard
             key={field.id}
             index={index}

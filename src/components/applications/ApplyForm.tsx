@@ -11,17 +11,6 @@ import { useApiForm } from '@/components/form/useApiForm';
 import { api } from '@/lib/http';
 import { MAX, optionalText } from '@/schemas/rules';
 
-/**
- * The apply form: one optional note, then submit.
- *
- * The schema is small enough to live here rather than in `schemas/` — it has one field and no mapper,
- * and moving it would spread a two-line rule across two files.
- *
- * A duplicate application comes back as a 409 with a specific reason ("Bu ilana zaten başvurdunuz."),
- * which `useApiForm` surfaces as-is because a generic "conflict" message would leave the user
- * guessing. Nothing here tries to pre-empt it: whether an application already exists is the server's
- * to know.
- */
 export function ApplyForm({ jobAdvertisementId }: { jobAdvertisementId: string }) {
   const t = useTranslations('applications');
   const tRoot = useTranslations();

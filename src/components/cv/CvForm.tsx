@@ -34,24 +34,8 @@ import { CvExtrasStep } from './CvExtrasStep';
 
 const STEPS = ['basics', 'education', 'experience', 'extras'] as const;
 
-/**
- * The résumé editor: **one** form spread across four steps.
- *
- * The screen it replaces was 1,074 lines and only looked like a wizard — it held six independent
- * Formik forms whose `onSubmit` handlers pushed into local arrays, so nothing was validated together
- * and a half-finished step was indistinguishable from a finished one. Here there is a single
- * `useForm`, the steps are views onto it, and every step's fields stay mounted in state whether or not
- * they are on screen.
- *
- * ⚠ **Saving replaces the whole résumé.** `UpdateCvCommand` clears each collection and re-inserts what
- * it receives, and answers 200 either way. That is why an edit starts from `fromCvResponse(cv)` — the
- * complete existing record — rather than from a blank form. Loading a subset here would delete
- * everything the user is not currently looking at, with no error anywhere. `schemas/cv.test.ts` pins
- * the round trip.
- */
 export function CvForm({ cv }: { cv: CvResponse | null }) {
   const t = useTranslations('cv');
-  // The schema speaks `validation.*`, the labels speak `cv.*` — two scopes, two translators.
   const tRoot = useTranslations();
   const router = useRouter();
   const [step, setStep] = useState(0);
@@ -82,12 +66,6 @@ export function CvForm({ cv }: { cv: CvResponse | null }) {
 
   return (
     <Form form={form}>
-      {/*
-        Steps are freely navigable rather than gated on validation. Every field lives in one form and
-        is submitted together, so blocking step 2 until step 1 is perfect would only stop someone from
-        filling in what they can remember now and coming back — and the server validates the whole
-        thing anyway.
-      */}
       <Stepper nonLinear activeStep={step} sx={{ mb: 4 }}>
         {STEPS.map((name, index) => (
           <Step key={name} completed={false}>
@@ -104,11 +82,6 @@ export function CvForm({ cv }: { cv: CvResponse | null }) {
 
       <Card>
         <CardContent sx={{ p: { xs: 2.5, sm: 4 } }}>
-          {/*
-            All four steps stay mounted, hidden with CSS rather than unmounted. Unmounting an RHF
-            field array drops its values, so a user who filled in their education, went to experience
-            and came back would find the education gone — and would rightly blame the save.
-          */}
           <StepPanel active={step === 0}>
             <CvBasicsStep />
           </StepPanel>
@@ -140,8 +113,6 @@ export function CvForm({ cv }: { cv: CvResponse | null }) {
             </Button>
           ) : null}
 
-          {/* Available on every step: the form is one submission, and someone who has finished editing
-              on step 2 should not have to click through to step 4 to save. */}
           <SubmitButton busy={form.formState.isSubmitting}>{t('save')}</SubmitButton>
         </Stack>
       </Stack>

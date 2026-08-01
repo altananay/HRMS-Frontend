@@ -21,13 +21,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('newTitle') };
 }
 
-/**
- * Applying to one opening.
- *
- * The job is shown above the form so the user can see what they are applying to — a bare note box
- * reached from a link is easy to submit against the wrong listing. A closed or unpublished opening is
- * a 404 rather than a form that will be rejected on submit.
- */
 export default async function NewApplicationPage({
   searchParams,
 }: {

@@ -16,12 +16,6 @@ import type { JobApplicationResponse } from '@/contracts/responses';
 import { api } from '@/lib/http';
 import { MAX, optionalText, type Translate } from '@/schemas/rules';
 
-/**
- * Moving an application along the pipeline, plus the note the candidate will read.
- *
- * The schema is two fields, so it lives here rather than in `schemas/` — splitting it across two files
- * would cost more to follow than it saves.
- */
 function statusSchema(t: Translate) {
   return z.object({
     status: z.enum(Object.values(JobApplicationStatus) as [string, ...string[]]),
@@ -41,8 +35,6 @@ export function ApplicationStatusForm({ application }: { application: JobApplica
 
   const submit = useCallback(
     async (values: Values) => {
-      // `employerId` is never sent — the controller takes it from the token and the manager checks
-      // ownership against it.
       await api('JobApplications/update', {
         method: 'PUT',
         body: {
@@ -102,7 +94,6 @@ function StatusSelect() {
       error={Boolean(fieldState.error)}
       helperText={fieldState.error?.message ?? ' '}
     >
-      {/* Pipeline order, not alphabetical — the list reads as a process. */}
       {jobApplicationStatusOrder.map((status) => (
         <MenuItem key={status} value={status}>
           {t(status)}

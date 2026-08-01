@@ -5,13 +5,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import { getTranslations } from 'next-intl/server';
 
-/**
- * Server-rendered pagination: two links and a position, not a client component with page state.
- *
- * The page number belongs in the URL for the same reason the filters do — a shared link to page 3
- * should open page 3. Building the target from the *current* search params preserves whatever filters
- * are active, which is the bug this component exists to not have.
- */
 export async function Pagination({
   page,
   totalPages,

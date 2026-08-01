@@ -27,13 +27,6 @@ type SearchParams = Record<string, string | string[] | undefined>;
 const first = (value: string | string[] | undefined) =>
   Array.isArray(value) ? value[0] : value;
 
-/**
- * The public job board. A Server Component: the list is rendered with its data already in it, so
- * there is no spinner, no client-side fetch and nothing for a crawler to miss.
- *
- * `isActive: true` is pinned here rather than exposed as a filter — an expired or unpublished opening
- * on a public board wastes the reader's time and the employer's.
- */
 export default async function JobsPage({
   searchParams,
 }: {

@@ -27,8 +27,6 @@ export default async function EditJobPage({ params }: Params) {
     fetchMine<JobAdvertisementResponse>(`JobAdvertisements/getbyid/${id}`),
   ]);
 
-  // `getbyid` is anonymous upstream, so ownership is not checked on the read — only on the save. A
-  // posting belonging to someone else must not open in an edit form that will 403 on submit.
   if (!job || job.employerId !== employer.id) notFound();
 
   return (

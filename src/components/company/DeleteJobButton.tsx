@@ -15,12 +15,6 @@ import { isApiError } from '@/contracts/api-error';
 import { apiErrorMessage } from '@/lib/api-error';
 import { api } from '@/lib/http';
 
-/**
- * Deleting a posting.
- *
- * Behind a confirmation because it cascades: the posting's applications go with it, and the candidates
- * who made them are not asked. The dialog says so rather than just asking "are you sure".
- */
 export function DeleteJobButton({ jobId }: { jobId: string }) {
   const t = useTranslations('company');
   const tRoot = useTranslations();

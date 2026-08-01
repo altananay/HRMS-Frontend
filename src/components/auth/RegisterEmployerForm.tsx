@@ -96,8 +96,6 @@ export function RegisterEmployerForm() {
             />
           </Grid>
           <Grid size={{ xs: 12, sm: 6 }}>
-            {/* `type="number"` deliberately not used: it silently drops non-numeric input, so a typo
-                clears the box with no message. The schema reports it instead. */}
             <RHFTextField<RegisterEmployerInput>
               name="numberOfEmployees"
               label={t('auth.numberOfEmployees')}

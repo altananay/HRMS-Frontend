@@ -2,17 +2,6 @@
 
 import { useEffect } from 'react';
 
-/**
- * The last resort: an error thrown by the **root layout itself**.
- *
- * `error.tsx` renders inside that layout, so it cannot catch a failure that happens while the layout
- * is rendering — the theme, i18n and session providers are all gone at that point. This file replaces
- * the whole document instead, which is why it renders its own `<html>` and `<body>` and why it cannot
- * use MUI, `next-intl` or anything else that expects a provider above it.
- *
- * That also rules out a translated string, hence the two-language copy: whichever locale the reader
- * has, one of the two lines is theirs.
- */
 export default function GlobalError({ error }: { error: Error & { digest?: string } }) {
   useEffect(() => {
     console.error(error);
@@ -39,8 +28,6 @@ export default function GlobalError({ error }: { error: Error & { digest?: strin
             <br />
             <span lang="en">The application failed to start. Try reloading the page.</span>
           </p>
-          {/* A plain anchor on purpose: the root layout failed, so a client-side navigation would
-              re-enter the same broken render. This must be a full document load. */}
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a
             href="/"

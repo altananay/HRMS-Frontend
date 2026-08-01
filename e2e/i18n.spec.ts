@@ -1,18 +1,10 @@
 import { expect, test } from './fixtures';
 
-/**
- * Language switching.
- *
- * The locale lives in a cookie with no URL prefix, so the only proof that it took is that the page
- * re-rendered on the server with the other bundle — hence the assertions on `<html lang>` and on real
- * copy rather than on the cookie alone.
- */
 test.describe('i18n', () => {
   test('the switcher changes the language and the choice survives a reload', async ({ page }) => {
     await page.goto('/');
 
     await expect(page.locator('html')).toHaveAttribute('lang', 'tr');
-    // Header only — the footer carries the same links, so an unscoped query is ambiguous.
     await expect(page.getByRole('banner').getByRole('link', { name: 'İş ilanları' })).toBeVisible();
 
     await page.getByRole('button', { name: 'Dili değiştir' }).click();
@@ -28,7 +20,6 @@ test.describe('i18n', () => {
   });
 
   test('a message key never leaks to the screen', async ({ page }) => {
-    // A missing key renders its own path — `nav.jobs` instead of "Jobs" — with no error anywhere.
     for (const locale of ['tr', 'en']) {
       await page.context().addCookies([
         { name: 'NEXT_LOCALE', value: locale, url: 'http://localhost:3000' },
@@ -46,7 +37,6 @@ test.describe('i18n', () => {
   });
 
   test('an unknown locale cookie falls back instead of failing', async ({ page }) => {
-    // The cookie is user input. A hand-edited value must not 500 the site.
     await page.context().addCookies([
       { name: 'NEXT_LOCALE', value: 'de', url: 'http://localhost:3000' },
     ]);

@@ -21,14 +21,6 @@ import {
   type LoginValues,
 } from '@/schemas/auth';
 
-/**
- * **One sign-in form for all three roles**, because the API has one `/auth/login`.
- *
- * The pre-rewrite app had `/login` and `/companylogin` as separate screens writing to two different
- * `localStorage` keys, which meant a user who picked the wrong one was told their password was wrong.
- * The response says what kind of account it is; the destination follows from that.
- */
-
 export function LoginForm() {
   const t = useTranslations();
   const router = useRouter();
@@ -42,9 +34,6 @@ export function LoginForm() {
         body: toLoginRequest(values),
       });
 
-      // `next` is set by the proxy when it turns an anonymous visitor away from a protected
-      // page. Only a same-origin path is honoured — an absolute URL here would make the sign-in form
-      // an open redirect, which is a classic phishing primitive.
       const next = searchParams.get('next');
       const destination =
         next && next.startsWith('/') && !next.startsWith('//')
@@ -52,8 +41,6 @@ export function LoginForm() {
           : (DASHBOARD_BY_USER_TYPE[user.userType] ?? '/');
 
       router.replace(destination);
-      // The session lives in httpOnly cookies, so the server has to re-render for the header and any
-      // protected page to see it.
       router.refresh();
     },
     [router, searchParams],

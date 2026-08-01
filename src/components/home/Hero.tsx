@@ -23,7 +23,6 @@ export async function Hero() {
       sx={{
         position: 'relative',
         overflow: 'hidden',
-        // Pull up under the transparent header instead of leaving a white strip above the gradient.
         mt: { xs: -8, md: -9.5 },
         pt: { xs: 14, md: 20 },
         pb: { xs: 8, md: 14 },
@@ -31,10 +30,6 @@ export async function Hero() {
         [darkScheme]: { backgroundImage: gradients.heroDark },
       }}
     >
-      {/*
-        A faint dot grid over the gradient. Purely decorative and mask-faded at the bottom edge so it
-        dissolves into the next section rather than stopping on a hard line.
-      */}
       <Box
         aria-hidden
         sx={{
@@ -54,15 +49,7 @@ export async function Hero() {
       <Container sx={{ position: 'relative' }}>
         <Grid container spacing={{ xs: 6, md: 8 }} sx={{ alignItems: 'center' }}>
           <Grid size={{ xs: 12, md: 7 }}>
-            {/*
-              A plain Box, not a `Chip` with an `icon` prop.
 
-              `Chip` is a client component and clones its `icon` element to inject a class. Handing it
-              JSX created in *this* server component made the server emit the label first and the
-              client emit the icon first — a hydration mismatch that React resolves by throwing the
-              whole hero subtree away and re-rendering it. Nothing about this badge needs Chip: it is
-              not interactive, not deletable, and not a selection.
-            */}
             <Box
               sx={{
                 display: 'inline-flex',
@@ -88,8 +75,6 @@ export async function Hero() {
               <Box
                 component="span"
                 sx={{
-                  // `background-clip: text` needs a transparent fill; the fallback colour is what
-                  // shows if a browser refuses the clip, so it must be readable on its own.
                   color: 'primary.main',
                   backgroundImage: gradients.brandText,
                   backgroundClip: 'text',

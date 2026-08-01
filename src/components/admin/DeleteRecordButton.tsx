@@ -18,16 +18,6 @@ import { isApiError } from '@/contracts/api-error';
 import { apiErrorMessage } from '@/lib/api-error';
 import { api } from '@/lib/http';
 
-/**
- * Deletes one record, behind a confirmation.
- *
- * `path` is the full proxy path so each screen names its own endpoint — they are not uniform
- * (`deletebyid/{id}` for most, `deletecv/{id}` for résumés), and inventing a convention here would
- * have hidden that.
- *
- * `label` names the record in the dialog and in the button's accessible name. In a table of identical
- * rows, "Delete" alone tells a screen-reader user nothing about which one they are about to remove.
- */
 export function DeleteRecordButton({ path, label }: { path: string; label: string }) {
   const t = useTranslations('admin');
   const tRoot = useTranslations();
@@ -57,7 +47,6 @@ export function DeleteRecordButton({ path, label }: { path: string; label: strin
         <IconButton
           size="small"
           onClick={(event) => {
-            // The row itself may navigate; deleting must not also open the record.
             event.stopPropagation();
             setOpen(true);
           }}

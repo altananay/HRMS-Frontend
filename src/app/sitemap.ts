@@ -5,17 +5,6 @@ import type { EmployerSummaryResponse, JobAdvertisementResponse } from '@/contra
 import { fetchPublic } from '@/server/queries';
 import { SITE_URL } from '@/server/site';
 
-/**
- * Every page a crawler should know about: the four public screens, plus one entry per open posting
- * and per listed company.
- *
- * Capped at one page of each. A sitemap is allowed 50,000 URLs, but this is generated on request and
- * an unbounded walk of the API would turn a crawler's polling into a load test. If the board ever
- * outgrows this, split it into a sitemap index — do not raise the page size.
- *
- * `fetchPublic` answers `null` when the API is unreachable, so an outage costs the dynamic entries
- * and still serves a valid sitemap rather than a 500.
- */
 const PAGE_SIZE = 200;
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

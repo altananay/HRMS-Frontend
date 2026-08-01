@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 
 import { email, optionalNationalId, optionalPositiveInt, PASSWORD_MIN_LENGTH, newPassword } from './rules';
 
-/** Echoes the key, so a failure names the rule rather than quoting prose. */
 const t = (key: string) => key;
 
 describe('email', () => {
@@ -10,8 +9,6 @@ describe('email', () => {
 
   it.each([
     'ada@example.com',
-    // The one that started this: a digit in the top-level domain. Zod's `.email()` rejects it, the
-    // backend accepts it, and the seeded E2E administrator uses exactly this shape.
     'admin@hrms.e2e',
     'someone@3m.com',
     'user@web2.de',
@@ -38,7 +35,6 @@ describe('email', () => {
 
 describe('newPassword', () => {
   it('should enforce length only, matching PasswordPolicy', () => {
-    // No character-class rules by decision — five characters of anything.
     expect(newPassword(t).safeParse('12345').success).toBe(true);
     expect(newPassword(t).safeParse('!!!!!').success).toBe(true);
     expect(newPassword(t).safeParse('1234').success).toBe(false);
@@ -63,7 +59,6 @@ describe('optionalPositiveInt', () => {
   });
 
   it.each(['0', '-3', 'abc', '1.5'])('should reject %s', (value) => {
-    // `0` matters: `z.coerce.number()` would turn an empty box into 0 and sail past a positive check.
     expect(optionalPositiveInt(t).safeParse(value).success, value).toBe(false);
   });
 });

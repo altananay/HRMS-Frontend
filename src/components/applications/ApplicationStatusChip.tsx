@@ -3,12 +3,6 @@ import { getTranslations } from 'next-intl/server';
 
 import { JobApplicationStatus } from '@/contracts/enums';
 
-/**
- * An application's status, coloured by what it means to the applicant.
- *
- * The colours carry meaning, so they are never the only signal — the label is always there. Someone
- * who cannot distinguish the greens from the reds still reads "Rejected".
- */
 const COLOURS: Record<JobApplicationStatus, ChipProps['color']> = {
   [JobApplicationStatus.Submitted]: 'default',
   [JobApplicationStatus.UnderReview]: 'info',

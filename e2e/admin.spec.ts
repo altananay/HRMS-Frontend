@@ -1,12 +1,5 @@
 import { expect, test } from './fixtures';
 
-/**
- * The admin panel.
- *
- * Ten screens that all read the same way, so the spec checks the shape once per screen and spends its
- * detail on the two things that actually have behaviour: server-side paging through the URL, and the
- * moderation actions.
- */
 const SCREENS = [
   ['/admin', 'Yönetim paneli'],
   ['/admin/users', 'Kullanıcılar'],
@@ -33,8 +26,6 @@ test.describe('admin panel', () => {
   }
 
   test('paging lives in the URL, so a page survives a reload', async ({ page, actors }) => {
-    // Eleven seekers, so a ten-row page always has a second one to go to. Counting what the seed and
-    // the other specs happen to leave behind would make this test pass or fail on run order.
     for (let index = 0; index < 11; index += 1) {
       await actors.signInAsNewJobSeeker();
     }
@@ -48,7 +39,7 @@ test.describe('admin panel', () => {
 
     await page.reload();
     await expect(page).toHaveURL(/[?&]page=2/);
-    await expect(page.getByRole('row')).not.toHaveCount(1); // header only would mean an empty page 2
+    await expect(page.getByRole('row')).not.toHaveCount(1);
   });
 
   test('an administrator creates a job position and deletes it', async ({ page, actors }) => {
@@ -56,7 +47,6 @@ test.describe('admin panel', () => {
     await page.goto('/admin/job-positions?pageSize=100');
 
     const name = `E2E Pozisyon ${Date.now().toString(36)}`;
-    // The grid's own column menus carry the field label too, so every dialog control is scoped.
     const dialog = page.getByRole('dialog');
 
     await page.getByRole('button', { name: 'Yeni pozisyon' }).click();
@@ -74,7 +64,6 @@ test.describe('admin panel', () => {
   });
 
   test('an administrator marks a contact message handled', async ({ page, actors }) => {
-    // The message is posted anonymously, the way the public form does it.
     await page.goto('/');
     const subject = `E2E mesaj ${Date.now().toString(36)}`;
     await page.request.post('/api/proxy/Contacts', {

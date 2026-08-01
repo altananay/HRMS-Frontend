@@ -1,12 +1,5 @@
 import { expect, test } from '@playwright/test';
 
-/**
- * What a crawler sees.
- *
- * Both files are generated at request time from `src/app/robots.ts` and `src/app/sitemap.ts`, so they
- * can break in ways a build never notices — a wrong base URL, or a sitemap that 500s because the API
- * is unreachable. Those are exactly the two failures asserted here.
- */
 test.describe('crawlers', () => {
   test('robots.txt keeps the panels out and points at the sitemap', async ({ request }) => {
     const response = await request.get('/robots.txt');
@@ -33,8 +26,6 @@ test.describe('crawlers', () => {
       expect(body).toContain(`<loc>http://localhost:3000${path}</loc>`);
     }
 
-    // A relative <loc> is accepted by the XML schema and ignored by every crawler — the quietest way
-    // for this file to be useless.
     expect(body).not.toMatch(/<loc>(?!https?:\/\/)/);
   });
 

@@ -29,15 +29,6 @@ import {
   type ChangePasswordValues,
 } from '@/schemas/profile';
 
-/**
- * Password and session management.
- *
- * **Both actions end this browser's session**, and the screen says so before either is taken.
- * `ChangePasswordAsync` rotates the security stamp and revokes every refresh token, so the access
- * token in our cookie is dead the moment it succeeds — the BFF handler clears the cookies and answers
- * `{ signedOut: true }` rather than leaving a session that 401s on the next click for no visible
- * reason.
- */
 export function SecuritySettings() {
   const t = useTranslations('security');
   const tRoot = useTranslations();
@@ -55,8 +46,6 @@ export function SecuritySettings() {
         body: { currentPassword: values.currentPassword, newPassword: values.newPassword },
       });
 
-      // Straight to sign-in: the session is already gone server-side, so anywhere else would just
-      // bounce them there via a failed request.
       router.replace('/login');
       router.refresh();
     },

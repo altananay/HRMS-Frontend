@@ -13,8 +13,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "e2e": "node e2e/prepare.mjs && playwright test",
-    "e2e:ui": "node e2e/prepare.mjs && playwright test --ui"
+    "e2e": "node e2e/prepare.mjs && npm run build && playwright test",
+    "e2e:ui": "node e2e/prepare.mjs && npm run build && playwright test --ui"
   },
   "dependencies": {
     "@emotion/cache": "11.14.0",

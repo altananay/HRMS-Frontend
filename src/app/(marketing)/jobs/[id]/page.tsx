@@ -45,13 +45,6 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   };
 }
 
-/**
- * One opening, in full.
- *
- * The apply button is a **link**, not an action: applying belongs to the job seeker panel (P6), and
- * an anonymous visitor is sent to sign in with `next` set so they land back here. Rendering a live
- * apply button that fails for two of the three roles would be worse than routing deliberately.
- */
 export default async function JobDetailPage({ params }: Params) {
   const { id } = await params;
   const [job, t, format, user] = await Promise.all([
@@ -101,8 +94,6 @@ export default async function JobDetailPage({ params }: Params) {
           <Typography variant="h4" sx={{ mb: 1.5 }}>
             {t('aboutRole')}
           </Typography>
-          {/* `pre-wrap`: the description is plain text from a textarea, and its paragraph breaks are
-              the only structure it has. Rendering it as HTML would be an injection hole. */}
           <Typography sx={{ whiteSpace: 'pre-wrap', mb: 4 }}>{job.description}</Typography>
 
           {job.skills.length > 0 ? (

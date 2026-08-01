@@ -5,28 +5,6 @@ import { useRouter } from 'next/navigation';
 import Box from '@mui/material/Box';
 import { useTheme } from '@mui/material/styles';
 
-/**
- * A rotating cloud of the skills employers are actually asking for.
- *
- * Replaces the old app's TagCanvas dependency — a jQuery plugin fed a hard-coded word list. This is
- * ~150 lines with no dependencies, driven by live advertisement data, and clicking a word filters the
- * job board by it.
- *
- * Three things here are not decoration:
- *
- *   **Nothing in this canvas is reachable by a keyboard or a screen reader**, and canvas pixels cannot
- *   be asserted on in a test. The parent renders a real `<Link>` list next to it; that list is the
- *   accessible control, the no-JS fallback and the thing Playwright clicks. This component is marked
- *   `aria-hidden` so the same skills are not announced twice.
- *
- *   **`prefers-reduced-motion` stops the animation entirely** rather than slowing it. A rotating word
- *   cloud is exactly the kind of continuous motion that setting exists to turn off; one static frame
- *   is drawn instead.
- *
- *   **The canvas is sized in device pixels** and scaled back with CSS. Skipping that renders text at
- *   1x on a 2x display, which looks blurred in a way that is hard to attribute afterwards.
- */
-
 type Point = { x: number; y: number; z: number };
 
 const RADIUS_RATIO = 0.42;
@@ -38,8 +16,6 @@ export function SkillSphereCanvas({ skills }: { skills: readonly string[] }) {
   const theme = useTheme();
   const [hovered, setHovered] = useState<number | null>(null);
 
-  // Written by the render loop and read by the pointer handlers. A ref, not state: this changes on
-  // every frame and re-rendering React 60 times a second to move a word is not the job.
   const projected = useRef<{ x: number; y: number; width: number; height: number }[]>([]);
   const pointer = useRef<{ x: number; y: number } | null>(null);
   const hoveredIndex = useRef<number | null>(null);
@@ -85,7 +61,6 @@ export function SkillSphereCanvas({ skills }: { skills: readonly string[] }) {
       height = rect.height;
       canvas.width = Math.round(width * ratio);
       canvas.height = Math.round(height * ratio);
-      // Reset before scaling, or every resize compounds the previous transform.
       context.setTransform(ratio, 0, 0, ratio, 0, 0);
     };
 
@@ -98,8 +73,6 @@ export function SkillSphereCanvas({ skills }: { skills: readonly string[] }) {
       context.clearRect(0, 0, width, height);
       projected.current = [];
 
-      // Painter's algorithm: sort back to front so the words nearer the viewer overlap the ones
-      // behind them rather than the other way round.
       const rotated = points
         .map((point, index) => ({ index, ...rotate(point, angle) }))
         .sort((a, b) => a.z - b.z);
@@ -108,8 +81,6 @@ export function SkillSphereCanvas({ skills }: { skills: readonly string[] }) {
         const label = skills[index];
         if (!label) continue;
 
-        // z runs -1..1. Nearer words are larger and more opaque; the far side stays legible enough to
-        // read as part of a sphere rather than disappearing.
         const depth = (z + 1) / 2;
         const scale = 0.55 + depth * 0.65;
         const fontSize = 13 * scale;
@@ -140,7 +111,6 @@ export function SkillSphereCanvas({ skills }: { skills: readonly string[] }) {
 
       context.globalAlpha = 1;
 
-      // Hit testing happens after the frame is laid out, so hover always matches what is on screen.
       if (pointer.current) {
         const next = hitTest(pointer.current.x, pointer.current.y);
 
@@ -181,8 +151,6 @@ export function SkillSphereCanvas({ skills }: { skills: readonly string[] }) {
     <Box
       component="canvas"
       ref={canvasRef}
-      // The `<Link>` list beside this is the accessible control; announcing the same skills twice
-      // would just make the page longer to listen to.
       aria-hidden
       onPointerMove={(event) => {
         const rect = event.currentTarget.getBoundingClientRect();
@@ -209,13 +177,6 @@ export function SkillSphereCanvas({ skills }: { skills: readonly string[] }) {
   );
 }
 
-/**
- * Spreads N points evenly over a sphere.
- *
- * The golden-angle spiral, not random placement and not a latitude/longitude grid — random leaves
- * visible clumps and gaps, and a grid crowds the poles. This is the standard construction and it is
- * three lines.
- */
 function fibonacciSphere(count: number): Point[] {
   const goldenAngle = Math.PI * (3 - Math.sqrt(5));
 
@@ -228,7 +189,6 @@ function fibonacciSphere(count: number): Point[] {
   });
 }
 
-/** Spins around Y and tilts slightly on X, so the sphere reads as a sphere rather than a ring. */
 function rotate(point: Point, angle: number): Point {
   const cos = Math.cos(angle);
   const sin = Math.sin(angle);

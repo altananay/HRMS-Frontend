@@ -13,7 +13,6 @@ import {
   type Translate,
 } from './rules';
 
-/** Mirrors `UpdateJobSeekerCommandValidator`. `id` is not a field — the controller takes it from the token. */
 export function jobSeekerProfileSchema(t: Translate) {
   return z.object({
     firstName: requiredText(t, { min: 2, max: MAX.name }),
@@ -31,8 +30,6 @@ export function fromJobSeeker(seeker: JobSeekerResponse): JobSeekerProfileInput 
     firstName: seeker.firstName,
     lastName: seeker.lastName,
     email: seeker.email,
-    // Parsed from `YYYY-MM-DD` by appending nothing — `new Date('1990-12-10')` is UTC midnight, which
-    // in UTC+3 is still the 10th locally, so the picker shows the right day.
     dateOfBirth: seeker.dateOfBirth ? new Date(`${seeker.dateOfBirth}T00:00:00`) : null,
   };
 }
@@ -46,13 +43,6 @@ export function toUpdateJobSeekerRequest(values: JobSeekerProfileValues): Update
   };
 }
 
-/**
- * Mirrors `ChangePasswordCommandValidator`.
- *
- * The current password is presence-only and the new one carries the policy — the same asymmetry as
- * sign-in, for the same reason: a length rule on the field being *checked* would reject a valid
- * existing password that predates the policy.
- */
 export function changePasswordSchema(t: Translate) {
   return z
     .object({

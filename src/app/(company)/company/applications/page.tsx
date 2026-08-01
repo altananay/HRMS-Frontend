@@ -21,13 +21,6 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const PAGE_SIZE = 20;
 
-/**
- * Every application to this employer's postings.
- *
- * No `employerId` is sent and none would help: `JobApplicationsController.GetAll` overwrites it from
- * the token for this role. The scoping is the server's, which makes it a security property rather
- * than a query parameter someone could tamper with.
- */
 export default async function CompanyApplicationsPage({
   searchParams,
 }: {

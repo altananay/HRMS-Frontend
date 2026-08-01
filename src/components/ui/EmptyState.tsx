@@ -3,13 +3,6 @@ import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 
-/**
- * What a list looks like when there is nothing in it.
- *
- * Worth a component rather than a `<p>No results</p>`: an empty region with no explanation is
- * indistinguishable from a page that failed to load, and the difference matters to whoever is looking
- * at it. Every empty state here says what is missing and, where there is one, what to do about it.
- */
 export function EmptyState({
   title,
   description,

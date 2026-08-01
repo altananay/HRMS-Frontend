@@ -1,27 +1,5 @@
 import { z } from 'zod';
 
-/**
- * The shared building blocks every schema is assembled from.
- *
- * These mirror `Core/Application/Validation/Validators.cs` **deliberately and by hand**. The
- * duplication is the point: the client copy exists so a user sees a problem before a round trip, and
- * the server copy is the only one that decides anything. If you change one, change the other in the
- * same commit and say so in the message.
- *
- * Messages are produced by a translator passed in from the component rather than hard-coded, so a
- * validation error obeys the same i18n rule as every other piece of user-facing text. Tests pass a
- * stub, which also keeps them asserting on *which inputs fail* rather than on prose.
- */
-
-/**
- * The message keys a schema may use.
- *
- * Spelled out rather than left as `string` so that `useTranslations()`'s own typed translator is
- * assignable here: its parameter is the union of every real key, and a function accepting a wider
- * union satisfies one accepting a narrower one. Widening this to `string` would break that in the
- * other direction and force a cast at every call site — and a typo in a key would go back to
- * rendering the key itself on screen.
- */
 export type ValidationKey =
   | 'validation.required'
   | 'validation.email'
@@ -39,7 +17,6 @@ export type ValidationKey =
 
 export type Translate = (key: ValidationKey, values?: Record<string, string | number>) => string;
 
-/** Backend column widths. Exceeding one is a 400 from the API, so the form should catch it first. */
 export const MAX = {
   email: 256,
   name: 100,
@@ -55,19 +32,8 @@ export const MAX = {
   note: 2000,
 } as const;
 
-/** `PasswordPolicy.MinimumLength`. Length only — no character-class rules, by decision. */
 export const PASSWORD_MIN_LENGTH = 5;
 
-/**
- * Matches FluentValidation's `EmailAddress()`, which defaults to `AspNetCoreCompatible`: one `@`,
- * something either side, no whitespace. Nothing more.
- *
- * Zod's `.email()` is **stricter than the server**, and that is a bug rather than a nicety. It rejects
- * a top-level domain containing a digit, so `admin@hrms.e2e` — and any real address at `@3m.com` or
- * `@web2.de` — is refused by the form while the API would have accepted it. A client rule that is
- * tighter than the server's does not protect anything; it just locks people out of the product with a
- * message insisting their own address is invalid.
- */
 const EMAIL = /^[^@\s]+@[^@\s]+$/;
 
 export function email(t: Translate) {
@@ -79,12 +45,6 @@ export function email(t: Translate) {
     .max(MAX.email, t('validation.maxLength', { max: MAX.email }));
 }
 
-/**
- * A password being **set**. Registration, reset, change.
- *
- * Not the same as the one being **checked** — see `currentPassword`. The backend draws that line too,
- * and for a good reason.
- */
 export function newPassword(t: Translate) {
   return z
     .string()
@@ -92,13 +52,6 @@ export function newPassword(t: Translate) {
     .min(PASSWORD_MIN_LENGTH, t('validation.minLength', { min: PASSWORD_MIN_LENGTH }));
 }
 
-/**
- * A password being **checked**: presence only.
- *
- * `LoginCommandValidator` is explicit about why — a length rule on sign-in discloses the policy to an
- * anonymous caller, and would lock out any password that predates the current one. Do not "improve"
- * this by reusing `newPassword`.
- */
 export function currentPassword(t: Translate) {
   return z.string().min(1, t('validation.required'));
 }
@@ -111,13 +64,6 @@ export function requiredText(t: Translate, { min = 1, max }: { min?: number; max
     : base.max(max, t('validation.maxLength', { max }));
 }
 
-/**
- * An optional free-text field.
- *
- * Empty input becomes `undefined`, not `''`. An empty string round-trips to the API as a real value
- * and overwrites whatever was there; `undefined` is serialized away by `JSON.stringify`, which is
- * what "the user left it blank" should mean.
- */
 export function optionalText(t: Translate, max: number) {
   return z
     .string()
@@ -127,13 +73,6 @@ export function optionalText(t: Translate, max: number) {
     .transform((value) => (value ? value : undefined));
 }
 
-/**
- * A positive whole number that may be left blank.
- *
- * The input arrives as a string, because that is what an `<input>` holds — including `''` for empty
- * and `'abc'` for a paste. Coercing with `z.coerce.number()` would turn both into `NaN` and `0`
- * respectively, and `0` would sail past a `.positive()` check on the wrong side of the boundary.
- */
 export function optionalPositiveInt(t: Translate) {
   return z
     .union([z.string(), z.number()])
@@ -147,7 +86,6 @@ export function optionalPositiveInt(t: Translate) {
     .refine((value) => value === undefined || value > 0, t('validation.positive'));
 }
 
-/** `RegisterJobSeekerCommandValidator`: exactly eleven digits, and only when supplied. */
 export function optionalNationalId(t: Translate) {
   return z
     .string()
@@ -157,7 +95,6 @@ export function optionalNationalId(t: Translate) {
     .refine((value) => value === undefined || /^[0-9]{11}$/.test(value), t('validation.nationalId'));
 }
 
-/** A chip list — sectors, skills. Each entry is bounded; the list itself may be empty. */
 export function tagList(t: Translate, max: number) {
   return z
     .array(z.string().trim().min(1, t('validation.required')).max(max, t('validation.maxLength', { max })))

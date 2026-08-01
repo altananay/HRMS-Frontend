@@ -1,20 +1,7 @@
 import { test as base, type APIRequestContext, type Page } from '@playwright/test';
 
-/**
- * Per-spec identities and sign-in.
- *
- * Every spec creates its own users through the API and never touches anyone else's data. That is what
- * makes `fullyParallel: true` safe without a lock or a shared login: registration is anonymous and
- * returns a session immediately, so a spec's whole world costs about five requests.
- *
- * Sign-in goes through **the app's own** `/api/auth/login`, not the API's, and specifically through
- * `page.request` — which shares the browser context's cookie jar, so the httpOnly cookies the BFF
- * sets are the ones the page then navigates with. That is the real session, not a simulation of one.
- */
-
 export const ADMIN = { email: 'admin@hrms.e2e', password: 'Adm!nE2E12345' } as const;
 
-/** Anything a spec creates is prefixed with this, so a failure names the spec that owns the data. */
 function unique(prefix: string): string {
   return `${prefix}-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
@@ -26,20 +13,12 @@ export type Identity = {
 };
 
 export type Actors = {
-  /** Registers a job seeker and signs the browser in as them. */
   signInAsNewJobSeeker: (overrides?: Partial<Identity>) => Promise<Identity>;
-  /** Registers an employer and signs the browser in as them. */
   signInAsNewEmployer: (overrides?: Partial<Identity>) => Promise<Identity>;
-  /** Signs in as the seeded administrator. */
   signInAsAdmin: () => Promise<void>;
-  /** Signs the browser out and clears the cookie jar. */
   signOut: () => Promise<void>;
 };
 
-/**
- * The BFF rejects a mutation whose `Origin` is missing or foreign — the same CSRF check a browser
- * request would satisfy automatically. Playwright's API requests do not set it, so specs must.
- */
 function origin(page: Page): Record<string, string> {
   return { origin: new URL(page.url() || 'http://localhost:3000').origin };
 }
@@ -55,16 +34,7 @@ async function post(page: Page, path: string, data: unknown) {
 }
 
 export const test = base.extend<{ actors: Actors }>({
-  /**
-   * Everything here goes through `page.request`, never the top-level `request` fixture.
-   *
-   * They are different `APIRequestContext`s with different cookie jars: `request` is standalone, so a
-   * sign-in through it succeeds, stores its cookies somewhere the browser cannot see, and every
-   * subsequent `page.goto` is anonymous. `page.request` shares the browser context's storage, which is
-   * what makes the session real for the page.
-   */
   actors: async ({ page }, use) => {
-    // A page must exist before the cookie jar is useful, and `origin()` needs a URL to work from.
     await page.goto('/');
 
     const register = async (
@@ -93,7 +63,6 @@ export const test = base.extend<{ actors: Actors }>({
               lastName: 'Lovelace',
             };
 
-      // Registration signs the user in, so no separate login call is needed.
       await post(page, `/api/auth/register/${role}`, body);
 
       return identity;
@@ -115,12 +84,6 @@ export const test = base.extend<{ actors: Actors }>({
 
 export { expect } from '@playwright/test';
 
-/**
- * Waits for the reset mail and returns its link.
- *
- * Polled rather than awaited once: the API answers the request before SMTP delivery finishes, so a
- * single read races the mail and fails perhaps one run in five — the worst kind of flake.
- */
 export async function waitForResetLink(
   request: APIRequestContext,
   email: string,
@@ -140,7 +103,6 @@ export async function waitForResetLink(
   }
 }
 
-/** Reads the newest message Mailpit received for an address, and the reset link inside it. */
 export async function readResetLink(
   request: APIRequestContext,
   email: string,

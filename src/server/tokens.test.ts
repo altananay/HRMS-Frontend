@@ -10,7 +10,6 @@ import {
 
 const API = 'https://api.test';
 
-/** A JWT with only the payload filled in — nothing here verifies a signature. */
 function jwt(claims: Record<string, unknown>): string {
   const payload = Buffer.from(JSON.stringify(claims)).toString('base64url');
   return `header.${payload}.signature`;
@@ -71,8 +70,6 @@ describe('needsRefresh', () => {
   });
 
   it('should_BeTrue_WithinTheSkewWindow', () => {
-    // The backend validates with `ClockSkew = TimeSpan.Zero`, so a token that expires mid-flight is
-    // simply rejected — the window exists to make sure that never happens.
     expect(needsRefresh(at(REFRESH_SKEW_MS - 1_000), now)).toBe(true);
     expect(needsRefresh(at(REFRESH_SKEW_MS + 1_000), now)).toBe(false);
   });
@@ -81,20 +78,12 @@ describe('needsRefresh', () => {
     ['there is no token', undefined],
     ['the token is unreadable', 'garbage'],
   ])('should_BeTrue_When_%s', (_label, token) => {
-    // Refreshing needlessly costs one request; skipping a needed refresh costs a 401.
     expect(needsRefresh(token, now)).toBe(true);
   });
 });
 
 describe('refreshOnce', () => {
   it('should_SendExactlyOneUpstreamRequest_ForTenConcurrentCallers', async () => {
-    // **The exit gate for this phase.**
-    //
-    // `AuthManager.RefreshAsync` treats a second presentation of a rotated refresh token as theft: it
-    // revokes the whole chain and bumps the security stamp, which signs the user out of every device
-    // and surfaces as an ordinary 401. Ten parallel requests after an idle period is a completely
-    // ordinary way to reach that, so "one upstream call" is a correctness requirement, not a
-    // performance one.
     let resolveUpstream: (value: Response) => void = () => {};
     const upstream = new Promise<Response>((resolve) => {
       resolveUpstream = resolve;
@@ -104,7 +93,6 @@ describe('refreshOnce', () => {
 
     const callers = Array.from({ length: 10 }, () => refreshOnce('shared-token', API));
 
-    // Every caller must have joined the same in-flight promise *before* it settles.
     expect(fetchMock).toHaveBeenCalledTimes(1);
 
     resolveUpstream(jsonResponse(tokenPair('new')));
@@ -120,7 +108,6 @@ describe('refreshOnce', () => {
   });
 
   it('should_NotShareAPromise_BetweenDifferentTokens', async () => {
-    // Keyed by token, so two users refreshing at the same moment never receive each other's session.
     const fetchMock = vi
       .spyOn(globalThis, 'fetch')
       .mockImplementation(async (_url, init) => {
@@ -146,7 +133,6 @@ describe('refreshOnce', () => {
     await refreshOnce('token', API);
     await refreshOnce('token', API);
 
-    // Not cached — the entry is cleared on settle, or a stale success would be replayed forever.
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
 
@@ -157,7 +143,6 @@ describe('refreshOnce', () => {
       .mockResolvedValueOnce(jsonResponse(tokenPair('new')));
 
     expect(await refreshOnce('token', API)).toEqual({ status: 'unavailable' });
-    // A rejected promise left in the map would poison every later refresh for that token.
     expect(await refreshOnce('token', API)).toMatchObject({ status: 'refreshed' });
     expect(fetchMock).toHaveBeenCalledTimes(2);
   });
@@ -168,8 +153,6 @@ describe('refreshOnce', () => {
     [500, 'unavailable'],
     [503, 'unavailable'],
   ])('should_Map%dTo%s', async (status, expected) => {
-    // The distinction decides whether the caller clears the cookies. A 5xx must never sign a user out
-    // — that would log people out because a container was restarting.
     vi.spyOn(globalThis, 'fetch').mockResolvedValue(jsonResponse({}, status));
 
     expect(await refreshOnce('token', API)).toEqual({ status: expected });

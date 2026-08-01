@@ -1,8 +1,5 @@
 import { expect, test } from '@playwright/test';
 
-// The harness proof: docker is up, the .NET API migrated and seeded a clean hrms_e2e, and Next is
-// serving. Real specs land from P7 onwards; this one exists so a broken harness fails on its own
-// instead of being mistaken for a broken feature.
 test.describe('harness', () => {
   test('the app responds', async ({ page }) => {
     const response = await page.goto('/');

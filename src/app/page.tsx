@@ -10,14 +10,6 @@ import { Hero } from '@/components/home/Hero';
 import { LatestJobs } from '@/components/home/LatestJobs';
 import { SkillSphere } from '@/components/home/SkillSphere';
 
-/**
- * The landing page. Every section is a server component — nothing here needs state except the hero's
- * search field and the skill cloud's canvas, which are the two client islands.
- *
- * The two data-backed sections are wrapped in `Suspense` so the hero streams immediately and does not
- * wait on the API. If it is slow the visitor still gets a complete-looking page; if it is down, both
- * sections render nothing rather than taking the page with them.
- */
 export default function Home() {
   return (
     <>

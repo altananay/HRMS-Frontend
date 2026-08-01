@@ -12,7 +12,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('title') };
 }
 
-/** Same component as the job seeker's: password and sessions are account concerns, not role ones. */
 export default async function CompanySecurityPage() {
   await requireRole(Role.Employer);
 

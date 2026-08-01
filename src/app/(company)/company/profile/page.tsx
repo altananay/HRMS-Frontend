@@ -22,8 +22,6 @@ export default async function CompanyProfilePage() {
   const [t, nav, detail] = await Promise.all([
     getTranslations('company'),
     companyNav(),
-    // `getbyemployerid` is anonymous and returns the full detail including departments — the same
-    // record the public company page renders, which is the point: this form edits what visitors see.
     fetchPublic<EmployerDetailResponse>(`Employers/getbyemployerid/${employer.id}`),
   ]);
 

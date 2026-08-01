@@ -17,7 +17,6 @@ import { useApiForm } from '@/components/form/useApiForm';
 import { auth } from '@/lib/http';
 import { MAX, email, newPassword, requiredText, PASSWORD_MIN_LENGTH, type Translate } from '@/schemas/rules';
 
-/** Mirrors `RegisterSystemStaffCommandValidator`. */
 function schemaFor(t: Translate) {
   return z.object({
     email: email(t),
@@ -30,14 +29,6 @@ function schemaFor(t: Translate) {
 type Values = z.output<ReturnType<typeof schemaFor>>;
 type Input = z.input<ReturnType<typeof schemaFor>>;
 
-/**
- * Creates an administrator.
- *
- * Posts to `/api/auth/register/system-staff`, which has its own BFF handler rather than going through
- * the generic proxy — the API answers with a **token pair for the new account**, and letting that
- * through `authenticate()` would swap the current admin's session for the one they just created.
- * The handler drops the tokens and returns only the user.
- */
 export function NewSystemStaffButton() {
   const t = useTranslations('admin');
   const tRoot = useTranslations();

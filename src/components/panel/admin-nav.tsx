@@ -12,7 +12,6 @@ import { getTranslations } from 'next-intl/server';
 
 import type { PanelNavItem } from './PanelNav';
 
-/** `/admin` is `exact` because it prefixes every other entry and would otherwise stay selected. */
 export async function adminNav(): Promise<PanelNavItem[]> {
   const t = await getTranslations('admin.nav');
 

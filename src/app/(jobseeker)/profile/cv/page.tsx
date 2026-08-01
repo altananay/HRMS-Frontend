@@ -19,12 +19,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('title') };
 }
 
-/**
- * The résumé as an employer sees it — read-only, so the user can check what they are sending.
- *
- * Rendered by the same `CvView` the employer's candidate screen uses, which is what makes the promise
- * on this page ("this is what employers see") true rather than aspirational.
- */
 export default async function CvPage() {
   const user = await requireRole(Role.JobSeeker);
 

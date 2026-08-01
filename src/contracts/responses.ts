@@ -1,14 +1,3 @@
-/**
- * Mirror of `Core/Application/Common/Contracts/Responses.cs` — same names, same order, same
- * nullability. When that file changes, this one changes in the same commit.
- *
- * Nullability rules used throughout:
- *   C# `string`    → `string`            (non-nullable reference type, enabled solution-wide)
- *   C# `string?`   → `string | null`     (JSON emits `null`, not an absent key)
- *   C# `DateOnly?` → `DateOnlyString | null`
- *   C# `T[]`       → `T[]`               (never null; the backend defaults them to `[]`)
- */
-
 import type { DateOnlyString, DateTimeString, Guid } from './envelope';
 import type {
   JobApplicationStatus,
@@ -18,7 +7,6 @@ import type {
   UserType,
 } from './enums';
 
-/** Every `add` endpoint answers 201 with this and a `Location` header. */
 export type CreatedResponse = {
   id: Guid;
 };
@@ -50,11 +38,6 @@ export type EmployerDetailResponse = EmployerResponse & {
   departments: DepartmentResponse[];
 };
 
-/**
- * The public company directory's shape — deliberately narrower than `EmployerResponse`: no `email`
- * and no `isActive`. The address appears only on the company's own detail page
- * (`EmployerDetailResponse`), so don't "fix" a missing email here by switching endpoints.
- */
 export type EmployerSummaryResponse = {
   id: Guid;
   companyName: string;
@@ -87,7 +70,6 @@ export type UserSummaryResponse = {
   createdAt: DateTimeString;
 };
 
-/** `GET /api/Auth/me`. Carries no token — the session lives in httpOnly cookies. */
 export type AuthenticatedUserResponse = {
   id: Guid;
   email: string;
@@ -96,7 +78,6 @@ export type AuthenticatedUserResponse = {
   roles: string[];
 };
 
-/** `email` here is the *employer's* address, not the applicant's. */
 export type JobAdvertisementResponse = {
   id: Guid;
   employerId: Guid;

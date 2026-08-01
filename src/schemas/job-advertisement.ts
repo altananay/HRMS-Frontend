@@ -10,15 +10,6 @@ import { toDateOnly } from '@/lib/format';
 
 import { MAX, optionalPositiveInt, optionalText, requiredText, tagList, type Translate } from './rules';
 
-/**
- * The job posting form, for both create and edit.
- *
- * ⚠ **One rule differs between the two, and the difference is deliberate.**
- * `CreateJobAdvertisementCommandValidator` requires `Deadline >= today`;
- * `UpdateJobAdvertisementCommandValidator` does **not**. Applying the create rule to edits would make
- * an expired posting impossible to touch — you could not even switch it off, because saving would
- * demand a future date first. `mode` carries that distinction.
- */
 export function jobAdvertisementSchema(t: Translate, mode: 'create' | 'edit') {
   const base = z.object({
     title: requiredText(t, { min: 3, max: MAX.title }),
@@ -29,7 +20,6 @@ export function jobAdvertisementSchema(t: Translate, mode: 'create' | 'edit') {
     skills: tagList(t, MAX.sector),
     minSalary: optionalPositiveInt(t),
     maxSalary: optionalPositiveInt(t),
-    // Three letters or nothing. The backend checks `Length(3)` only when a value is present.
     currency: z
       .string()
       .trim()
@@ -66,7 +56,6 @@ export function jobAdvertisementSchema(t: Translate, mode: 'create' | 'edit') {
 export type JobAdvertisementValues = z.output<ReturnType<typeof jobAdvertisementSchema>>;
 export type JobAdvertisementInput = z.input<ReturnType<typeof jobAdvertisementSchema>>;
 
-/** A blank posting. `deadline` starts a month out — a same-day closing date is never what is meant. */
 export function emptyJobAdvertisement(): JobAdvertisementInput {
   const deadline = new Date();
   deadline.setMonth(deadline.getMonth() + 1);
@@ -101,8 +90,6 @@ export function fromJobAdvertisement(job: JobAdvertisementResponse): JobAdvertis
     currency: job.currency ?? '',
     openPositions: job.openPositions,
     jobType: job.jobType,
-    // `T00:00:00` forces local midnight. `new Date('2026-09-01')` is parsed as UTC, which in UTC+3
-    // still reads as the 1st but in a negative offset would show the previous day in the picker.
     deadline: new Date(`${job.deadline}T00:00:00`),
     isActive: job.isActive,
   };
@@ -111,8 +98,6 @@ export function fromJobAdvertisement(job: JobAdvertisementResponse): JobAdvertis
 function toWire(values: JobAdvertisementValues) {
   return {
     title: values.title,
-    // Free text, not an id: `ResolveOrCreateAsync` matches an existing position or creates one, which
-    // is why the field is a freeSolo autocomplete.
     jobPositionName: values.jobPositionName,
     description: values.description,
     experience: values.experience ?? null,
@@ -130,8 +115,6 @@ function toWire(values: JobAdvertisementValues) {
 export function toCreateJobAdvertisementRequest(
   values: JobAdvertisementValues,
 ): CreateJobAdvertisementRequest {
-  // `employerId` is deliberately absent — the controller overwrites it from the bearer token, and a
-  // body-supplied owner would be an IDOR.
   return toWire(values);
 }
 

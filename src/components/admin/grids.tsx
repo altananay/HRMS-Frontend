@@ -21,16 +21,6 @@ import { ContactHandledToggle } from './ContactHandledToggle';
 import { DeleteRecordButton } from './DeleteRecordButton';
 import { ServerDataGrid } from './ServerDataGrid';
 
-/**
- * The admin grids.
- *
- * One file rather than nine, because they are the same component with different columns and the
- * differences are easier to compare side by side than across nine near-identical files. Anything with
- * real behaviour of its own — the contact toggle, the position editor — lives separately.
- *
- * Every grid is a client component only because `DataGrid` is; the rows arrive already fetched and
- * paged from the server.
- */
 type Page<T> = { items: T[]; totalCount: number; page: number; pageSize: number };
 
 function useCommon() {
@@ -41,7 +31,6 @@ function useCommon() {
   return { t, columns, format };
 }
 
-/** A date cell. `valueGetter` keeps the raw string out of sorting and the formatter out of the render. */
 function dateColumn<Row extends object>(
   field: keyof Row & string,
   headerName: string,
@@ -191,8 +180,6 @@ export function EmployersGrid({ page }: { page: Page<EmployerResponse> }) {
       rowCount={page.totalCount}
       page={page.page}
       pageSize={page.pageSize}
-      // The public company page is the only detail view an employer has, and it is what an admin
-      // moderating the directory actually wants to look at.
       onRowClick={(row) => router.push(`/companies/${row.id}`)}
     />
   );
@@ -362,7 +349,6 @@ export function CvsGrid({ page }: { page: Page<CvResponse> }) {
       width: 90,
       sortable: false,
       renderCell: ({ row }) => (
-        // `deletecv/{id}`, not `deletebyid/{id}` — the CV controller does not follow the others.
         <DeleteRecordButton
           path={`Cvs/deletecv/${row.id}`}
           label={`${row.firstName} ${row.lastName}`}

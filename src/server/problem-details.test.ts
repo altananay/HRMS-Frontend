@@ -33,8 +33,6 @@ describe('toApiError', () => {
   });
 
   it('should_Distinguish_ABusinessRuleFromAValidationFailure', async () => {
-    // Both are 400. The presence of `errors` is the only reliable signal — the backend's titles
-    // ("Doğrulama hatası." vs "İş kuralı ihlali.") are display strings, not a contract.
     const business = await toApiError(
       problem({ title: 'İş kuralı ihlali.', detail: 'Bu ilana zaten başvurdunuz.' }, 400),
     );
@@ -65,9 +63,6 @@ describe('toApiError', () => {
   });
 
   it('should_SplitA401_OnWhetherASessionWasPresented', async () => {
-    // `unauthorized` means nothing was presented, so there is nothing to refresh — retrying it would
-    // be a guaranteed-useless round trip on every anonymous 401. `session_expired` is the one the
-    // browser retries once.
     expect((await toApiError(new Response(null, { status: 401 }), false)).code).toBe('unauthorized');
     expect((await toApiError(new Response(null, { status: 401 }), true)).code).toBe(
       'session_expired',
@@ -76,8 +71,6 @@ describe('toApiError', () => {
 
   describe('responses that are not ProblemDetails at all', () => {
     it('should_HandleAnEmptyBody', async () => {
-      // A 403 from the authorization middleware short-circuits before MVC runs, so
-      // GlobalExceptionHandler never sees it and there is no body. `response.json()` on this throws.
       const error = await toApiError(new Response(null, { status: 403 }), true);
 
       expect(error).toMatchObject({ status: 403, code: 'forbidden' });
@@ -85,8 +78,6 @@ describe('toApiError', () => {
     });
 
     it('should_HandleThePlainTextBodyFromUseStatusCodePages', async () => {
-      // What the rate limiter actually produces: `RejectionStatusCode` is written directly and
-      // `UseStatusCodePages()` fills in text/plain.
       const response = new Response('Status Code: 429; Too Many Requests', {
         status: 429,
         headers: { 'content-type': 'text/plain' },

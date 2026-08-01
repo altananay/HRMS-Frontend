@@ -4,15 +4,6 @@ import { apiFetch } from '@/server/api-client';
 import { crossOriginRejected, isSameOrigin } from '@/server/handlers';
 import { clearSession, readTokens } from '@/server/session';
 
-/**
- * Signs out.
- *
- * The local cookies are cleared **whatever the API says**. A logout that fails because the API is
- * down and leaves the user apparently still signed in is worse than a refresh token that outlives its
- * cookie: the token expires on its own in seven days, and the browser can no longer present it.
- *
- * The upstream call is what revokes it server-side, so it is still made — just not depended on.
- */
 export async function POST(request: Request) {
   if (!isSameOrigin(request)) return crossOriginRejected();
 
@@ -27,7 +18,6 @@ export async function POST(request: Request) {
         contentType: 'application/json',
       });
     } catch {
-      // Deliberately swallowed — see above.
     }
   }
 

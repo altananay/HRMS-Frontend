@@ -11,10 +11,6 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('title') };
 }
 
-/**
- * `Suspense` is required, not decorative: `LoginForm` calls `useSearchParams()` to read the `next`
- * parameter the proxy sets, and Next refuses to build a page that does so outside a boundary.
- */
 export default async function LoginPage() {
   const t = await getTranslations('auth.login');
 

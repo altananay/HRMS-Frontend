@@ -1,15 +1,3 @@
-/**
- * The raw colour scales. Kept separate from `theme.ts` so a tone can be referenced directly
- * (gradients, canvas, chart series) without reaching into a built theme object.
- *
- * Three families, each a proper 50→950 tonal ramp so light and dark can pick different rungs
- * instead of relying on `alpha()` guesses:
- *
- *   brand    a cool cobalt — the trust colour, used for structure and primary actions
- *   accent   a warm amber — used sparingly, and only where we want the eye to land
- *   neutral  slate with a blue undertone; pure grey next to a blue brand reads muddy
- */
-
 export const brand = {
   50: '#EFF4FF',
   100: '#DBE6FE',
@@ -52,48 +40,34 @@ export const neutral = {
   950: '#0A1320',
 } as const;
 
-/**
- * The semantic colours, one set per colour scheme.
- *
- * They cannot be shared. `main` does double duty — it fills a chip or an alert **and** it colours
- * text on the page background — and those two jobs pull in opposite directions once the background
- * flips. A green dark enough for white text on a light page is nearly invisible as text on a dark
- * one, and the reverse is worse: the original single set filled chips at 3.47:1, which is what axe
- * caught on `/admin/users`.
- *
- * So: light gets dark fills with white text, dark gets bright fills with near-black text. Every pair
- * below is ≥ 4.5:1 (checked at both ends — fill against its own text, and `main` as text against the
- * page). Change one and re-check the other; `e2e/a11y.spec.ts` scans both schemes.
- */
 export const success = {
   light: '#34D399',
-  main: '#0A7F57', // 5.02:1 with white
+  main: '#0A7F57',
   dark: '#04563E',
   contrastText: '#FFFFFF',
 } as const;
 
 export const warning = {
   light: '#FBBF24',
-  main: '#B45309', // 5.02:1
+  main: '#B45309',
   dark: '#7C3D06',
   contrastText: '#FFFFFF',
 } as const;
 
 export const error = {
   light: '#F87171',
-  main: '#DC2626', // 4.83:1 — already passing, left alone
+  main: '#DC2626',
   dark: '#991B1B',
   contrastText: '#FFFFFF',
 } as const;
 
 export const info = {
   light: '#38BDF8',
-  main: '#0369A1', // 5.93:1
+  main: '#0369A1',
   dark: '#0B4A6F',
   contrastText: '#FFFFFF',
 } as const;
 
-/** The dark-scheme counterparts: bright fills, dark text on them. */
 export const successDark = {
   light: '#6EE7B7',
   main: '#34D399',
@@ -122,19 +96,13 @@ export const infoDark = {
   contrastText: '#042536',
 } as const;
 
-/**
- * Decorative gradients. Written as functions of the scales above so a palette change propagates
- * instead of leaving hard-coded hexes behind in a hero section.
- */
 export const gradients = {
-  /** The hero mesh — three offset radial blooms rather than a linear ramp, which looks dated. */
   heroLight: `radial-gradient(at 18% 12%, ${brand[100]} 0px, transparent 55%),
               radial-gradient(at 82% 8%, ${accent[100]} 0px, transparent 50%),
               radial-gradient(at 55% 85%, ${brand[50]} 0px, transparent 55%)`,
   heroDark: `radial-gradient(at 18% 12%, ${brand[950]} 0px, transparent 55%),
              radial-gradient(at 82% 8%, ${accent[950]} 0px, transparent 50%),
              radial-gradient(at 55% 85%, #10203F 0px, transparent 55%)`,
-  /** For text that needs to carry the brand: headline spans, logo mark. */
   brandText: `linear-gradient(120deg, ${brand[600]}, ${brand[400]} 55%, ${accent[400]})`,
   brandTextDark: `linear-gradient(120deg, ${brand[300]}, ${brand[200]} 55%, ${accent[300]})`,
 } as const;

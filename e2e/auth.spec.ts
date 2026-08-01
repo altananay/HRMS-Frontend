@@ -1,15 +1,7 @@
 import { expect, test } from './fixtures';
 
-/**
- * Sign-in, registration and the session cookies behind them.
- *
- * The pre-rewrite app had two sign-in screens writing two `localStorage` keys, and never attached the
- * token to a request. The properties asserted here are the ones that replaced that.
- */
 test.describe('authentication', () => {
   test('one form signs in every role, and each lands in its own panel', async ({ page }) => {
-    // The API has a single /auth/login. The destination comes from the response, not from which form
-    // the user happened to open.
     await page.goto('/login');
 
     await page.getByLabel('E-posta').fill('admin@hrms.e2e');
@@ -30,7 +22,6 @@ test.describe('authentication', () => {
     expect(session.every((cookie) => cookie.httpOnly)).toBe(true);
     expect(session.every((cookie) => cookie.sameSite === 'Lax')).toBe(true);
 
-    // The property the whole BFF exists for.
     expect(await page.evaluate(() => document.cookie)).not.toContain('hrms_');
   });
 
@@ -46,7 +37,6 @@ test.describe('authentication', () => {
   });
 
   test('an unknown address gives the same message as a wrong password', async ({ page }) => {
-    // Different messages here would make the sign-in form a way to test who has an account.
     await page.goto('/login');
 
     await page.getByLabel('E-posta').fill('kimse-yok@e2e.test');
@@ -78,8 +68,6 @@ test.describe('authentication', () => {
     await actors.signInAsNewJobSeeker();
     await page.goto('/');
 
-    // Asserted against the very first HTML rather than after hydration: a client-side session fetch
-    // would ship "Giriş yap" in the markup and swap it later.
     const html = await (await page.request.get('/')).text();
     expect(html).not.toContain('href="/login"');
 
@@ -94,7 +82,6 @@ test.describe('authentication', () => {
     await page.getByRole('menuitem', { name: 'Çıkış yap' }).click();
 
     await expect(page).toHaveURL('/');
-    // Scoped to the header: the footer links to the same place, and an unscoped role query matches both.
     await expect(page.getByRole('banner').getByRole('link', { name: 'Giriş yap' })).toBeVisible();
 
     const cookies = await page.context().cookies();

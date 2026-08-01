@@ -89,12 +89,6 @@ export function CvExtrasStep() {
   );
 }
 
-/**
- * The proficiency select.
- *
- * Options come from `languageLevelOrder`, which is ordered weakest to strongest to match the backend's
- * ordinals — alphabetical would put "Advanced" first and "Beginner" second, which reads as nonsense.
- */
 function LanguageLevelSelect({ index }: { index: number }) {
   const t = useTranslations('cv.level');
   const { field, fieldState } = useController<CvInput>({ name: `languages.${index}.level` });

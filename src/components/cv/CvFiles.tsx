@@ -30,13 +30,6 @@ import type { CvFileResponse } from '@/contracts/responses';
 import { apiErrorMessage } from '@/lib/api-error';
 import { api } from '@/lib/http';
 
-/**
- * Résumé file management.
- *
- * The limits below mirror `CvFileManager` exactly. They are checked here so the user is told
- * immediately rather than after uploading five megabytes over a slow connection — but the server is
- * still the one that decides, and it rejects anything that gets past this with a 409.
- */
 const MAX_FILE_BYTES = 5 * 1024 * 1024;
 const MAX_FILES = 5;
 const ACCEPTED = [
@@ -84,9 +77,6 @@ export function CvFiles({ files }: { files: readonly CvFileResponse[] }) {
       setUploading(true);
 
       try {
-        // `FormData`, and `lib/http` deliberately does not set `content-type` for it — the browser has
-        // to add the multipart boundary. The field name is `files` because the controller binds an
-        // `IFormFileCollection` parameter of that name.
         const body = new FormData();
         body.append('files', file, file.name);
 
@@ -98,8 +88,6 @@ export function CvFiles({ files }: { files: readonly CvFileResponse[] }) {
         report(error);
       } finally {
         setUploading(false);
-        // Reset the input, or picking the same file twice in a row fires no `change` event and the
-        // second attempt appears to do nothing.
         if (inputRef.current) inputRef.current.value = '';
       }
     },
@@ -162,11 +150,6 @@ export function CvFiles({ files }: { files: readonly CvFileResponse[] }) {
                 key={file.id}
                 secondaryAction={
                   <Stack direction="row" spacing={0.5}>
-                    {/*
-                      A plain link, not a fetch. The proxy streams the file with its
-                      `content-disposition` intact, so the browser's own download handling takes over —
-                      and the URL only works with the session cookie attached.
-                    */}
                     <Tooltip title={t('download')}>
                       <IconButton
                         component="a"
@@ -227,7 +210,6 @@ export function CvFiles({ files }: { files: readonly CvFileResponse[] }) {
   );
 }
 
-/** Bytes as KB or MB. Sizes here are small and bounded, so two units are enough. */
 function formatBytes(bytes: number): string {
   return bytes >= 1024 * 1024
     ? `${(bytes / 1024 / 1024).toFixed(1)} MB`

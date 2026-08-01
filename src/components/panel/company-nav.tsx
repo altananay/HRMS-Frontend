@@ -7,7 +7,6 @@ import { getTranslations } from 'next-intl/server';
 
 import type { PanelNavItem } from './PanelNav';
 
-/** `/company` is `exact` because it prefixes every other entry and would otherwise stay selected. */
 export async function companyNav(): Promise<PanelNavItem[]> {
   const t = await getTranslations('company.nav');
 

@@ -29,8 +29,6 @@ export function ProfileForm({ seeker }: { seeker: JobSeekerResponse }) {
   const submit = useCallback(
     async (values: JobSeekerProfileValues) => {
       await api('JobSeekers/update', { method: 'PUT', body: toUpdateJobSeekerRequest(values) });
-      // The header shows the display name, and it is rendered on the server — without this it would
-      // keep showing the old name until the next full navigation.
       router.refresh();
     },
     [router],

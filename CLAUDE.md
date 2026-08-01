@@ -276,9 +276,17 @@ Two runners, both must stay green.
   `vi.spyOn(globalThis, 'fetch')` — one mechanism, no mock-server layer to keep in sync.
 - **Playwright** — against the **real** backend and a real PostgreSQL (`hrms_e2e`), with Mailpit for
   the password-reset flow. `e2e/prepare.mjs` (run by `npm run e2e`, *before* Playwright) brings up
-  docker and recreates the database; `webServer` then starts the API and `next dev`. Not `globalSetup`
-  — that runs after `webServer`, so it would reset the database under an API that had already seeded
-  it. `e2e/a11y.spec.ts` adds an axe pass over one screen of each shape, in both colour schemes.
+  docker and recreates the database; `webServer` then starts the API and the frontend. Not
+  `globalSetup` — that runs after `webServer`, so it would reset the database under an API that had
+  already seeded it. `e2e/a11y.spec.ts` adds an axe pass over one screen of each shape, in both
+  colour schemes.
+
+  > **The frontend server is a production build (`next build && next start`), not `next dev`.**
+  > `npm run e2e` runs the build itself, so nothing stale from a previous run is served. `next dev`
+  > compiles each route on first request, and at real concurrency (16 workers) that showed up as
+  > `ECONNRESET` on requests that raced a route's first compile — an infra flake with no application
+  > bug behind it, but one that cost a retry every few runs. The production server has no such
+  > per-route compile step, which is also why the whole suite runs in about a third of the time.
 
 > **Neither runner executes React Server Components.** Don't try to unit-test an RSC page — test the
 > modules it calls and assert the rendered result in Playwright.
